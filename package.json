@@ -1,0 +1,23 @@
+{
+  "name": "json-object-mapper",
+  "version": "1.0.0",
+  "description": "A TypeScript library to serialize and deserialize JSON objects.",
+  "scripts": {
+    "watch-compile": "node_modules/.bin/tsc -w -p .",
+    "compile": "node_modules/.bin/tsc -p .",
+    "dist": "node_modules/.bin/tsc --outFile ./dist/json4typescript.js -p ./src/main",
+    "tests": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
+    "postinstall": "typings install dt~jasmine --save-dev --global"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.2",
+    "jasmine-core": "^2.3.4",
+    "jasmine-node": "^1.14.5",
+    "tslint": "^3.10.2",
+    "typescript": "^2.0.10",
+    "typings": "^0.8.1"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.8"
+  }
+}
