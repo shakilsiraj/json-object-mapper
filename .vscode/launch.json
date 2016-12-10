@@ -1,0 +1,35 @@
+/**
+
+References:{
+    http://stackoverflow.com/questions/38419779/debugging-current-file-in-vs-code,
+
+}
+
+*/
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Tests",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/jasmine-node/bin/jasmine-node",
+            "stopOnEntry": false,
+            "args": [
+                "bin",
+                "--verbose"
+            ],
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true,
+            "outDir": "${workspaceRoot}/bin"
+        },
+        {
+            "name": "Attach to Node",
+            "type": "node",
+            "request": "attach",
+            "address": "localhost",
+            "port": 5858,
+            "restart": false
+        }
+    ]
+}
