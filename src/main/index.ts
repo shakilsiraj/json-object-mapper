@@ -1,4 +1,4 @@
-import { JsonProperty, JsonPropertyDecoratorMetadata } from "./DecoratorMetadata";
+import { JsonProperty, JsonPropertyDecoratorMetadata, JsonConverstionError } from "./DecoratorMetadata";
 import { ConversionFunctionStructure, conversionFunctions } from "./DeserializationHelper";
 import { SerializationStructure, serializeFunctions, mergeObjectOrArrayValues } from "./SerializationHelper";
 
@@ -7,8 +7,8 @@ export namespace ObjectMapper {
     /**
      * Deserializes a Object type with the passed on JSON data.
      */
-    export var deserialize = <T>(obj: { new (): T }, json: Object): T => {
-        let dtoInstance = new obj();
+    export var deserialize = <T>(type: { new (): T }, json: Object): T => {
+        let dtoInstance = new type();
         let conversionFunctionStructure: ConversionFunctionStructure =
             { functionName: 'object', instance: dtoInstance, json: json };
 
@@ -67,4 +67,7 @@ export namespace ObjectMapper {
 
         return struct.values[0];
     }
+}
+export default {
+    JsonProperty, JsonConverstionError
 }
