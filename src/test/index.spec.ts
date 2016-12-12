@@ -1,7 +1,7 @@
 /// <reference path="../../typings/index.d.ts"/>
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
-
+import { a, b} from "./NameSpaces";
 describe("Testing deserialize functions", () => {
 
     it("Testing Class type with no annotations and 0 children", () => {
@@ -55,5 +55,26 @@ describe("Testing serialize functions", () => {
         let stringrified: String = ObjectMapper.serialize(intance);
         expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe","AKA":["John","Doe","JohnDoe","JohnPDoe"]}');
 
+    });
+});
+
+describe("Testing NameSpaces", () => {
+    it("Test 1", () => {
+
+        let random1 = Math.random();
+        let random2 = Date.now();
+
+        var json = {
+            "c": "This is a test",
+            "d": {
+                "f": random1,
+                "t" : random2
+            }
+        };
+        
+
+        let testInstance = ObjectMapper.deserialize(b.NamespaceBClass, json);
+        expect(testInstance.d.f).toBe(random1);
+        expect(testInstance.d.t).toBe(random2);
     });
 });
