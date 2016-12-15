@@ -22,14 +22,6 @@ References:{
             "cwd": "${workspaceRoot}",
             "sourceMaps": true,
             "outDir": "${workspaceRoot}/bin"
-        },
-        {
-            "name": "Attach to Node",
-            "type": "node",
-            "request": "attach",
-            "address": "localhost",
-            "port": 5858,
-            "restart": false
         }
     ]
 }

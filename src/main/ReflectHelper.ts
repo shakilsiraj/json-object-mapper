@@ -41,6 +41,10 @@ export function getPropertyDecorator(metadataKey: string, metadata: any) {
  */
 export function isSimpleType(typeName: string): boolean {
     switch (typeName) {
+        case 'String': return true;
+        case 'Number': return true;
+        case 'Boolean': return true;
+        case 'Date': return true;
         case 'string': return true;
         case 'number': return true;
         case 'boolean': return true;
@@ -51,15 +55,10 @@ export function isSimpleType(typeName: string): boolean {
 
 /**
  * Returns the the instance type name by looking at the constructor name.
+ * Stupid IE does not have name property! Hence the hack.
  */
 export function getTypeNameFromInstance(instance): string {
-    var type = Object.getOwnPropertyDescriptor(instance, 'name')
-    if (type && type.value) {
-        return type.value.toLowerCase();
-    } else {
-        return undefined;
-    }
-    // return instance.constructor['name'].toLowerCase();
+    return instance.toString().trim().split(/[\s\()]/g)[1];
 }
 
 function getType(instance: any, key: string): any {
@@ -73,7 +72,7 @@ export function isArrayType(instance: any, key: string): boolean {
 export function getTypeName(instance, key): string {
     let type = getType(instance, key);
     if (type != undefined) {
-        return type.name.toLowerCase();
+        return getTypeNameFromInstance(type);
     }
     return type;
 }

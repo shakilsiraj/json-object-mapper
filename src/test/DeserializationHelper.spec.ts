@@ -14,7 +14,7 @@ describe("Testing Conversion functions", () => {
         jsonTest['name'] = 'Shakil';
 
 
-        var moreFunctionsList = DeserializeSimpleType(instance, "field", "string", jsonTest, "name");
+        var moreFunctionsList = DeserializeSimpleType(instance, "field", "String", jsonTest, "name");
         expect(moreFunctionsList.length).toBe(0);
         expect(instance.field).toBe('Shakil');
     });
@@ -30,7 +30,7 @@ describe("Testing Conversion functions", () => {
         jsonTest['booleanType'] = true;
 
 
-        var moreFunctionsList = DeserializeSimpleType(instance, "field", "boolean", jsonTest, "booleanType");
+        var moreFunctionsList = DeserializeSimpleType(instance, "field", "Boolean", jsonTest, "booleanType");
         expect(moreFunctionsList.length).toBe(0);
         expect(instance.field).toBe(true);
     });
@@ -46,7 +46,7 @@ describe("Testing Conversion functions", () => {
         jsonTest['numberType'] = 12345;
 
 
-        var moreFunctionsList = DeserializeSimpleType(instance, "field", "number", jsonTest, "numberType");
+        var moreFunctionsList = DeserializeSimpleType(instance, "field", "Number", jsonTest, "numberType");
         expect(moreFunctionsList.length).toBe(0);
         expect(instance.field).toBe(12345);
     });
@@ -61,7 +61,7 @@ describe("Testing Conversion functions", () => {
         jsonTest['dateType'] = '05/08/2013';
 
 
-        var moreFunctionsList = DeserializeDateType(instance, "field", "date", jsonTest, "dateType");
+        var moreFunctionsList = DeserializeDateType(instance, "field", "Date", jsonTest, "dateType");
         expect(moreFunctionsList.length).toBe(0);
         expect(instance.field.getTime()).toBe((new Date('05/08/2013')).getTime());
     });

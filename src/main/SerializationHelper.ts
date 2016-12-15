@@ -124,6 +124,12 @@ var SerializeDateType = (key: string, instance: Date): string => {
 }
 
 export var serializeFunctions = [];
+serializeFunctions['String'] = SerializeStringType;
+serializeFunctions['Number'] = SerializeAnyType;
+serializeFunctions['Boolean'] = SerializeAnyType;
+serializeFunctions['Date'] = SerializeDateType;
+serializeFunctions['Array'] = SerializeArrayType;
+serializeFunctions['Object'] = SerializeObjectType;
 serializeFunctions['string'] = SerializeStringType;
 serializeFunctions['number'] = SerializeAnyType;
 serializeFunctions['boolean'] = SerializeAnyType;

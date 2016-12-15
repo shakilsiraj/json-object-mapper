@@ -2,7 +2,7 @@ import { JsonConverstionError, JsonPropertyDecoratorMetadata, AccessType } from 
 import { isSimpleType, getTypeName, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType } from "./ReflectHelper";
 
 var SimpleTypeCoverter = (value: any, type: string): any => {
-    return type === 'date' ? new Date(value) : value;
+    return type === 'Date' ? new Date(value) : value;
 }
 
 /**
@@ -42,7 +42,7 @@ export var DeserializeArrayType = (instance: Object, instanceKey: string, type: 
             let typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {
                 let typeInstance = new type();
-                conversionFunctionsList.push({ functionName: 'object', instance: typeInstance, json: json[jsonKey][i] });
+                conversionFunctionsList.push({ functionName: 'Object', instance: typeInstance, json: json[jsonKey][i] });
                 arrayInstance.push(typeInstance);
             } else {
                 arrayInstance.push(conversionFunctions['fromArray'](json[jsonKey][i], typeName));
@@ -100,12 +100,12 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
                     let typeName = getTypeName(objectInstance, key);
                     if (!isSimpleType(typeName)) {
                         objectInstance[key] = new metadata.type();;
-                        conversionFunctionsList.push({ functionName: 'object', type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
+                        conversionFunctionsList.push({ functionName: 'Object', type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
                     } else {
                         conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);
                     }
                 } else {
-                    let moreFunctions: Array<ConversionFunctionStructure> = conversionFunctions['array'](objectInstance, key, metadata.type, json, jsonKeyName);
+                    let moreFunctions: Array<ConversionFunctionStructure> = conversionFunctions['Array'](objectInstance, key, metadata.type, json, jsonKeyName);
                     moreFunctions.forEach((struct: ConversionFunctionStructure) => {
                         conversionFunctionsList.push(struct);
                     });
@@ -135,10 +135,16 @@ export interface ConversionFunctionStructure {
  * List of JSON object conversion functions.
  */
 export var conversionFunctions = new Object();
+conversionFunctions['Object'] = DeserializeComplexType;
+conversionFunctions['Array'] = DeserializeArrayType;
+conversionFunctions['Date'] = DeserializeDateType;
+conversionFunctions['String'] = DeserializeSimpleType;
+conversionFunctions['Number'] = DeserializeSimpleType;
+conversionFunctions['Boolean'] = DeserializeSimpleType;
+conversionFunctions['fromArray'] = SimpleTypeCoverter;
 conversionFunctions['object'] = DeserializeComplexType;
 conversionFunctions['array'] = DeserializeArrayType;
 conversionFunctions['date'] = DeserializeDateType;
 conversionFunctions['string'] = DeserializeSimpleType;
 conversionFunctions['number'] = DeserializeSimpleType;
 conversionFunctions['boolean'] = DeserializeSimpleType;
-conversionFunctions['fromArray'] = SimpleTypeCoverter;
