@@ -1,8 +1,8 @@
 import { JsonConverstionError, JsonPropertyDecoratorMetadata, AccessType } from "./DecoratorMetadata";
-import { isSimpleType, getTypeName, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType } from "./ReflectHelper";
+import { isSimpleType, getTypeName, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType, Constants } from "./ReflectHelper";
 
 var SimpleTypeCoverter = (value: any, type: string): any => {
-    return type === 'Date' ? new Date(value) : value;
+    return type === Constants.DATE_TYPE ? new Date(value) : value;
 }
 
 /**
@@ -42,10 +42,10 @@ export var DeserializeArrayType = (instance: Object, instanceKey: string, type: 
             let typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {
                 let typeInstance = new type();
-                conversionFunctionsList.push({ functionName: 'Object', instance: typeInstance, json: json[jsonKey][i] });
+                conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: json[jsonKey][i] });
                 arrayInstance.push(typeInstance);
             } else {
-                arrayInstance.push(conversionFunctions['fromArray'](json[jsonKey][i], typeName));
+                arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](json[jsonKey][i], typeName));
             }
         }
     }
@@ -100,12 +100,12 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
                     let typeName = getTypeName(objectInstance, key);
                     if (!isSimpleType(typeName)) {
                         objectInstance[key] = new metadata.type();;
-                        conversionFunctionsList.push({ functionName: 'Object', type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
+                        conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
                     } else {
                         conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);
                     }
                 } else {
-                    let moreFunctions: Array<ConversionFunctionStructure> = conversionFunctions['Array'](objectInstance, key, metadata.type, json, jsonKeyName);
+                    let moreFunctions: Array<ConversionFunctionStructure> = conversionFunctions[Constants.ARRAY_TYPE](objectInstance, key, metadata.type, json, jsonKeyName);
                     moreFunctions.forEach((struct: ConversionFunctionStructure) => {
                         conversionFunctionsList.push(struct);
                     });
@@ -135,16 +135,16 @@ export interface ConversionFunctionStructure {
  * List of JSON object conversion functions.
  */
 export var conversionFunctions = new Object();
-conversionFunctions['Object'] = DeserializeComplexType;
-conversionFunctions['Array'] = DeserializeArrayType;
-conversionFunctions['Date'] = DeserializeDateType;
-conversionFunctions['String'] = DeserializeSimpleType;
-conversionFunctions['Number'] = DeserializeSimpleType;
-conversionFunctions['Boolean'] = DeserializeSimpleType;
-conversionFunctions['fromArray'] = SimpleTypeCoverter;
-conversionFunctions['object'] = DeserializeComplexType;
-conversionFunctions['array'] = DeserializeArrayType;
-conversionFunctions['date'] = DeserializeDateType;
-conversionFunctions['string'] = DeserializeSimpleType;
-conversionFunctions['number'] = DeserializeSimpleType;
-conversionFunctions['boolean'] = DeserializeSimpleType;
+conversionFunctions[Constants.OBJECT_TYPE] = DeserializeComplexType;
+conversionFunctions[Constants.ARRAY_TYPE] = DeserializeArrayType;
+conversionFunctions[Constants.DATE_TYPE] = DeserializeDateType;
+conversionFunctions[Constants.STRING_TYPE] = DeserializeSimpleType;
+conversionFunctions[Constants.NUMBER_TYPE] = DeserializeSimpleType;
+conversionFunctions[Constants.BOOLEAN_TYPE] = DeserializeSimpleType;
+conversionFunctions[Constants.FROM_ARRAY] = SimpleTypeCoverter;
+conversionFunctions[Constants.OBJECT_TYPE_LOWERCASE] = DeserializeComplexType;
+conversionFunctions[Constants.ARRAY_TYPE_LOWERCASE] = DeserializeArrayType;
+conversionFunctions[Constants.DATE_TYPE_LOWERCASE] = DeserializeDateType;
+conversionFunctions[Constants.STRING_TYPE_LOWERCASE] = DeserializeSimpleType;
+conversionFunctions[Constants.NUMBER_TYPE_LOWERCASE] = DeserializeSimpleType;
+conversionFunctions[Constants.BOOLEAN_TYPE_LOWERCASE] = DeserializeSimpleType;

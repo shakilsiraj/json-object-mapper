@@ -1,5 +1,5 @@
 
-import { isArrayType, isSimpleType, getTypeNameFromInstance, getTypeName, getKeyName } from "./ReflectHelper";
+import { isArrayType, isSimpleType, getTypeNameFromInstance, getTypeName, getKeyName, Constants } from "./ReflectHelper";
 
 export interface SerializationStructure {
     id: string, /** id of the current structure */
@@ -19,7 +19,7 @@ export var SerializeArrayType = (parentStructure: SerializationStructure, instan
             if (!isSimpleType(typeof value)) {
                 let struct: SerializationStructure = {
                     id: uniqueId(),
-                    type: 'object',
+                    type: Constants.OBJECT_TYPE,
                     instance: value,
                     parentIndex: instanceIndex,
                     values: new Array<String>(),
@@ -55,7 +55,7 @@ export var serializeArray = (key: string, instanceValuesStack: Array<String>): s
 
 export var mergeObjectOrArrayValues = (instanceStructure: SerializationStructure): void => {
     let mergedValue: string;
-    if (instanceStructure.type === 'object') {
+    if (instanceStructure.type === Constants.OBJECT_TYPE) {
         mergedValue = serializeObject(instanceStructure.key, instanceStructure.values);
     } else {
         mergedValue = serializeArray(instanceStructure.key, instanceStructure.values);
@@ -72,7 +72,7 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
             if (isArrayType(instanceStructure.instance, key)) {
                 let struct: SerializationStructure = {
                     id: uniqueId(),
-                    type: 'array',
+                    type: Constants.ARRAY_TYPE,
                     instance: keyInstance,
                     parentIndex: instanceIndex,
                     values: new Array<String>(),
@@ -84,7 +84,7 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
             } else if (!isSimpleType(typeof keyInstance)) {
                 let struct: SerializationStructure = {
                     id: uniqueId(),
-                    type: 'object',
+                    type: Constants.OBJECT_TYPE,
                     instance: keyInstance,
                     parentIndex: instanceIndex,
                     values: new Array<String>(),
@@ -124,18 +124,18 @@ var SerializeDateType = (key: string, instance: Date): string => {
 }
 
 export var serializeFunctions = [];
-serializeFunctions['String'] = SerializeStringType;
-serializeFunctions['Number'] = SerializeAnyType;
-serializeFunctions['Boolean'] = SerializeAnyType;
-serializeFunctions['Date'] = SerializeDateType;
-serializeFunctions['Array'] = SerializeArrayType;
-serializeFunctions['Object'] = SerializeObjectType;
-serializeFunctions['string'] = SerializeStringType;
-serializeFunctions['number'] = SerializeAnyType;
-serializeFunctions['boolean'] = SerializeAnyType;
-serializeFunctions['date'] = SerializeDateType;
-serializeFunctions['array'] = SerializeArrayType;
-serializeFunctions['object'] = SerializeObjectType;
+serializeFunctions[Constants.STRING_TYPE] = SerializeStringType;
+serializeFunctions[Constants.NUMBER_TYPE] = SerializeAnyType;
+serializeFunctions[Constants.BOOLEAN_TYPE] = SerializeAnyType;
+serializeFunctions[Constants.DATE_TYPE] = SerializeDateType;
+serializeFunctions[Constants.ARRAY_TYPE] = SerializeArrayType;
+serializeFunctions[Constants.OBJECT_TYPE] = SerializeObjectType;
+serializeFunctions[Constants.STRING_TYPE_LOWERCASE] = SerializeStringType;
+serializeFunctions[Constants.NUMBER_TYPE_LOWERCASE] = SerializeAnyType;
+serializeFunctions[Constants.BOOLEAN_TYPE_LOWERCASE] = SerializeAnyType;
+serializeFunctions[Constants.DATE_TYPE_LOWERCASE] = SerializeDateType;
+serializeFunctions[Constants.ARRAY_TYPE_LOWERCASE] = SerializeArrayType;
+serializeFunctions[Constants.OBJECT_TYPE_LOWERCASE] = SerializeObjectType;
 
 
 var uniqueId = (): string => {

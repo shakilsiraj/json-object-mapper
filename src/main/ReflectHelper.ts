@@ -76,3 +76,19 @@ export function getTypeName(instance, key): string {
     }
     return type;
 }
+
+export var Constants = {
+    OBJECT_TYPE: "Object",
+    OBJECT_TYPE_LOWERCASE: "object",
+    STRING_TYPE: "String",
+    STRING_TYPE_LOWERCASE: "string",
+    NUMBER_TYPE: "Number",
+    NUMBER_TYPE_LOWERCASE: "number",
+    BOOLEAN_TYPE: "Boolean",
+    BOOLEAN_TYPE_LOWERCASE: "boolean",
+    DATE_TYPE: "Date",
+    DATE_TYPE_LOWERCASE: "date",
+    ARRAY_TYPE: "Array",
+    ARRAY_TYPE_LOWERCASE: "array",
+    FROM_ARRAY: "fromArray"
+}

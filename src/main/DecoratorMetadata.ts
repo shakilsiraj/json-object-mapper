@@ -1,4 +1,4 @@
-import { getJsonPropertyDecorator, getPropertyDecorator } from "./ReflectHelper";
+import { getJsonPropertyDecorator, getPropertyDecorator, Constants } from "./ReflectHelper";
 
 /**
  * Decorator names
@@ -27,7 +27,7 @@ export enum AccessType {
 /**
  * JsonProperty Decorator function.
  */
-export function JsonProperty(metadata?: JsonPropertyDecoratorMetadata) : any{
+export function JsonProperty(metadata?: JsonPropertyDecoratorMetadata): any {
     if (typeof metadata === 'string') {
         return getJsonPropertyDecorator({ name: metadata as string, required: false, access: AccessType.BOTH });
     } else {

@@ -1,6 +1,7 @@
 import { JsonProperty, JsonPropertyDecoratorMetadata, JsonConverstionError } from "./DecoratorMetadata";
 import { ConversionFunctionStructure, conversionFunctions } from "./DeserializationHelper";
 import { SerializationStructure, serializeFunctions, mergeObjectOrArrayValues } from "./SerializationHelper";
+import { Constants } from "./ReflectHelper";
 
 export namespace ObjectMapper {
 
@@ -10,7 +11,7 @@ export namespace ObjectMapper {
     export var deserialize = <T>(type: { new (): T }, json: Object): T => {
         let dtoInstance = new type();
         let conversionFunctionStructure: ConversionFunctionStructure =
-            { functionName: 'object', instance: dtoInstance, json: json };
+            { functionName: Constants.OBJECT_TYPE, instance: dtoInstance, json: json };
 
         var converstionFunctionsArray: Array<ConversionFunctionStructure> = new Array<ConversionFunctionStructure>();
         converstionFunctionsArray.push(conversionFunctionStructure);
@@ -36,7 +37,7 @@ export namespace ObjectMapper {
         let stack: Array<SerializationStructure> = new Array<SerializationStructure>();
         let struct: SerializationStructure = {
             id: undefined,
-            type: 'object',
+            type: Constants.OBJECT_TYPE,
             instance: obj,
             parentIndex: undefined,
             values: new Array<String>(),

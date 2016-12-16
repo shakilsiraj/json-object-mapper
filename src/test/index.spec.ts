@@ -1,7 +1,7 @@
 /// <reference path="../../typings/index.d.ts"/>
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
-import { a, b} from "./NameSpaces";
+import { a, b } from "./NameSpaces";
 describe("Testing deserialize functions", () => {
 
     it("Testing Class type with no annotations and 0 children", () => {
@@ -56,6 +56,8 @@ describe("Testing serialize functions", () => {
         expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe","AKA":["John","Doe","JohnDoe","JohnPDoe"]}');
 
     });
+
+
 });
 
 describe("Testing NameSpaces", () => {
@@ -68,13 +70,43 @@ describe("Testing NameSpaces", () => {
             "c": "This is a test",
             "d": {
                 "f": random1,
-                "t" : random2
+                "t": random2
             }
         };
-        
+
 
         let testInstance = ObjectMapper.deserialize(b.NamespaceBClass, json);
         expect(testInstance.d.f).toBe(random1);
         expect(testInstance.d.t).toBe(random2);
+    });
+});
+
+describe("Misc tests", () => {
+    it("Tesing Dto with functions", () => {
+        class Roster {
+            private name: string = undefined;
+            private worksOnWeekend: boolean = false;
+            private today: Date = new Date();
+            public isAvailable(date: Date): boolean {
+                if (date.getDay() % 6 == 0 && this.worksOnWeekend == false) {
+                    return false;
+                }
+                return true;
+            }
+            public isAvailableToday(): boolean {
+                return this.isAvailable(this.today);
+            }
+        }
+
+        var json = {
+            name: 'John Doe',
+            worksOnWeekend: false
+        }
+
+        var testInstance: Roster = ObjectMapper.deserialize(Roster, json);
+        expect(testInstance.isAvailable(new Date("2016-12-17"))).toBeFalsy();
+        expect(testInstance.isAvailable(new Date("2016-12-16"))).toBeTruthy();
+        expect(testInstance.isAvailableToday()).toBe(((new Date()).getDay() % 6 == 0) ? false : true);
+
     });
 });
