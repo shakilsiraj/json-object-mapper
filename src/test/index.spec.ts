@@ -2,6 +2,8 @@
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 import { a, b } from "./NameSpaces";
+
+
 describe("Testing deserialize functions", () => {
 
     it("Testing Class type with no annotations and 0 children", () => {
@@ -36,6 +38,7 @@ describe("Testing serialize functions", () => {
         };
 
         let stringrified: String = ObjectMapper.serialize(SimpleClassJson);
+        // console.log(JSON.stringify(SimpleClassJson));
         expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe"}');
 
     });

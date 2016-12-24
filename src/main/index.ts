@@ -1,6 +1,6 @@
 import { JsonProperty, JsonPropertyDecoratorMetadata, JsonConverstionError } from "./DecoratorMetadata";
 import { ConversionFunctionStructure, conversionFunctions } from "./DeserializationHelper";
-import { SerializationStructure, serializeFunctions, mergeObjectOrArrayValues } from "./SerializationHelper";
+import { SerializationStructure, serializeFunctions, mergeObjectOrArrayValues, mergeObjectOrArrayValuesAndCopyToParents } from "./SerializationHelper";
 import { Constants } from "./ReflectHelper";
 
 export namespace ObjectMapper {
@@ -42,7 +42,7 @@ export namespace ObjectMapper {
             parentIndex: undefined,
             values: new Array<String>(),
             key: undefined,
-            dependsOn: new Array<String>()
+            visited: false
         }
 
         stack.push(struct);
@@ -50,17 +50,21 @@ export namespace ObjectMapper {
         do {
             let instanceStruct: SerializationStructure = stack[stack.length - 1];
             let parentStruct: SerializationStructure = stack[stack.length > 1 ? instanceStruct.parentIndex : 0];
-            let moreStructures: Array<SerializationStructure> = serializeFunctions[instanceStruct.type](parentStruct, instanceStruct, stack.length - 1);
-            if (moreStructures.length > 0) {
-                moreStructures.forEach((each: SerializationStructure) => {
-                    stack.push(each);
-                });
-            } else {
-                if (stack.length > 1) {
-                    mergeObjectOrArrayValues(instanceStruct);
-                    parentStruct.values.push(instanceStruct.values.pop());
-                }
+            if (instanceStruct.visited) {
+                mergeObjectOrArrayValuesAndCopyToParents(instanceStruct, parentStruct);
                 stack.pop();
+            } else {
+                let moreStructures: Array<SerializationStructure> = serializeFunctions[instanceStruct.type](parentStruct, instanceStruct, stack.length - 1);
+                if (moreStructures.length > 0) {
+                    moreStructures.forEach((each: SerializationStructure) => {
+                        stack.push(each);
+                    });
+                } else {
+                    if (stack.length > 1) {
+                        mergeObjectOrArrayValuesAndCopyToParents(instanceStruct, parentStruct);
+                    }
+                    stack.pop();
+                }
             }
         } while (stack.length > 1);
 

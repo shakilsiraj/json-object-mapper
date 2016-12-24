@@ -1,3 +1,7 @@
 {
-    "typescript.check.workspaceVersion": false
+    "typescript.check.workspaceVersion": false,
+    "extension.refactorix.Property.ToGetterSetter": {
+        "singleLine": false,
+        "prefix": "_"
+    }
 }

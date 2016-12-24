@@ -18,7 +18,7 @@ export var getJsonPropertyDecoratorMetadata = (target: any, key: string): JsonPr
  */
 export var getKeyName = (target: any, key: string): string => {
     let metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(target, key);
-    if (metadata != undefined) {
+    if (metadata != undefined && metadata.name != undefined) {
         return metadata.name;
     } else {
         return key;

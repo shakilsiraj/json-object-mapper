@@ -99,7 +99,7 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
                 if (!isArrayType(objectInstance, key)) {
                     let typeName = getTypeName(objectInstance, key);
                     if (!isSimpleType(typeName)) {
-                        objectInstance[key] = new metadata.type();;
+                        objectInstance[key] = new metadata.type();
                         conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
                     } else {
                         conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);

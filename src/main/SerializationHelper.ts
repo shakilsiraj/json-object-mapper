@@ -8,12 +8,13 @@ export interface SerializationStructure {
     values: Array<String>, /** Array of current current instance's key value pairs */
     parentIndex: number, /** Parent's index position in the stack */
     key: string, /** the parent object's key name for this object instance. Options as it is not required for arrays */
-    dependsOn: Array<String> /** List of more structure ids which needs to be finished before this object can be fully serialized */
+    visited: boolean /** Indicates if this node has been visited or not */
 }
 
 export var SerializeArrayType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
     let furtherSerializationStructures: Object = new Object();
     let arrayInstance: Array<any> = instanceStructure.instance as Array<any>;
+    instanceStructure.visited = true;
     arrayInstance.forEach((value: any) => {
         if (value != undefined) {
             if (!isSimpleType(typeof value)) {
@@ -24,9 +25,8 @@ export var SerializeArrayType = (parentStructure: SerializationStructure, instan
                     parentIndex: instanceIndex,
                     values: new Array<String>(),
                     key: undefined,
-                    dependsOn: new Array<String>()
+                    visited: false
                 };
-                parentStructure.dependsOn.push(struct.id);
                 furtherSerializationStructures[struct.id] = struct;
             } else {
                 instanceStructure.values.push(serializeFunctions[typeof value](undefined, value));
@@ -53,6 +53,11 @@ export var serializeArray = (key: string, instanceValuesStack: Array<String>): s
     return (key != undefined ? '"' + key + '":' : '') + '[' + instanceValuesStack.join() + ']';
 }
 
+export var mergeObjectOrArrayValuesAndCopyToParents = (instanceStructure: SerializationStructure, parentStructure: SerializationStructure): void => {
+    mergeObjectOrArrayValues(instanceStructure);
+    parentStructure.values.push(instanceStructure.values.pop());
+}
+
 export var mergeObjectOrArrayValues = (instanceStructure: SerializationStructure): void => {
     let mergedValue: string;
     if (instanceStructure.type === Constants.OBJECT_TYPE) {
@@ -66,10 +71,11 @@ export var mergeObjectOrArrayValues = (instanceStructure: SerializationStructure
 
 export var SerializeObjectType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
     let furtherSerializationStructures: Object = new Object();
+    instanceStructure.visited = true;
     Object.keys(instanceStructure.instance).forEach((key: string) => {
         let keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {
-            if (isArrayType(instanceStructure.instance, key)) {
+            if (keyInstance instanceof Array) {
                 let struct: SerializationStructure = {
                     id: uniqueId(),
                     type: Constants.ARRAY_TYPE,
@@ -77,9 +83,8 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
                     parentIndex: instanceIndex,
                     values: new Array<String>(),
                     key: getKeyName(instanceStructure.instance, key),
-                    dependsOn: new Array<String>()
+                    visited: false
                 };
-                parentStructure.dependsOn.push(struct.id);
                 furtherSerializationStructures[struct.id] = struct;
             } else if (!isSimpleType(typeof keyInstance)) {
                 let struct: SerializationStructure = {
@@ -89,12 +94,11 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
                     parentIndex: instanceIndex,
                     values: new Array<String>(),
                     key: getKeyName(instanceStructure.instance, key),
-                    dependsOn: new Array<String>()
+                    visited: false
                 };
-                parentStructure.dependsOn.push(struct.id);
                 furtherSerializationStructures[struct.id] = struct;
             } else {
-                parentStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance));
+                instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance));
             }
         }
 
