@@ -140,4 +140,24 @@ describe("Misc tests", () => {
         expect(testInstance.isAvailableToday()).toBe(((new Date()).getDay() % 6 == 0) ? false : true);
 
     });
+
+    it("Testing enum ", () => {
+        enum Days{
+            Sun, Mon, Tues, Wed, Thurs, Fri, Sat
+        }  
+
+        class Workday{
+            @JsonProperty({type: Days})
+            today: Days = undefined;
+        }        
+
+        let json = { "today": 2 };
+        
+        let testInstance: Workday = ObjectMapper.deserialize(Workday, json);
+        expect(testInstance.today == Days.Tues).toBeTruthy();
+        testInstance.today = Days.Fri;
+        let serialized: String = ObjectMapper.serialize(testInstance);
+        expect(serialized).toBe('{"today":5}');
+    });
+
 });
