@@ -5,8 +5,9 @@ be able to load the JSON data from `Http`/`File`/`Stream` stright
 into an object graph of your DTO classes as well as serialize a DTO object graph 
 so that it can be sent to an output stream. 
 
-Using this library, you do not need to add serialization and de-serialization
-methods to each of your DTO classes - thus keeping them clean and simple.
+The idea behind this is that you do not need to add serialization and 
+de-serialization methods to each of your DTO classes - thus keeping them clean 
+and simple.
 
 ## Usage
 
@@ -14,6 +15,8 @@ The core of the library is the `ObjectMapper` class which essentially serializes
 de-serializes object graph.
 
 It has the following methods:
+
+
 1. `serialize(Object) => String` : will serialize a class instance into JSON string.
 2. `deserialize(Type, Object) => Type` : will take a class type and a JSON object
 and create a new instance of the class type based on the JSON data model.
@@ -66,7 +69,7 @@ to it. As the `Date` type is not a primitive data type, you will need to explici
 to the processor that we need to create a new instance of `Date` object with the supplied value and
 assign it to the `systemDate` property.
 
-The `deserialize` method runs, it will first create a new instance of 'SimpleRoster' class.
+When the `deserialize` method runs, it will first create a new instance of 'SimpleRoster' class.
 Then it will parse the keys of the instance and assign the correct values to 
 each keys. While doing that, it will make sure that the right property types are maintained -
 meaning that `name` field will be assinged a `String` object with the value 'John Doe', `numberOfHours` will be assigned
@@ -135,11 +138,11 @@ The best way to manage this complexitiy I have found so far is to use the
 1st January 1970 UTC. So, to best use this library, make sure that the date is 
 passed on as the number of milliseconds during deserializition:
 ```json
-jsonTest['dateType'] = 1333065600000;
+jsonTest["dateType"] : 1333065600000;
 ```
 even though it will take the date as string without guranting the accuracy of time:
 ```json
-jsonTest['dateType'] = '05/08/2013';
+jsonTest["dateType"] : '05/08/2013';
 ```
 For serialization, it will only print out the milliseconds:
 ```json
