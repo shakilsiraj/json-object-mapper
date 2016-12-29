@@ -65,6 +65,23 @@ describe("Testing Conversion functions", () => {
         expect(moreFunctionsList.length).toBe(0);
         expect(instance.field.getTime()).toBe((new Date('05/08/2013')).getTime());
     });
+    it("Test DeserializeSimpleType case - UTC date", () => {
+        class testObject81 {
+            field: Date = undefined;
+        }
+
+        var instance = new testObject81();
+
+        var jsonTest = new Object();
+        jsonTest['dateType'] = 1333065600000;
+
+
+        var moreFunctionsList = DeserializeDateType(instance, "field", "Date", jsonTest, "dateType");
+        expect(moreFunctionsList.length).toBe(0);
+        expect(instance.field.getFullYear()).toBe(2012);
+        expect(instance.field.getMonth()).toBe(2);
+        expect(instance.field.getDate()).toBe(30);
+    });
     it("Test DeserializeArrayType - simple type array ", () => {
         class testObject9 {
             field: string[] = undefined;
@@ -139,7 +156,7 @@ describe("Testing Conversion functions", () => {
         expect(moreFunctionsList.length).toBe(1);
         expect(testInstance.firstname).toBe('John');
         expect(testInstance.lastname).toBe('Doe');
-        // expect(testInstance.middlename).toBe('P');
+        expect(testInstance.middlename).toBe('P');
     });
 
     it("Test DeserializeComplexType - complex array class ", () => {
@@ -149,9 +166,7 @@ describe("Testing Conversion functions", () => {
         }
 
         class DeserializeComplexTypeArrayTest {
-            @JsonProperty()
             storeName: string = undefined;
-
             @JsonProperty({ type: ZipCodesObject })
             availableAt: ZipCodesObject[] = undefined;
 
@@ -193,10 +208,12 @@ describe("Testing Conversion functions", () => {
             dates: Date[] = undefined;
         }
 
-        var json ={ dates: [(new Date('04/02/2008')).getTime(), (new Date('05/2/2008')).getTime(), (new Date('04/02/2009')).getTime()]  };
+        var json = { dates: [(new Date('04/02/2008')).getTime(), (new Date('05/2/2008')).getTime(), (new Date('04/02/2009')).getTime()] };
         var testDateArrayInstance = new DeserializeComplexTypeDateArray();
         var moreFunctionsList = DeserializeComplexType(testDateArrayInstance, undefined, DeserializeComplexTypeDateArray, json, undefined);
         expect(moreFunctionsList.length).toBe(0);
         expect(testDateArrayInstance.dates[0].getTime()).toBe((new Date('04/02/2008')).getTime());
     });
+
+    
 });

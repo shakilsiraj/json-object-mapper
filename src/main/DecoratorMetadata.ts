@@ -14,10 +14,10 @@ export const JSON_PROPERTY_DECORATOR_NAME = "JsonProperty";
  * Decorator metadata definition for JsonProperty
  */
 export interface JsonPropertyDecoratorMetadata {
-    name?: string,
-    required?: boolean,
-    access?: AccessType,
-    type?: any
+    name?: string, //name of the JSON property to map
+    required?: boolean, //is this field required in the JSON object that is being deserialized
+    access?: AccessType, //is this serializable and de-serializable
+    type?: any //the type of Object that should be assigned to this property
 }
 
 export enum AccessType {

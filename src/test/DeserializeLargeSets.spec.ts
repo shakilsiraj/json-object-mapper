@@ -5,65 +5,65 @@ import { isArrayType } from "../main/ReflectHelper";
 
 describe("Testing deserialize function with large datasets", () => {
 
-    it("Testing json data from http://www.json-generator.com/", () => {
-    
-        class JsonGeneratorFriendDataObject{
-            id: number = undefined;
-            name: string = undefined;
-        }
-        class JsonGeneratorDataObject{
-            _id: string = undefined;
-            index: number = undefined;
-            guid: string = undefined; 
-            isActive: boolean = undefined;
-            balance: string = undefined;
-            picture: string = undefined;
-            age: string = undefined;
-            eyeColor: string = undefined;
-            name: string = undefined;
-            gender: string = undefined;
-            company: string = undefined;
-            email: string = undefined;
-            phone: string = undefined;
-            address: string = undefined;
-            about: string = undefined;
-            @JsonProperty({type:Date})
-            registered: Date = undefined;
-            latitude: number = undefined;
-            longitude: number = undefined; 
-            @JsonProperty({type:String})
-            tags: string[] = undefined;
-            @JsonProperty({type:JsonGeneratorFriendDataObject})
-            friends: JsonGeneratorFriendDataObject[] = undefined;
-            greeting: string = undefined;
-            favoriteFruit: string = undefined;
+  class JsonGeneratorFriendDataObject {
+    id: number = undefined;
+    name: string = undefined;
+  }
+  class JsonGeneratorDataObject {
+    _id: string = undefined;
+    index: number = undefined;
+    guid: string = undefined;
+    isActive: boolean = undefined;
+    balance: string = undefined;
+    picture: string = undefined;
+    age: string = undefined;
+    eyeColor: string = undefined;
+    name: string = undefined;
+    gender: string = undefined;
+    company: string = undefined;
+    email: string = undefined;
+    phone: string = undefined;
+    address: string = undefined;
+    about: string = undefined;
+    @JsonProperty({ type: Date })
+    registered: Date = undefined;
+    latitude: number = undefined;
+    longitude: number = undefined;
+    @JsonProperty({ type: String })
+    tags: string[] = undefined;
+    @JsonProperty({ type: JsonGeneratorFriendDataObject })
+    friends: JsonGeneratorFriendDataObject[] = undefined;
+    greeting: string = undefined;
+    favoriteFruit: string = undefined;
 
+  }
+  class JsonGeneratorData {
+    @JsonProperty({ name: "DATA", type: JsonGeneratorDataObject })
+    data: JsonGeneratorDataObject[] = undefined;
+  }
+
+  it("Testing json data from http://www.json-generator.com/", () => {
+
+    let testData: JsonGeneratorData = ObjectMapper.deserialize(JsonGeneratorData, largeDataSet1);
+    expect(testData.data.length).toBe(6);
+    Object.keys(testData.data).forEach((key: string) => {
+      let jsonGeneratorDataObject = testData.data[key];
+      Object.keys(jsonGeneratorDataObject).forEach((key1: string) => {
+        if (isArrayType(jsonGeneratorDataObject, key1)) {
+          expect((jsonGeneratorDataObject[key1] as Array<any>).length > 0).toBe(true);
+        } else {
+          expect(jsonGeneratorDataObject[key1] === undefined).toBe(false);
         }
-        class JsonGeneratorData{
-            @JsonProperty({name:"DATA",type:JsonGeneratorDataObject})
-            data: JsonGeneratorDataObject[] = undefined;
-        }
-        
-        let testData: JsonGeneratorData = ObjectMapper.deserialize(JsonGeneratorData, largeDataSet1);
-        expect(testData.data.length).toBe(6);
-        Object.keys(testData.data).forEach((key: string) => {
-            let jsonGeneratorDataObject = testData.data[key];
-            Object.keys(jsonGeneratorDataObject).forEach((key1: string)=>{
-                if (isArrayType(jsonGeneratorDataObject, key1)) {
-                expect((jsonGeneratorDataObject[key1] as Array<any>).length > 0).toBe(true); 
-            }    else {
-                expect(jsonGeneratorDataObject[key1] === undefined).toBe(false);
-            }
-            });
-            
-        });
+      });
 
     });
+
+  });
 
 });
 
 
-var largeDataSet1 : any = {
+var largeDataSet1: any = {
   "DATA": [
     {
       "_id": "584171b525e650f837438e9b",

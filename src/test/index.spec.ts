@@ -60,6 +60,34 @@ describe("Testing serialize functions", () => {
 
     });
 
+    it("Test all simple type properties", () => {
+        class SimpleRoster {
+            private name: String = undefined;
+            private worksOnWeekend: Boolean = undefined;
+            private numberOfHours: Number = undefined;
+            @JsonProperty({type:Date})
+            private systemDate: Date = undefined;
+
+            public isAvailableToday(): Boolean {
+                if (this.systemDate.getDay() % 6 == 0 && this.worksOnWeekend == false) {
+                    return false;
+                }
+                return true;
+            }
+
+        }
+        let json = {
+            'name': 'John Doe',
+            'worksOnWeekend' : false,
+            'numberOfHours': 8,
+            'systemDate' : 1483142400000 // Sat Dec 31, 2016
+        };
+
+        let testInstance: SimpleRoster = ObjectMapper.deserialize(SimpleRoster, json);
+        expect(testInstance.isAvailableToday()).toBeFalsy();
+
+    });
+
 
 });
 
@@ -102,8 +130,8 @@ describe("Misc tests", () => {
         }
 
         var json = {
-            name: 'John Doe',
-            worksOnWeekend: false
+            'name': 'John Doe',
+            'worksOnWeekend': false
         }
 
         var testInstance: Roster = ObjectMapper.deserialize(Roster, json);

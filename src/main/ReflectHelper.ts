@@ -41,14 +41,14 @@ export function getPropertyDecorator(metadataKey: string, metadata: any) {
  */
 export function isSimpleType(typeName: string): boolean {
     switch (typeName) {
-        case 'String': return true;
-        case 'Number': return true;
-        case 'Boolean': return true;
-        case 'Date': return true;
-        case 'string': return true;
-        case 'number': return true;
-        case 'boolean': return true;
-        case 'date': return true;
+        case Constants.STRING_TYPE: return true;
+        case Constants.NUMBER_TYPE: return true;
+        case Constants.BOOLEAN_TYPE: return true;
+        case Constants.DATE_TYPE: return true;
+        case Constants.STRING_TYPE_LOWERCASE: return true;
+        case Constants.NUMBER_TYPE_LOWERCASE: return true;
+        case Constants.BOOLEAN_TYPE_LOWERCASE: return true;
+        case Constants.DATE_TYPE_LOWERCASE: return true;
         default: false;
     }
 }

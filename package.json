@@ -25,7 +25,7 @@
   "scripts": {
     "watch-compile": "node_modules/.bin/tsc -w -p .",
     "build": "node_modules/.bin/tsc -p .",
-    "dist": "node_modules/.bin/tsc --outFile ./dist/json4typescript.js -p ./src/main",
+    "dist": "node_modules/.bin/tsc --outFile ./dist/json-object-mapper.js -p ./tsconfig.json -m System",
     "test": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
     "test-karma" : "node_modules/.bin/karma start ./karma.conf.js",
     "postinstall": "node_modules/.bin/typings install dt~jasmine --save-dev --global"
