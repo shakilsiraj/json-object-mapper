@@ -1,5 +1,5 @@
-
-import { isArrayType, isSimpleType, getTypeNameFromInstance, getTypeName, getKeyName, Constants } from "./ReflectHelper";
+import { JsonPropertyDecoratorMetadata, AccessType } from "./DecoratorMetadata";
+import { isArrayType, isSimpleType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants } from "./ReflectHelper";
 
 export interface SerializationStructure {
     id: string, /** id of the current structure */
@@ -75,7 +75,10 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
     Object.keys(instanceStructure.instance).forEach((key: string) => {
         let keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {
-            if (keyInstance instanceof Array) {
+            let metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
+            if (metadata != undefined && AccessType.READ_ONLY == metadata.access) {
+                //SKIP
+            } else if (keyInstance instanceof Array) {
                 let struct: SerializationStructure = {
                     id: uniqueId(),
                     type: Constants.ARRAY_TYPE,
@@ -100,6 +103,7 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
             } else {
                 instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance));
             }
+
         }
 
 

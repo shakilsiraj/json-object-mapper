@@ -160,4 +160,50 @@ describe("Misc tests", () => {
         expect(serialized).toBe('{"today":5}');
     });
 
+    it("Testing AccessType.READ_ONLY", () => {
+
+        class SimpleClass {
+            firstName: string = "John";
+            middleName: string = "P";
+            lastName: string = "Doe";
+            @JsonProperty({ type: String, name: "AKA", access: AccessType.READ_ONLY })
+            knownAs: String[] = ["John", "Doe", "JohnDoe", "JohnPDoe"]
+        };
+
+        let intance: SimpleClass = new SimpleClass();
+
+        let stringrified: String = ObjectMapper.serialize(intance);
+        expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe"}');
+
+    });
+
+    it("Testing AccessType.WRITE_ONLY", () => {
+        class Roster {
+            @JsonProperty({access:AccessType.WRITE_ONLY})
+            private name: string = undefined;
+            private worksOnWeekend: boolean = false;
+            private today: Date = new Date();
+            public isAvailable(date: Date): boolean {
+                if (date.getDay() % 6 == 0 && this.worksOnWeekend == false) {
+                    return false;
+                }
+                return true;
+            }
+            public isAvailableToday(): boolean {
+                return this.isAvailable(this.today);
+            }
+            public getName(): String {
+                return this.name;
+            }
+        }
+
+        var json = {
+            'name': 'John Doe',
+            'worksOnWeekend': false
+        }
+
+        var testInstance: Roster = ObjectMapper.deserialize(Roster, json);
+        expect(testInstance.getName()).toBeUndefined();
+    });
+
 });

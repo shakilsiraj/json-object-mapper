@@ -78,37 +78,39 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
         if (metadata === undefined) {
             metadata = { name: key, required: false, access: AccessType.BOTH };
         }
-        /**
-         * Check requried property
-         */
-        if (metadata.required && json[metadata.name] === undefined) {
-            throw new JsonConverstionError("JSON structure does have have required property '"
-                + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance)
-                + "[" + key + "]", json);
-        }
+        if (AccessType.WRITE_ONLY != metadata.access) {
+            /**
+             * Check requried property
+             */
+            if (metadata.required && json[metadata.name] === undefined) {
+                throw new JsonConverstionError("JSON structure does have have required property '"
+                    + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance)
+                    + "[" + key + "]", json);
+            }
 
-        let jsonKeyName = metadata.name != undefined ? metadata.name : key;
+            let jsonKeyName = metadata.name != undefined ? metadata.name : key;
 
-        if (json[jsonKeyName] != undefined) {
-            if (metadata.type === undefined) {
-                /**
-                * If we do not have any type defined, then we can't do much here but to hope for the best.
-                */
-                objectInstance[key] = json[jsonKeyName];
-            } else {
-                if (!isArrayType(objectInstance, key)) {
-                    let typeName = getTypeName(objectInstance, key);
-                    if (!isSimpleType(typeName)) {
-                        objectInstance[key] = new metadata.type();
-                        conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
-                    } else {
-                        conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);
-                    }
+            if (json[jsonKeyName] != undefined) {
+                if (metadata.type === undefined) {
+                    /**
+                    * If we do not have any type defined, then we can't do much here but to hope for the best.
+                    */
+                    objectInstance[key] = json[jsonKeyName];
                 } else {
-                    let moreFunctions: Array<ConversionFunctionStructure> = conversionFunctions[Constants.ARRAY_TYPE](objectInstance, key, metadata.type, json, jsonKeyName);
-                    moreFunctions.forEach((struct: ConversionFunctionStructure) => {
-                        conversionFunctionsList.push(struct);
-                    });
+                    if (!isArrayType(objectInstance, key)) {
+                        let typeName = getTypeName(objectInstance, key);
+                        if (!isSimpleType(typeName)) {
+                            objectInstance[key] = new metadata.type();
+                            conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
+                        } else {
+                            conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);
+                        }
+                    } else {
+                        let moreFunctions: Array<ConversionFunctionStructure> = conversionFunctions[Constants.ARRAY_TYPE](objectInstance, key, metadata.type, json, jsonKeyName);
+                        moreFunctions.forEach((struct: ConversionFunctionStructure) => {
+                            conversionFunctionsList.push(struct);
+                        });
+                    }
                 }
             }
         }
