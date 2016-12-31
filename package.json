@@ -19,21 +19,19 @@
     "name": "Shakil Siraj",
     "email": "shakil.siraj@gmail.com"
   },
-  "main": "./src/main/index.ts",
+  "main": "./dist/json-object-mapper.min.js",
+  "moduleName": "ObjectMapper",
   "license": "MIT",
   "homepage": "https://github.com/shakilsiraj/json-object-mapper",
   "scripts": {
     "watch-compile": "node_modules/.bin/tsc -w -p .",
     "build": "node_modules/.bin/tsc -p .",
-    "dist": "node_modules/.bin/tsc --outFile ./dist/json-object-mapper.js -p ./tsconfig.json -m System",
+    "dist": "./node_modules/.bin/rollup -c && ./node_modules/.bin/tsc --out ./dist/ObjectMapper.es5.js --target es5 --allowJs ./dist/ObjectMapper.es2015.js && ./node_modules/.bin/uglifyjs ./dist/ObjectMapper.es5.js --mangle --output ./dist/json-object-mapper.min.js",
     "test": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
-    "test-karma" : "node_modules/.bin/karma start ./karma.conf.js",
+    "test-karma": "node_modules/.bin/karma start ./karma.conf.js",
     "postinstall": "node_modules/.bin/typings install dt~jasmine --save-dev --global"
   },
   "devDependencies": {
-    "browser-resolve": "^1.11.2",
-    "buffer": "^5.0.2",
-    "detective": "^4.3.2",
     "jasmine": "^2.5.2",
     "jasmine-core": "^2.3.4",
     "jasmine-node": "^1.14.5",
@@ -46,9 +44,14 @@
     "karma-spec-reporter": "0.0.26",
     "karma-typescript": "^2.1.4",
     "process": "^0.11.9",
+    "rollup": "^0.38.3",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-typescript": "^0.8.1",
+    "rollup-plugin-uglify": "^1.0.1",
     "tslint": "^3.10.2",
     "typescript": "^2.0.10",
-    "typings": "^0.8.1"
+    "typings": "^0.8.1",
+    "uglify-js": "^2.7.5"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.8"
