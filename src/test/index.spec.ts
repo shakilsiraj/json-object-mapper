@@ -1,8 +1,9 @@
 /// <reference path="../../typings/index.d.ts"/>
-import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
+import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, Serializer, Deserializer } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 import { a, b } from "./NameSpaces";
-
+import { getOrCreateDeserializer } from "../main/DeserializationHelper";
+import { getOrCreateSerializer } from "../main/SerializationHelper";
 
 describe("Testing deserialize functions", () => {
 
@@ -142,22 +143,32 @@ describe("Misc tests", () => {
     });
 
     it("Testing enum ", () => {
+        
+        class DaysEnumSerializerDeserializer implements Deserializer, Serializer{
+            deserialize = (value: string): Days => {
+                return Days[value];
+            }
+            serialize = (value: Days): string => {
+                return '"' + Days[value] + '"';
+            }
+        }
+        
         enum Days{
             Sun, Mon, Tues, Wed, Thurs, Fri, Sat
         }  
 
         class Workday{
-            @JsonProperty({type: Days})
+            @JsonProperty({ type: Days, deserializer: DaysEnumSerializerDeserializer, serializer: DaysEnumSerializerDeserializer})
             today: Days = undefined;
         }        
 
-        let json = { "today": 2 };
+        let json = { "today": 'Tues' };
         
         let testInstance: Workday = ObjectMapper.deserialize(Workday, json);
         expect(testInstance.today == Days.Tues).toBeTruthy();
         testInstance.today = Days.Fri;
         let serialized: String = ObjectMapper.serialize(testInstance);
-        expect(serialized).toBe('{"today":5}');
+        expect(serialized).toBe('{"today":"Fri"}');
     });
 
     it("Testing AccessType.READ_ONLY", () => {
@@ -204,6 +215,29 @@ describe("Misc tests", () => {
 
         var testInstance: Roster = ObjectMapper.deserialize(Roster, json);
         expect(testInstance.getName()).toBeUndefined();
+    });
+
+    it("Testing deserializer and serializer instances", () => {
+        
+        class TestSerailizer implements Serializer{
+            serialize = (value: any): any => {
+                
+            }
+        }
+        
+        let instance1: TestSerailizer = getOrCreateSerializer(TestSerailizer);
+        let instance2: TestSerailizer = getOrCreateSerializer(TestSerailizer);
+        expect(instance1).toBe(instance2);
+
+        class TestDeserializer implements Deserializer{
+            deserialize = (value: any): any => {
+                
+            }
+        }
+
+        let instance3: TestDeserializer = getOrCreateDeserializer(TestDeserializer);
+        let instance4: TestDeserializer = getOrCreateDeserializer(TestDeserializer);
+        expect(instance3).toBe(instance4);
     });
 
 });

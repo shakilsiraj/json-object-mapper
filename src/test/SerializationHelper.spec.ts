@@ -1,21 +1,21 @@
 /// <reference path="../../typings/index.d.ts"/>
 import { JsonProperty } from "../main/DecoratorMetadata";
-import { SerializeArrayType, SerializeObjectType, serializeFunctions, SerializationStructure } from "../main/SerializationHelper";
+import { SerializeArrayType, SerializeObjectType, serializeFunctions, serializers, SerializationStructure } from "../main/SerializationHelper";
 import { getTypeNameFromInstance, Constants } from "../main/ReflectHelper";
 
 describe("Testing SerializationHelper methods", () => {
 
     it("Testing SerializeDateType", () => {
-        expect(serializeFunctions[Constants.DATE_TYPE]("test", new Date("03/05/2016"))).toBe('"test":' + (new Date("03/05/2016")).getTime());
+        expect(serializeFunctions[Constants.DATE_TYPE]("test", new Date("03/05/2016"), serializers[Constants.DATE_TYPE])).toBe('"test":' + (new Date("03/05/2016")).getTime());
     });
     it("Testing SerializeStringType", () => {
-        expect(serializeFunctions[Constants.STRING_TYPE]("test", "testString")).toBe('"test":"testString"');
+        expect(serializeFunctions[Constants.STRING_TYPE]("test", "testString", serializers[Constants.STRING_TYPE])).toBe('"test":"testString"');
     });
     it("Testing SerializeBooleanType", () => {
-        expect(serializeFunctions[Constants.BOOLEAN_TYPE]("test", true)).toBe('"test":true');
+        expect(serializeFunctions[Constants.BOOLEAN_TYPE]("test", true, serializers[Constants.BOOLEAN_TYPE])).toBe('"test":true');
     });
     it("Testing SerializeNumberType", () => {
-        expect(serializeFunctions[Constants.NUMBER_TYPE]("test", 10)).toBe('"test":10');
+        expect(serializeFunctions[Constants.NUMBER_TYPE]("test", 10, serializers[Constants.NUMBER_TYPE])).toBe('"test":10');
     });
     it("Testing SerializeArrayType", () => {
         let struct: SerializationStructure = {

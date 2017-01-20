@@ -1,0 +1,49 @@
+
+/**
+ * Decorator metadata definition for JsonProperty
+ */
+export interface JsonPropertyDecoratorMetadata {
+    name?: string, //name of the JSON property to map
+    required?: boolean, //is this field required in the JSON object that is being deserialized
+    access?: AccessType, //is this serializable and de-serializable
+    type?: any //the type of Object that should be assigned to this property
+    serializer?: any, //Serializer for the type
+    deserializer?: any // deserializer for the type
+}
+
+export enum AccessType {
+    READ_ONLY, WRITE_ONLY, BOTH
+}
+
+export interface Serializer{
+    serialize(value: any): any;
+}
+
+export interface Deserializer{
+    deserialize(value: any): any;
+}
+
+/**
+ * JsonProperty Decorator function.
+ */
+export declare function JsonProperty(metadata?: JsonPropertyDecoratorMetadata): any;
+
+/**
+ * Json convertion error type.
+ */
+export declare function JsonConverstionError(message, json);
+
+export declare namespace ObjectMapper {
+
+    /**
+     * Deserializes a Object type with the passed on JSON data.
+     */
+    export function deserialize<T>(type: { new (): T }, json: Object): T;
+
+    /**
+     * Serializes an object instance to JSON string.
+     */
+    export function serialize(obj: any): String;
+    
+}
+

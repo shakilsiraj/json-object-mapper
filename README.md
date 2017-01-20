@@ -125,26 +125,37 @@ it is always trying to check for the variable `Reflect`. So, until such time whe
 ## Things to remember
 ### Enum serialization and de-serialization
 You can use `enum` data type by specifying the `type` property of @JsonProperty decorator.
+You will need to use `Serializer` and `Deserializer` to make the enum work correctly.
+
 Following is an example of `enum` serialization and de-serialization:
 
 ```typescript
+
+class DaysEnumSerializerDeserializer implements Deserializer, Serializer{
+    deserialize = (value: string): Days => {
+        return Days[value];
+    }
+    serialize = (value: Days): string => {
+        return '"' + Days[value] + '"';
+    }
+}
 
 enum Days{
     Sun, Mon, Tues, Wed, Thurs, Fri, Sat
 }  
 
 class Workday{
-    @JsonProperty({type: Days})
+    @JsonProperty({ type: Days, deserializer: DaysEnumSerializerDeserializer, serializer: DaysEnumSerializerDeserializer})
     today: Days = undefined;
 }        
 
-let json = { "today": 2 };
+let json = { "today": 'Tues' };
 
 let testInstance: Workday = ObjectMapper.deserialize(Workday, json);
 expect(testInstance.today == Days.Tues).toBeTruthy();
 testInstance.today = Days.Fri;
 let serialized: String = ObjectMapper.serialize(testInstance);
-expect(serialized).toBe('{"today":5}');
+expect(serialized).toBe('{"today":"Fri"}');
 
 ```
 

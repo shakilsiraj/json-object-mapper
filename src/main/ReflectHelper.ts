@@ -92,3 +92,11 @@ export var Constants = {
     ARRAY_TYPE_LOWERCASE: "array",
     FROM_ARRAY: "fromArray"
 }
+
+export var getCachedType = (type: any, cache: Object): any => {
+    let typeName: string = getTypeNameFromInstance(type);
+    if (!cache[typeName]) {
+        cache[typeName] = new type();
+    }
+    return cache[typeName];
+}

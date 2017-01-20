@@ -1,5 +1,5 @@
-import { JsonPropertyDecoratorMetadata, AccessType } from "./DecoratorMetadata";
-import { isArrayType, isSimpleType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants } from "./ReflectHelper";
+import { JsonPropertyDecoratorMetadata, AccessType, Serializer } from "./DecoratorMetadata";
+import { isArrayType, isSimpleType, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants } from "./ReflectHelper";
 
 export interface SerializationStructure {
     id: string, /** id of the current structure */
@@ -29,7 +29,7 @@ export var SerializeArrayType = (parentStructure: SerializationStructure, instan
                 };
                 furtherSerializationStructures[struct.id] = struct;
             } else {
-                instanceStructure.values.push(serializeFunctions[typeof value](undefined, value));
+                instanceStructure.values.push(serializeFunctions[typeof value](undefined, value, serializers[typeof value]));
             }
         }
     });
@@ -101,7 +101,11 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
                 };
                 furtherSerializationStructures[struct.id] = struct;
             } else {
-                instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance));
+                let serializer: Serializer = serializers[typeof keyInstance];
+                if (metadata != undefined && metadata.serializer != undefined) {
+                    serializer = getOrCreateSerializer(metadata.serializer);
+                }
+                instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
             }
 
         }
@@ -115,33 +119,73 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
 /**
  * Serialize any type with key value pairs
  */
-var SerializeAnyType = (key: string, instance: any): string => {
+var SerializeSimpleType = (key: string, instance: any, serializer : Serializer): string => {
+    let value: any = serializer.serialize(instance);
     if (key != undefined) {
-        return '"' + key + '":' + instance;
+        return '"' + key + '":' + value;
     } else {
-        return instance;
+        return value;
     }
 }
 
-var SerializeStringType = (key: string, instance: string): string => {
-    return SerializeAnyType(key, '"' + instance + '"');
+
+class DateSerializer implements Serializer{
+    serialize = (value: Date): number =>{
+        return value.getTime();
+    }
 }
 
-var SerializeDateType = (key: string, instance: Date): string => {
-    return SerializeAnyType(key, instance.getTime());
+class StringSerializer implements Serializer{
+    serialize = (value: string): string => {
+        return '"' + value + '"';
+    }
+}
+
+class NumberSerializer implements Serializer{
+    serialize = (value: number): number => {
+        return value;
+    }
+}
+
+class BooleanSerializer implements Serializer{
+    serialize = (value: boolean): boolean => {
+        return value;
+    }
+}
+
+/**
+ * Object to cache serializers
+ */
+export var serializers = new Object();
+serializers[Constants.STRING_TYPE] = new StringSerializer();
+serializers[Constants.NUMBER_TYPE] = new NumberSerializer();
+serializers[Constants.DATE_TYPE] = new DateSerializer();
+serializers[Constants.BOOLEAN_TYPE] = new BooleanSerializer();
+serializers[Constants.STRING_TYPE_LOWERCASE] = serializers[Constants.STRING_TYPE];
+serializers[Constants.NUMBER_TYPE_LOWERCASE] = serializers[Constants.NUMBER_TYPE];
+serializers[Constants.DATE_TYPE_LOWERCASE] = serializers[Constants.DATE_TYPE];
+serializers[Constants.BOOLEAN_TYPE_LOWERCASE] = serializers[Constants.BOOLEAN_TYPE];
+
+/**
+ * Checks to see if the serializer already exists or not.
+ * If not, creates a new one and caches it, returns the
+ * cached instance otherwise.
+ */
+export var getOrCreateSerializer = (type: any): any => {
+    return getCachedType(type, serializers);
 }
 
 export var serializeFunctions = [];
-serializeFunctions[Constants.STRING_TYPE] = SerializeStringType;
-serializeFunctions[Constants.NUMBER_TYPE] = SerializeAnyType;
-serializeFunctions[Constants.BOOLEAN_TYPE] = SerializeAnyType;
-serializeFunctions[Constants.DATE_TYPE] = SerializeDateType;
+serializeFunctions[Constants.STRING_TYPE] = SerializeSimpleType;
+serializeFunctions[Constants.NUMBER_TYPE] = SerializeSimpleType;
+serializeFunctions[Constants.BOOLEAN_TYPE] = SerializeSimpleType;
+serializeFunctions[Constants.DATE_TYPE] = SerializeSimpleType;
 serializeFunctions[Constants.ARRAY_TYPE] = SerializeArrayType;
 serializeFunctions[Constants.OBJECT_TYPE] = SerializeObjectType;
-serializeFunctions[Constants.STRING_TYPE_LOWERCASE] = SerializeStringType;
-serializeFunctions[Constants.NUMBER_TYPE_LOWERCASE] = SerializeAnyType;
-serializeFunctions[Constants.BOOLEAN_TYPE_LOWERCASE] = SerializeAnyType;
-serializeFunctions[Constants.DATE_TYPE_LOWERCASE] = SerializeDateType;
+serializeFunctions[Constants.STRING_TYPE_LOWERCASE] = SerializeSimpleType;
+serializeFunctions[Constants.NUMBER_TYPE_LOWERCASE] = SerializeSimpleType;
+serializeFunctions[Constants.BOOLEAN_TYPE_LOWERCASE] = SerializeSimpleType;
+serializeFunctions[Constants.DATE_TYPE_LOWERCASE] = SerializeSimpleType;
 serializeFunctions[Constants.ARRAY_TYPE_LOWERCASE] = SerializeArrayType;
 serializeFunctions[Constants.OBJECT_TYPE_LOWERCASE] = SerializeObjectType;
 

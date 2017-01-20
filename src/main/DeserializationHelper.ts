@@ -1,5 +1,5 @@
-import { JsonConverstionError, JsonPropertyDecoratorMetadata, AccessType } from "./DecoratorMetadata";
-import { isSimpleType, getTypeName, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType, Constants } from "./ReflectHelper";
+import { JsonConverstionError, JsonPropertyDecoratorMetadata, AccessType , Deserializer} from "./DecoratorMetadata";
+import { isSimpleType, getTypeName, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType, Constants } from "./ReflectHelper";
 
 var SimpleTypeCoverter = (value: any, type: string): any => {
     return type === Constants.DATE_TYPE ? new Date(value) : value;
@@ -98,9 +98,9 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
                     objectInstance[key] = json[jsonKeyName];
                 } else {
                     if (!isArrayType(objectInstance, key)) {
-                        let typeName = getTypeName(objectInstance, key);
+                        let typeName = metadata.type != undefined ? getTypeNameFromInstance(metadata.type) : getTypeName(objectInstance, key);
                         if (!isSimpleType(typeName)) {
-                            objectInstance[key] = new metadata.type();
+                            objectInstance[key] = metadata.deserializer != undefined ? getOrCreateDeserializer(metadata.deserializer).deserialize(json[jsonKeyName]) : new metadata.type();
                             conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
                         } else {
                             conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);
@@ -132,6 +132,21 @@ export interface ConversionFunctionStructure {
     json: any,
     jsonKey?: string
 }
+
+/**
+ * Object to cache deserializers
+ */
+export var deserializers = new Object();
+
+/**
+ * Checks to see if the deserializer already exists or not.
+ * If not, creates a new one and caches it, returns the
+ * cached instance otherwise.
+ */
+export var getOrCreateDeserializer = (type: any): any => {
+    return getCachedType(type, deserializers);
+}
+
 
 /**
  * List of JSON object conversion functions.

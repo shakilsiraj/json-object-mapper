@@ -1,4 +1,3 @@
-import { JsonProperty, JsonPropertyDecoratorMetadata, JsonConverstionError } from "./DecoratorMetadata";
 import { ConversionFunctionStructure, conversionFunctions } from "./DeserializationHelper";
 import { SerializationStructure, serializeFunctions, mergeObjectOrArrayValues, mergeObjectOrArrayValuesAndCopyToParents } from "./SerializationHelper";
 import { Constants } from "./ReflectHelper";
@@ -73,6 +72,4 @@ export namespace ObjectMapper {
         return struct.values[0];
     }
 }
-export default {
-    JsonProperty, JsonConverstionError
-}
+export { JsonProperty, JsonConverstionError} from "./DecoratorMetadata";

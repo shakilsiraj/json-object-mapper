@@ -18,10 +18,20 @@ export interface JsonPropertyDecoratorMetadata {
     required?: boolean, //is this field required in the JSON object that is being deserialized
     access?: AccessType, //is this serializable and de-serializable
     type?: any //the type of Object that should be assigned to this property
+    serializer?: any, //Serializer for the type
+    deserializer?: any // deserializer for the type
 }
 
 export enum AccessType {
     READ_ONLY, WRITE_ONLY, BOTH
+}
+
+export interface Serializer{
+    serialize(value: any): any;
+}
+
+export interface Deserializer{
+    deserialize(value: any): any;
 }
 
 /**
