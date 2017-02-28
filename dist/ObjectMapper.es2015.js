@@ -206,7 +206,13 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
             }
             var jsonKeyName = metadata.name != undefined ? metadata.name : key;
             if (json[jsonKeyName] != undefined) {
-                if (metadata.type === undefined) {
+                /**
+                 * If metadata has deserializer, use that one instead.
+                 */
+                if (metadata.deserializer != undefined) {
+                    objectInstance[key] = getOrCreateDeserializer(metadata.deserializer).deserialize(json[jsonKeyName]);
+                }
+                else if (metadata.type === undefined) {
                     /**
                     * If we do not have any type defined, then we can't do much here but to hope for the best.
                     */
@@ -216,7 +222,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                     if (!isArrayType(objectInstance, key)) {
                         var typeName = metadata.type != undefined ? getTypeNameFromInstance(metadata.type) : getTypeName(objectInstance, key);
                         if (!isSimpleType(typeName)) {
-                            objectInstance[key] = metadata.deserializer != undefined ? getOrCreateDeserializer(metadata.deserializer).deserialize(json[jsonKeyName]) : new metadata.type();
+                            objectInstance[key] = new metadata.type();
                             conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
                         }
                         else {
@@ -327,36 +333,39 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
             if (metadata != undefined && AccessType.READ_ONLY == metadata.access) {
             }
-            else if (keyInstance instanceof Array) {
-                var struct = {
-                    id: uniqueId(),
-                    type: Constants.ARRAY_TYPE,
-                    instance: keyInstance,
-                    parentIndex: instanceIndex,
-                    values: new Array(),
-                    key: getKeyName(instanceStructure.instance, key),
-                    visited: false
-                };
-                furtherSerializationStructures[struct.id] = struct;
-            }
-            else if (!isSimpleType(typeof keyInstance)) {
-                var struct = {
-                    id: uniqueId(),
-                    type: Constants.OBJECT_TYPE,
-                    instance: keyInstance,
-                    parentIndex: instanceIndex,
-                    values: new Array(),
-                    key: getKeyName(instanceStructure.instance, key),
-                    visited: false
-                };
-                furtherSerializationStructures[struct.id] = struct;
+            else if (metadata != undefined && metadata.serializer != undefined) {
+                var serializer = getOrCreateSerializer(metadata.serializer);
+                instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
             }
             else {
-                var serializer = serializers[typeof keyInstance];
-                if (metadata != undefined && metadata.serializer != undefined) {
-                    serializer = getOrCreateSerializer(metadata.serializer);
+                if (keyInstance instanceof Array) {
+                    var struct = {
+                        id: uniqueId(),
+                        type: Constants.ARRAY_TYPE,
+                        instance: keyInstance,
+                        parentIndex: instanceIndex,
+                        values: new Array(),
+                        key: getKeyName(instanceStructure.instance, key),
+                        visited: false
+                    };
+                    furtherSerializationStructures[struct.id] = struct;
                 }
-                instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
+                else if (!isSimpleType(typeof keyInstance)) {
+                    var struct = {
+                        id: uniqueId(),
+                        type: Constants.OBJECT_TYPE,
+                        instance: keyInstance,
+                        parentIndex: instanceIndex,
+                        values: new Array(),
+                        key: getKeyName(instanceStructure.instance, key),
+                        visited: false
+                    };
+                    furtherSerializationStructures[struct.id] = struct;
+                }
+                else {
+                    var serializer = serializers[typeof keyInstance];
+                    instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
+                }
             }
         }
     });
@@ -504,4 +513,4 @@ var ObjectMapper;
     };
 })(ObjectMapper || (ObjectMapper = {}));
 
-export { ObjectMapper, JsonProperty, JsonConverstionError };
+export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType };

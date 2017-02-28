@@ -78,34 +78,36 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
             let metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
             if (metadata != undefined && AccessType.READ_ONLY == metadata.access) {
                 //SKIP
-            } else if (keyInstance instanceof Array) {
-                let struct: SerializationStructure = {
-                    id: uniqueId(),
-                    type: Constants.ARRAY_TYPE,
-                    instance: keyInstance,
-                    parentIndex: instanceIndex,
-                    values: new Array<String>(),
-                    key: getKeyName(instanceStructure.instance, key),
-                    visited: false
-                };
-                furtherSerializationStructures[struct.id] = struct;
-            } else if (!isSimpleType(typeof keyInstance)) {
-                let struct: SerializationStructure = {
-                    id: uniqueId(),
-                    type: Constants.OBJECT_TYPE,
-                    instance: keyInstance,
-                    parentIndex: instanceIndex,
-                    values: new Array<String>(),
-                    key: getKeyName(instanceStructure.instance, key),
-                    visited: false
-                };
-                furtherSerializationStructures[struct.id] = struct;
-            } else {
-                let serializer: Serializer = serializers[typeof keyInstance];
-                if (metadata != undefined && metadata.serializer != undefined) {
-                    serializer = getOrCreateSerializer(metadata.serializer);
-                }
+            } else if (metadata != undefined && metadata.serializer != undefined) {
+                let serializer: Serializer = getOrCreateSerializer(metadata.serializer);
                 instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
+            } else {
+                if (keyInstance instanceof Array) {
+                    let struct: SerializationStructure = {
+                        id: uniqueId(),
+                        type: Constants.ARRAY_TYPE,
+                        instance: keyInstance,
+                        parentIndex: instanceIndex,
+                        values: new Array<String>(),
+                        key: getKeyName(instanceStructure.instance, key),
+                        visited: false
+                    };
+                    furtherSerializationStructures[struct.id] = struct;
+                } else if (!isSimpleType(typeof keyInstance)) {
+                    let struct: SerializationStructure = {
+                        id: uniqueId(),
+                        type: Constants.OBJECT_TYPE,
+                        instance: keyInstance,
+                        parentIndex: instanceIndex,
+                        values: new Array<String>(),
+                        key: getKeyName(instanceStructure.instance, key),
+                        visited: false
+                    };
+                    furtherSerializationStructures[struct.id] = struct;
+                } else {
+                    let serializer: Serializer = serializers[typeof keyInstance];
+                    instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
+                }
             }
 
         }
@@ -119,7 +121,7 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
 /**
  * Serialize any type with key value pairs
  */
-var SerializeSimpleType = (key: string, instance: any, serializer : Serializer): string => {
+var SerializeSimpleType = (key: string, instance: any, serializer: Serializer): string => {
     let value: any = serializer.serialize(instance);
     if (key != undefined) {
         return '"' + key + '":' + value;
@@ -129,25 +131,25 @@ var SerializeSimpleType = (key: string, instance: any, serializer : Serializer):
 }
 
 
-class DateSerializer implements Serializer{
-    serialize = (value: Date): number =>{
+class DateSerializer implements Serializer {
+    serialize = (value: Date): number => {
         return value.getTime();
     }
 }
 
-class StringSerializer implements Serializer{
+class StringSerializer implements Serializer {
     serialize = (value: string): string => {
         return '"' + value + '"';
     }
 }
 
-class NumberSerializer implements Serializer{
+class NumberSerializer implements Serializer {
     serialize = (value: number): number => {
         return value;
     }
 }
 
-class BooleanSerializer implements Serializer{
+class BooleanSerializer implements Serializer {
     serialize = (value: boolean): boolean => {
         return value;
     }

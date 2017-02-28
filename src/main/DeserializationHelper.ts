@@ -91,7 +91,13 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
             let jsonKeyName = metadata.name != undefined ? metadata.name : key;
 
             if (json[jsonKeyName] != undefined) {
-                if (metadata.type === undefined) {
+                /**
+                 * If metadata has deserializer, use that one instead.
+                 */
+                if (metadata.deserializer != undefined) {
+                    objectInstance[key] = getOrCreateDeserializer(metadata.deserializer).deserialize(json[jsonKeyName]);
+                }
+                else if (metadata.type === undefined) {
                     /**
                     * If we do not have any type defined, then we can't do much here but to hope for the best.
                     */
@@ -100,7 +106,7 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
                     if (!isArrayType(objectInstance, key)) {
                         let typeName = metadata.type != undefined ? getTypeNameFromInstance(metadata.type) : getTypeName(objectInstance, key);
                         if (!isSimpleType(typeName)) {
-                            objectInstance[key] = metadata.deserializer != undefined ? getOrCreateDeserializer(metadata.deserializer).deserialize(json[jsonKeyName]) : new metadata.type();
+                            objectInstance[key] = new metadata.type();
                             conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
                         } else {
                             conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);

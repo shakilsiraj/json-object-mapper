@@ -160,8 +160,22 @@ expect(serialized).toBe('{"today":"Fri"}');
 ```
 
 ### Map objects serialization and de-serialization
-This functionality is still not there. So please use a class type instead of 
-`Map` type until it can be resolved.
+This can be achieved by using implementations of `Serializer` and `Deserializer`. For example:
+
+```typescript
+class MapDeserailizer implements Deserializer {
+    deserialize = (value: any): any => {
+        let mapToReturn: Map<String, String> = new Map<String, String>();
+        if (value) {
+            Object.keys(value).forEach((key: String) => {
+                mapToReturn.set(key, value['' + key]);
+            });
+        }
+        return mapToReturn;
+    }
+}
+
+```
 
 ### A special thing about Date object
 It's very hard to get a `Date` instance right across all browsers - 

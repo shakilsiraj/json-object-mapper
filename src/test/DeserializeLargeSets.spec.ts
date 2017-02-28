@@ -27,7 +27,8 @@ describe("Testing deserialize function with large datasets", () => {
     about: string = undefined;
     @JsonProperty({ type: Date })
     registered: Date = undefined;
-    latitude: number = undefined;
+    @JsonProperty({access:AccessType.READ_ONLY})
+    latitude: Number = undefined;
     longitude: number = undefined;
     @JsonProperty({ type: String })
     tags: string[] = undefined;
@@ -38,7 +39,7 @@ describe("Testing deserialize function with large datasets", () => {
 
   }
   class JsonGeneratorData {
-    @JsonProperty({ name: "DATA", type: JsonGeneratorDataObject })
+    @JsonProperty({ name: "DATA", type: JsonGeneratorDataObject, access:AccessType.READ_ONLY })
     data: JsonGeneratorDataObject[] = undefined;
   }
 

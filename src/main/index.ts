@@ -72,4 +72,4 @@ export namespace ObjectMapper {
         return struct.values[0];
     }
 }
-export { JsonProperty, JsonConverstionError} from "./DecoratorMetadata";
+export { JsonProperty, JsonConverstionError, AccessType } from "./DecoratorMetadata";
