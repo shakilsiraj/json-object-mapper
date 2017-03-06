@@ -3,7 +3,7 @@ import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, Serializer, De
 import { ObjectMapper } from "../main/index";
 import { a, b } from "./NameSpaces";
 import { getOrCreateDeserializer } from "../main/DeserializationHelper";
-import { getOrCreateSerializer } from "../main/SerializationHelper";
+import { getOrCreateSerializer, DateSerializer } from "../main/SerializationHelper";
 
 describe("Testing deserialize functions", () => {
 
@@ -52,12 +52,14 @@ describe("Testing serialize functions", () => {
             lastName: string = "Doe";
             @JsonProperty({ type: String, name: "AKA" })
             knownAs: String[] = ["John", "Doe", "JohnDoe", "JohnPDoe"]
+            @JsonProperty({type: Date, name:'dateOfBirth', serializer: DateSerializer})
+            dob: Date = new Date(1483142400000) // Sat Dec 31, 2016
         };
 
         let intance: SimpleClass = new SimpleClass();
 
         let stringrified: String = ObjectMapper.serialize(intance);
-        expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe","AKA":["John","Doe","JohnDoe","JohnPDoe"]}');
+        expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe","dateOfBirth":1483142400000,"AKA":["John","Doe","JohnDoe","JohnPDoe"]}');
 
     });
 

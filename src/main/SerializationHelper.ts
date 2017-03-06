@@ -80,7 +80,7 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
                 //SKIP
             } else if (metadata != undefined && metadata.serializer != undefined) {
                 let serializer: Serializer = getOrCreateSerializer(metadata.serializer);
-                instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
+                instanceStructure.values.push(serializeFunctions[Constants.STRING_TYPE](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
             } else {
                 if (keyInstance instanceof Array) {
                     let struct: SerializationStructure = {
@@ -131,7 +131,7 @@ var SerializeSimpleType = (key: string, instance: any, serializer: Serializer): 
 }
 
 
-class DateSerializer implements Serializer {
+export class DateSerializer implements Serializer {
     serialize = (value: Date): number => {
         return value.getTime();
     }

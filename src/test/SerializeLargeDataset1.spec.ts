@@ -4,7 +4,7 @@ import { ObjectMapper } from "../main/index";
 
 
 
-describe("Testing serialization of large datasets", () => {
+xdescribe("Testing serialization of large datasets", () => {
 
     class NodeWith1Children {
         uuid: String = createUUID();

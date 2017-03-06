@@ -73,3 +73,4 @@ export namespace ObjectMapper {
     }
 }
 export { JsonProperty, JsonConverstionError, AccessType } from "./DecoratorMetadata";
+export { DateSerializer } from "./SerializationHelper";

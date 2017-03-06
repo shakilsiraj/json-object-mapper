@@ -335,7 +335,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
             }
             else if (metadata != undefined && metadata.serializer != undefined) {
                 var serializer = getOrCreateSerializer(metadata.serializer);
-                instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
+                instanceStructure.values.push(serializeFunctions[Constants.STRING_TYPE](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
             }
             else {
                 if (keyInstance instanceof Array) {
@@ -513,4 +513,4 @@ var ObjectMapper;
     };
 })(ObjectMapper || (ObjectMapper = {}));
 
-export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType };
+export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType, DateSerializer };

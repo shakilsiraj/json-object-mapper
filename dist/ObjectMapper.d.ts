@@ -47,3 +47,13 @@ export declare namespace ObjectMapper {
     
 }
 
+/**
+ * Default Date serializer implementation.
+ * 
+ * @class DateSerializer
+ * @implements {Serializer}
+ */
+export declare class DateSerializer implements Serializer {
+    public serialize(value: Date): number;
+}
+

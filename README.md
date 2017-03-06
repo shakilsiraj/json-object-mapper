@@ -195,5 +195,9 @@ For serialization, it will only print out the milliseconds:
 ```json
 {"test":1457096400000}
 ```
-
+Also, you will need to use the `DateSerializer` or your own implementation for serializing `Date` objects. 
+```typescript
+@JsonProperty({type: Date, name:'dateOfBirth', serializer: DateSerializer})
+dob: Date = new Date(1483142400000)
+```
 
