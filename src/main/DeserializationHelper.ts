@@ -33,7 +33,8 @@ export var DeserializeDateType = (instance: Object, instanceKey: string, type: a
  * Deserializes a JS array type from json.
  */
 export var DeserializeArrayType = (instance: Object, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
-    let jsonArraySize = json[jsonKey].length;
+    let jsonObject = jsonKey != undefined ? json[jsonKey] : json;
+    let jsonArraySize = jsonObject.length;
     let conversionFunctionsList = new Array<ConversionFunctionStructure>();
     if (jsonArraySize > 0) {
         let arrayInstance = [];
@@ -42,10 +43,10 @@ export var DeserializeArrayType = (instance: Object, instanceKey: string, type: 
             let typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {
                 let typeInstance = new type();
-                conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: json[jsonKey][i] });
+                conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
                 arrayInstance.push(typeInstance);
             } else {
-                arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](json[jsonKey][i], typeName));
+                arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](jsonObject[i], typeName));
             }
         }
     }

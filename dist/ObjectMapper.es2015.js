@@ -152,7 +152,8 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
  * Deserializes a JS array type from json.
  */
 var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey) {
-    var jsonArraySize = json[jsonKey].length;
+    var jsonObject = jsonKey != undefined ? json[jsonKey] : json;
+    var jsonArraySize = jsonObject.length;
     var conversionFunctionsList = new Array();
     if (jsonArraySize > 0) {
         var arrayInstance = [];
@@ -161,11 +162,11 @@ var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey)
             var typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {
                 var typeInstance = new type();
-                conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: json[jsonKey][i] });
+                conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
                 arrayInstance.push(typeInstance);
             }
             else {
-                arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](json[jsonKey][i], typeName));
+                arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](jsonObject[i], typeName));
             }
         }
     }
@@ -455,13 +456,34 @@ var uniqueId = function () {
 var ObjectMapper;
 (function (ObjectMapper) {
     /**
+     * Deserializes an array of object types with the passed on JSON data.
+     */
+    ObjectMapper.deserializeArray = function (type, json) {
+        var ObjectsArrayParent = (function () {
+            function ObjectsArrayParent() {
+                this.instances = undefined;
+            }
+            return ObjectsArrayParent;
+        }());
+        var parent = new ObjectsArrayParent();
+        runDeserialization(conversionFunctions[Constants.ARRAY_TYPE](parent, "instances", type, json, undefined));
+        return parent.instances;
+    };
+    /**
      * Deserializes a Object type with the passed on JSON data.
      */
     ObjectMapper.deserialize = function (type, json) {
         var dtoInstance = new type();
         var conversionFunctionStructure = { functionName: Constants.OBJECT_TYPE, instance: dtoInstance, json: json };
+        runDeserialization([conversionFunctionStructure]);
+        return dtoInstance;
+    };
+    var runDeserialization = function (conversionFunctionStructures) {
         var converstionFunctionsArray = new Array();
-        converstionFunctionsArray.push(conversionFunctionStructure);
+        conversionFunctionStructures.forEach(function (struct) {
+            converstionFunctionsArray.push(struct);
+        });
+        var conversionFunctionStructure = converstionFunctionsArray[0];
         while (conversionFunctionStructure != undefined) {
             var stackEntries = conversionFunctions[conversionFunctionStructure.functionName](conversionFunctionStructure.instance, conversionFunctionStructure.instanceKey, conversionFunctionStructure.type, conversionFunctionStructure.json, conversionFunctionStructure.jsonKey);
             stackEntries.forEach(function (structure) {
@@ -469,7 +491,6 @@ var ObjectMapper;
             });
             conversionFunctionStructure = converstionFunctionsArray.pop();
         }
-        return dtoInstance;
     };
     /**
      * Serializes an object instance to JSON string.
@@ -478,7 +499,7 @@ var ObjectMapper;
         var stack = new Array();
         var struct = {
             id: undefined,
-            type: Constants.OBJECT_TYPE,
+            type: Array.isArray(obj) == true ? Constants.ARRAY_TYPE : Constants.OBJECT_TYPE,
             instance: obj,
             parentIndex: undefined,
             values: new Array(),

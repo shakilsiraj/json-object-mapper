@@ -5,6 +5,20 @@ import { Constants } from "./ReflectHelper";
 export namespace ObjectMapper {
 
     /**
+     * Deserializes an array of object types with the passed on JSON data.
+     */
+    export var deserializeArray = <T>(type: { new (): T }, json: Object): T[] => {
+        class ObjectsArrayParent {
+            instances: T[] = undefined
+        }
+
+        let parent: ObjectsArrayParent = new ObjectsArrayParent();
+        runDeserialization(conversionFunctions[Constants.ARRAY_TYPE](parent, "instances", type, json, undefined));
+
+        return parent.instances;
+    }
+
+    /**
      * Deserializes a Object type with the passed on JSON data.
      */
     export var deserialize = <T>(type: { new (): T }, json: Object): T => {
@@ -12,8 +26,19 @@ export namespace ObjectMapper {
         let conversionFunctionStructure: ConversionFunctionStructure =
             { functionName: Constants.OBJECT_TYPE, instance: dtoInstance, json: json };
 
+        runDeserialization([conversionFunctionStructure]);
+
+        return dtoInstance;
+    }
+
+    var runDeserialization = (conversionFunctionStructures: ConversionFunctionStructure[]): void => {
+
         var converstionFunctionsArray: Array<ConversionFunctionStructure> = new Array<ConversionFunctionStructure>();
-        converstionFunctionsArray.push(conversionFunctionStructure);
+        conversionFunctionStructures.forEach((struct: ConversionFunctionStructure) => {
+            converstionFunctionsArray.push(struct);
+        });
+
+        let conversionFunctionStructure: ConversionFunctionStructure = converstionFunctionsArray[0];
 
         while (conversionFunctionStructure != undefined) {
             let stackEntries: Array<ConversionFunctionStructure> = conversionFunctions[conversionFunctionStructure.functionName](
@@ -26,7 +51,6 @@ export namespace ObjectMapper {
             conversionFunctionStructure = converstionFunctionsArray.pop();
         }
 
-        return dtoInstance;
     }
 
     /**
@@ -36,7 +60,7 @@ export namespace ObjectMapper {
         let stack: Array<SerializationStructure> = new Array<SerializationStructure>();
         let struct: SerializationStructure = {
             id: undefined,
-            type: Constants.OBJECT_TYPE,
+            type: Array.isArray(obj) == true ? Constants.ARRAY_TYPE: Constants.OBJECT_TYPE,
             instance: obj,
             parentIndex: undefined,
             values: new Array<String>(),

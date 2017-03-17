@@ -20,6 +20,7 @@ It has the following methods:
 1. `serialize(Object) => String` : will serialize a class instance into JSON string.
 2. `deserialize(Type, Object) => Type` : will take a class type and a JSON object
 and create a new instance of the class type based on the JSON data model.
+3. `deserializeArray(Type, Object) => Type[]` : will take a JSON array and convert that to an array of class type.
 
 There is also the `@JsonProperty` decorator which has additional metadata about
 how the class properties needs to be processed. This decorator comes handy when

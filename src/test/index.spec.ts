@@ -26,6 +26,324 @@ describe("Testing deserialize functions", () => {
 
     });
 
+    class Event{
+
+    }
+
+    class EventsArray{
+        @JsonProperty({ type: Event })
+        eventsArray: Event[] = undefined;
+        
+    }
+
+});
+
+describe('Testing serialize array function', () => {
+    it("Testing array serialization", () => {
+        class Event {
+            id: number = undefined;
+            location: string = undefined;
+            constructor(id: number, location: string) {
+                this.id = id;
+                this.location = location;
+            }
+        }
+        let eventsArray: Event[] = [
+            new Event(1, "Canberra"),
+            new Event(2, "Sydney"),
+            new Event(3, "Melbourne")
+        ];
+
+        let serializedString: String = ObjectMapper.serialize(eventsArray);
+        expect(serializedString).toBe('[{"id":3,"location":"Melbourne"},{"id":2,"location":"Sydney"},{"id":1,"location":"Canberra"}]');
+
+    });
+});
+
+describe('Testing deserialize array function', () => {
+
+    it("Testing array serialization 1", () => {
+
+        class Event {
+            id: number = undefined;
+            location: string = undefined;
+        }
+
+        let json = [
+            { "id": 1, "location": "Canberra" },
+            { "id": 2, "location": "Sydney" },
+            { "id": 3, "location": "Melbourne" }
+        ];
+
+        let eventsArray: Event[] = ObjectMapper.deserializeArray(Event, json);
+        expect(eventsArray.length > 0);
+        expect(eventsArray[1].id).toBe(2);
+        expect(eventsArray[1].location).toBe("Sydney");
+
+    });
+
+    it("Testing array serialization 2", () => {
+        class Friend {
+            id: number = undefined;
+            name: string = undefined;
+            uuid: string = undefined;
+            age: number = undefined;
+            email: string = undefined;
+            gender: string = undefined;
+        }
+
+        let json = [
+            {
+                "id": 0,
+                "name": "Kim Hernandez",
+                "uuid": "5a8f55ea-f667-489a-b29f-13e1e6594963",
+                "age": 20,
+                "email": "kimhernandez@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 1,
+                "name": "Sophie Hudson",
+                "uuid": "c61d5c41-e807-4ff1-ae88-19eeb5429411",
+                "age": 33,
+                "email": "sophiehudson@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 2,
+                "name": "Rowland Gates",
+                "uuid": "6ce0a1bd-c955-4fb7-a89a-f9cca038de5e",
+                "age": 26,
+                "email": "rowlandgates@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 3,
+                "name": "Madeline Ewing",
+                "uuid": "678fa258-2481-4457-965d-5d8571cb59cc",
+                "age": 25,
+                "email": "madelineewing@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 4,
+                "name": "Stevens Ryan",
+                "uuid": "8b67b198-7eb9-4bb6-a317-315a22c89c1d",
+                "age": 40,
+                "email": "stevensryan@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 5,
+                "name": "Malone Chang",
+                "uuid": "2859f03b-a648-478f-bfd9-f913993dfe74",
+                "age": 34,
+                "email": "malonechang@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 6,
+                "name": "Arlene Small",
+                "uuid": "bb3a9e09-4748-47a5-8a9c-ad1c51a43399",
+                "age": 39,
+                "email": "arlenesmall@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 7,
+                "name": "Josefa Blackburn",
+                "uuid": "f858dbd4-f4f3-4f0e-9601-854c31fb73bb",
+                "age": 40,
+                "email": "josefablackburn@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 8,
+                "name": "Dorothea Lopez",
+                "uuid": "ddce2735-8aa0-4aca-8b6a-42f42bedcc73",
+                "age": 22,
+                "email": "dorothealopez@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 9,
+                "name": "Cecile Soto",
+                "uuid": "1fab793a-a691-4185-ba36-8023d961cee7",
+                "age": 40,
+                "email": "cecilesoto@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 10,
+                "name": "Barrett Pope",
+                "uuid": "7a4ceca2-95a4-4894-987a-69c86b98a313",
+                "age": 33,
+                "email": "barrettpope@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 11,
+                "name": "Eliza Torres",
+                "uuid": "f24351ff-ee2f-4483-b525-fd7cef62d56c",
+                "age": 39,
+                "email": "elizatorres@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 12,
+                "name": "Baxter Cannon",
+                "uuid": "ba1d7536-637f-412b-a2ba-0eab28c1b156",
+                "age": 29,
+                "email": "baxtercannon@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 13,
+                "name": "Greene Martin",
+                "uuid": "80d4aa47-3e13-4f77-835d-97f030188488",
+                "age": 33,
+                "email": "greenemartin@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 14,
+                "name": "Mckinney Lowe",
+                "uuid": "6852df51-efb3-4fdc-baed-4cd90a97fb39",
+                "age": 22,
+                "email": "mckinneylowe@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 15,
+                "name": "Chambers Sloan",
+                "uuid": "f1e7a0c0-7620-40a6-84cd-b5578b20cad5",
+                "age": 26,
+                "email": "chamberssloan@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 16,
+                "name": "Lynne Gillespie",
+                "uuid": "1d6465a1-2881-4a58-96a8-2e5ccfddfbf4",
+                "age": 33,
+                "email": "lynnegillespie@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 17,
+                "name": "Fern York",
+                "uuid": "34e25ab4-e268-468f-bb16-e8a2390fbd72",
+                "age": 34,
+                "email": "fernyork@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 18,
+                "name": "Diaz Shelton",
+                "uuid": "896c2c51-a8af-4c42-b069-13d4437a97f3",
+                "age": 30,
+                "email": "diazshelton@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 19,
+                "name": "Carol Lindsay",
+                "uuid": "4809bba6-4986-4501-9bc5-0437f22d1e2e",
+                "age": 26,
+                "email": "carollindsay@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 20,
+                "name": "Eugenia Day",
+                "uuid": "36e116d2-2d99-4052-a957-9b9a7e75d84f",
+                "age": 38,
+                "email": "eugeniaday@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 21,
+                "name": "Marsha Bradford",
+                "uuid": "e57a3802-1173-452c-ace6-d60bf13b7b88",
+                "age": 35,
+                "email": "marshabradford@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 22,
+                "name": "Avila Saunders",
+                "uuid": "161919ec-65aa-4875-b7f6-68c684a2f57a",
+                "age": 40,
+                "email": "avilasaunders@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 23,
+                "name": "Hartman Herman",
+                "uuid": "b71a026e-7909-4105-af1a-3d314821edba",
+                "age": 20,
+                "email": "hartmanherman@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 24,
+                "name": "Yolanda Rodriguez",
+                "uuid": "21ec9746-7c04-42b9-a492-ced69e5203c9",
+                "age": 29,
+                "email": "yolandarodriguez@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 25,
+                "name": "Head Nichols",
+                "uuid": "a514f653-c0ac-4028-921e-43bd3c32c14c",
+                "age": 20,
+                "email": "headnichols@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 26,
+                "name": "Albert Gardner",
+                "uuid": "a962a277-81fc-425a-b320-e676d957ab06",
+                "age": 24,
+                "email": "albertgardner@comverges.com",
+                "gender": "male"
+            },
+            {
+                "id": 27,
+                "name": "Claudine Wells",
+                "uuid": "4d9d781b-0215-47fa-8c24-720058c2bbec",
+                "age": 21,
+                "email": "claudinewells@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 28,
+                "name": "Addie Long",
+                "uuid": "16712b38-99e9-487b-be88-dd9f31206360",
+                "age": 33,
+                "email": "addielong@comverges.com",
+                "gender": "female"
+            },
+            {
+                "id": 29,
+                "name": "Deidre Puckett",
+                "uuid": "f3cf9b5b-f7b6-46cc-8a75-57634c6bf3f8",
+                "age": 34,
+                "email": "deidrepuckett@comverges.com",
+                "gender": "female"
+            }
+        ];
+
+        let friends: Friend[] = ObjectMapper.deserializeArray(Friend, json);
+        expect(friends.length).toBe(30);
+
+        expect(friends[15].name).toBe("Chambers Sloan");
+        expect(friends[29].email).toBe("deidrepuckett@comverges.com");
+        expect(friends[25].uuid).toBe("a514f653-c0ac-4028-921e-43bd3c32c14c");
+        expect(friends[18].gender).toBe("male");
+    });
+    
 });
 
 

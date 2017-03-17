@@ -41,6 +41,11 @@ export declare namespace ObjectMapper {
     export function deserialize<T>(type: { new (): T }, json: Object): T;
 
     /**
+     * Deserializes an array of object types with the passed on JSON data.
+     */
+    export function deserializeArray<T>(type: { new (): T }, json: Object): T[];
+
+    /**
      * Serializes an object instance to JSON string.
      */
     export function serialize(obj: any): String;

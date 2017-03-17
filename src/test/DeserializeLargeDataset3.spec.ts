@@ -4823,7 +4823,7 @@ var json = {
                         "code": "BOU"
                     },
                     "score1": null,
-                    "score2": null
+                    "score2": null 
                 },
                 {
                     "date": "2017-04-05",
