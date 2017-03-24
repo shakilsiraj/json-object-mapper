@@ -1,5 +1,16 @@
 import 'reflect-metadata';
 
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function __metadata(k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+}
+
 /**
  * Helper functions for JS reflections.
  */
@@ -83,7 +94,13 @@ var Constants = {
     FROM_ARRAY: "fromArray"
 };
 var getCachedType = function (type, cache) {
-    var typeName = getTypeNameFromInstance(type);
+    var typeName = undefined;
+    if (type.getJsonObjectMapperCacheKey != undefined) {
+        typeName = type.getJsonObjectMapperCacheKey();
+    }
+    else {
+        typeName = getTypeNameFromInstance(type);
+    }
     if (!cache[typeName]) {
         cache[typeName] = new type();
     }
@@ -110,6 +127,21 @@ function JsonProperty(metadata) {
     else {
         return getJsonPropertyDecorator(metadata);
     }
+}
+/**
+ * Decorator for specifying cache key.
+ * Used for Serializer/Deserializer caching.
+ *
+ * @export
+ * @param {string} key
+ * @returns
+ */
+function CacheKey(key) {
+    return function (f) {
+        var functionName = "getJsonObjectMapperCacheKey";
+        var functionImpl = new Function("return '" + key + "';");
+        f[functionName] = functionImpl;
+    };
 }
 /**
  * Json convertion error type.
@@ -390,6 +422,10 @@ var DateSerializer = (function () {
             return value.getTime();
         };
     }
+    DateSerializer = __decorate([
+        CacheKey("DateSerializer"), 
+        __metadata('design:paramtypes', [])
+    ], DateSerializer);
     return DateSerializer;
 }());
 var StringSerializer = (function () {
@@ -398,6 +434,10 @@ var StringSerializer = (function () {
             return '"' + value + '"';
         };
     }
+    StringSerializer = __decorate([
+        CacheKey("StringSerializer"), 
+        __metadata('design:paramtypes', [])
+    ], StringSerializer);
     return StringSerializer;
 }());
 var NumberSerializer = (function () {
@@ -406,6 +446,10 @@ var NumberSerializer = (function () {
             return value;
         };
     }
+    NumberSerializer = __decorate([
+        CacheKey("NumberSerializer"), 
+        __metadata('design:paramtypes', [])
+    ], NumberSerializer);
     return NumberSerializer;
 }());
 var BooleanSerializer = (function () {
@@ -414,6 +458,10 @@ var BooleanSerializer = (function () {
             return value;
         };
     }
+    BooleanSerializer = __decorate([
+        CacheKey("BooleanSerializer"), 
+        __metadata('design:paramtypes', [])
+    ], BooleanSerializer);
     return BooleanSerializer;
 }());
 /**
@@ -534,4 +582,4 @@ var ObjectMapper;
     };
 })(ObjectMapper || (ObjectMapper = {}));
 
-export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType, DateSerializer };
+export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType, CacheKey, DateSerializer };

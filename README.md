@@ -131,7 +131,7 @@ You will need to use `Serializer` and `Deserializer` to make the enum work corre
 Following is an example of `enum` serialization and de-serialization:
 
 ```typescript
-
+@CacheKey("DaysEnumSerializerDeserializer")
 class DaysEnumSerializerDeserializer implements Deserializer, Serializer{
     deserialize = (value: string): Days => {
         return Days[value];

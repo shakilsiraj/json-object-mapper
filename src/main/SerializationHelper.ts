@@ -1,4 +1,4 @@
-import { JsonPropertyDecoratorMetadata, AccessType, Serializer } from "./DecoratorMetadata";
+import { JsonPropertyDecoratorMetadata, AccessType, Serializer, CacheKey } from "./DecoratorMetadata";
 import { isArrayType, isSimpleType, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants } from "./ReflectHelper";
 
 export interface SerializationStructure {
@@ -130,25 +130,25 @@ var SerializeSimpleType = (key: string, instance: any, serializer: Serializer): 
     }
 }
 
-
+@CacheKey("DateSerializer")
 export class DateSerializer implements Serializer {
     serialize = (value: Date): number => {
         return value.getTime();
     }
 }
-
+@CacheKey("StringSerializer")
 class StringSerializer implements Serializer {
     serialize = (value: string): string => {
         return '"' + value + '"';
     }
 }
-
+@CacheKey("NumberSerializer")
 class NumberSerializer implements Serializer {
     serialize = (value: number): number => {
         return value;
     }
 }
-
+@CacheKey("BooleanSerializer")
 class BooleanSerializer implements Serializer {
     serialize = (value: boolean): boolean => {
         return value;

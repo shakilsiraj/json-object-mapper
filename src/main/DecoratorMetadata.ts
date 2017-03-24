@@ -46,6 +46,23 @@ export function JsonProperty(metadata?: JsonPropertyDecoratorMetadata): any {
 }
 
 /**
+ * Decorator for specifying cache key.
+ * Used for Serializer/Deserializer caching.
+ * 
+ * @export
+ * @param {string} key 
+ * @returns 
+ */
+export function CacheKey(key: string): Function {
+    return function (f: Function) {
+        var functionName = "getJsonObjectMapperCacheKey";
+        var functionImpl = new Function("return '" + key + "';");
+        f[functionName] = functionImpl;
+    }
+}
+
+
+/**
  * Json convertion error type.
  */
 export function JsonConverstionError(message, json) {

@@ -94,7 +94,12 @@ export var Constants = {
 }
 
 export var getCachedType = (type: any, cache: Object): any => {
-    let typeName: string = getTypeNameFromInstance(type);
+    let typeName: string = undefined;
+    if (type.getJsonObjectMapperCacheKey != undefined){
+        typeName = type.getJsonObjectMapperCacheKey();
+    }else{
+        typeName = getTypeNameFromInstance(type);
+    }
     if (!cache[typeName]) {
         cache[typeName] = new type();
     }

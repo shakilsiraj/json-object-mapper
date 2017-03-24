@@ -29,6 +29,16 @@ export interface Deserializer{
 export declare function JsonProperty(metadata?: JsonPropertyDecoratorMetadata): any;
 
 /**
+ * Decorator for specifying cache key.
+ * Used for Serializer/Deserializer caching.
+ * 
+ * @export
+ * @param {string} key 
+ * @returns 
+ */
+export function CacheKey(key: string): Function;
+
+/**
  * Json convertion error type.
  */
 export declare function JsonConverstionError(message, json);

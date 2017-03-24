@@ -96,5 +96,5 @@ export namespace ObjectMapper {
         return struct.values[0];
     }
 }
-export { JsonProperty, JsonConverstionError, AccessType } from "./DecoratorMetadata";
+export { JsonProperty, JsonConverstionError, AccessType, CacheKey } from "./DecoratorMetadata";
 export { DateSerializer } from "./SerializationHelper";
