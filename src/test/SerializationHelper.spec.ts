@@ -11,6 +11,9 @@ describe("Testing SerializationHelper methods", () => {
     it("Testing SerializeStringType", () => {
         expect(serializeFunctions[Constants.STRING_TYPE]("test", "testString", serializers[Constants.STRING_TYPE])).toBe('"test":"testString"');
     });
+    it("Testing SerializeStringType with quotes", () => {
+        expect(serializeFunctions[Constants.STRING_TYPE]("test", `testString 'with' "quotes"`, serializers[Constants.STRING_TYPE])).toBe('"test":"testString \'with\' \\"quotes\\""');
+    });
     it("Testing SerializeBooleanType", () => {
         expect(serializeFunctions[Constants.BOOLEAN_TYPE]("test", true, serializers[Constants.BOOLEAN_TYPE])).toBe('"test":true');
     });
