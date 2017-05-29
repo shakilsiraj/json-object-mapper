@@ -139,7 +139,7 @@ export class DateSerializer implements Serializer {
 @CacheKey("StringSerializer")
 class StringSerializer implements Serializer {
     serialize = (value: string): string => {
-        return '"' + value + '"';
+        return JSON.stringify(value);
     }
 }
 @CacheKey("NumberSerializer")
