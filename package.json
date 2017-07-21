@@ -53,7 +53,8 @@
         "rollup": "~0.38.3",
         "rollup-plugin-typescript": "~0.8.1",
         "tslint": "~5.5.0",
-        "typescript": "~2.4.2"
+        "typescript": "~2.4.2",
+        "typings": "^0.8.1"
     },
     "dependencies": {
         "reflect-metadata": "~0.1.8"
