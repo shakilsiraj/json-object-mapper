@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts"/>
+/// <reference path="../../typings/main.d.ts"/>
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
 import { getJsonPropertyDecoratorMetadata } from "../main/ReflectHelper";
 
@@ -15,7 +15,7 @@ describe("Testing JsonProperty decorator", () => {
     });
     it("Test with name", () => {
         class testObject2 {
-            @JsonProperty("Test")
+            @JsonProperty({name: 'test'})
             field: String = undefined;
         }
 

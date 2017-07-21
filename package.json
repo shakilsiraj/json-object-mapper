@@ -4,7 +4,7 @@
   "description": "A TypeScript library to serialize and deserialize JSON objects in a fast and non-recursive way",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shakilsiraj/json-object-mapper.git"
+    "url": "https://github.com/DSI-HUG/json-object-mapper.git"
   },
   "keywords": [
     "JSON",
@@ -15,15 +15,11 @@
     "DTO",
     "Data Transfer Objects"
   ],
-  "author": {
-    "name": "Shakil Siraj",
-    "email": "shakil.siraj@gmail.com"
-  },
   "main": "./dist/ObjectMapper.es2015.js",
   "typings": "./dist/ObjectMapper.d.ts",
   "moduleName": "ObjectMapper",
   "license": "MIT",
-  "homepage": "https://github.com/shakilsiraj/json-object-mapper",
+  "homepage": "https://github.com/DSI-HUG/json-object-mapper",
   "scripts": {
     "watch-compile": "node_modules/.bin/tsc -w -p .",
     "build": "node_modules/.bin/tsc -p .",
@@ -31,10 +27,16 @@
     "dist": "npm run build && npm run test && npm run rollup",
     "test": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
     "test-karma": "node_modules/.bin/karma start ./karma.conf.js",
-    "post-install": "node_modules/.bin/typings install"
+    "post-install": "node_modules/.bin/typings install",
+    "lint": "node_modules/.bin/tslint -c tslint.json 'src/**/*.ts'",
+    "release:major": "changelog -M && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version major && git push origin",
+    "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version minor && git push origin",
+    "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m \"updated CHANGELOG.md\" && npm version patch && git push origin"
   },
   "devDependencies": {
+    "@deja-js/generate-changelog": "1.3.1",
     "@types/jasmine": "^2.5.46",
+    "codelyzer": "3.1.2",
     "es6-shim": "^0.35.3",
     "jasmine": "^2.5.2",
     "jasmine-core": "^2.3.4",
@@ -50,7 +52,7 @@
     "process": "^0.11.9",
     "rollup": "^0.38.3",
     "rollup-plugin-typescript": "^0.8.1",
-    "tslint": "^3.10.2",
+    "tslint": "^3.15.1",
     "typescript": "^2.0.10",
     "typings": "^0.8.1"
   },

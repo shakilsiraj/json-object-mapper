@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts"/>
+/// <reference path="../../typings/main.d.ts"/>
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, Deserializer } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 import { Map } from "es6-shim";
@@ -21,17 +21,17 @@ describe("Testing Map De-serializer", () => {
         }
 
         class TagLib {
-            @JsonProperty("taglib-uri")
+            @JsonProperty({name: 'taglib-uri'})
             tagLibUri: String = undefined;
-            @JsonProperty("taglib-location")
+            @JsonProperty({name: 'taglib-location'})
             tagLibLocation: String = undefined;
 
         }        
 
         class Servlet {
-            @JsonProperty("servlet-name")
+            @JsonProperty({name: 'servlet-name'})
             servletName: String = undefined;
-            @JsonProperty("servlet-class")
+            @JsonProperty({name: 'servlet-class'})
             servletClass: String = undefined;
             @JsonProperty({ name: "init-param", type: Map, deserializer: MapDeserailizer })
             initParams: Map<String, String> = undefined;

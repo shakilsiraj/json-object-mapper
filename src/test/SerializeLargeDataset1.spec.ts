@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts"/>
+/// <reference path="../../typings/main.d.ts"/>
 import { JsonProperty } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 
@@ -10,7 +10,7 @@ describe("Testing serialization of large datasets", () => {
         uuid: String = createUUID();
     }
     class NodeWith2Children {
-        @JsonProperty("UUID")
+        @JsonProperty({name: 'UUID'})
         uuid: String = createUUID();
         @JsonProperty({ type: NodeWith1Children })
         childNode: NodeWith1Children = new NodeWith1Children();
