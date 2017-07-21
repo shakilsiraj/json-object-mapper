@@ -52,7 +52,7 @@ describe('Testing serialize array function', () => {
         ];
 
         const serializedString: String = ObjectMapper.serialize(eventsArray);
-        expect(serializedString).toBe(`[{"id":3,{"id":1,"location":"Canberra"},{"id":2,"location":"Sydney"},"location":"Melbourne"}]`);
+        expect(serializedString).toBe(`[{"id":1,"location":"Canberra"},{"id":2,"location":"Sydney"},{"id":3,"location":"Melbourne"}]`);
 
     });
 });
@@ -66,16 +66,16 @@ describe('Testing deserialize array function', () => {
             location: string = undefined;
         }
 
-        const json = [
-            { id: 1, location: 'Canberra' },
-            { id: 2, location: 'Sydney' },
-            { id: 3, location: 'Melbourne' }
-        ];
+        const json = JSON.parse('[{"id":1,"location":"Canberra"},{"id":2,"location":"Sydney"},{"id":3,"location":"Melbourne"}]');
 
         const eventsArray: Event[] = ObjectMapper.deserializeArray(Event, json);
         expect(eventsArray.length > 0);
+        expect(eventsArray[0].id).toBe(1);
+        expect(eventsArray[0].location).toBe('Canberra');
         expect(eventsArray[1].id).toBe(2);
         expect(eventsArray[1].location).toBe('Sydney');
+        expect(eventsArray[2].id).toBe(3);
+        expect(eventsArray[2].location).toBe('Melbourne');
 
     });
 
@@ -340,7 +340,6 @@ describe('Testing deserialize array function', () => {
         expect(friends[25].uuid).toBe('a514f653-c0ac-4028-921e-43bd3c32c14c');
         expect(friends[18].gender).toBe('male');
     });
-
 });
 
 describe('Testing serialize functions', () => {
