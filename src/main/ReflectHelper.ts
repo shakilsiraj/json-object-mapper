@@ -17,6 +17,7 @@ export const getJsonPropertyDecoratorMetadata = (target: any, key: string): Json
  */
 export const getKeyName = (target: any, key: string): string => {
     const metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(target, key);
+    // tslint:disable-next-line:triple-equals
     if (metadata != undefined && metadata.name != undefined) {
         return metadata.name;
     } else {
@@ -70,6 +71,7 @@ export const isArrayType = (instance: any, key: string): boolean => {
 
 export const getTypeName = (instance, key): string => {
     const type = getType(instance, key);
+    // tslint:disable-next-line:triple-equals
     if (type != undefined) {
         return getTypeNameFromInstance(type);
     }
@@ -93,6 +95,7 @@ export const Constants = {
 };
 
 export const getCachedType = (type: any, cache: Object): any => {
+    // tslint:disable-next-line:triple-equals
     const typeName: string = type.getJsonObjectMapperCacheKey != undefined ? type.getJsonObjectMapperCacheKey() : getTypeNameFromInstance(type);
     if (!cache[typeName]) {
         cache[typeName] = new type();

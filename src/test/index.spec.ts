@@ -52,7 +52,7 @@ describe('Testing serialize array function', () => {
         ];
 
         const serializedString: String = ObjectMapper.serialize(eventsArray);
-        expect(serializedString).toBe(`[{"id":3,"location":"Melbourne"},{"id":2,"location":"Sydney"},{"id":1,"location":"Canberra"}]`);
+        expect(serializedString).toBe(`[{"id":3,{"id":1,"location":"Canberra"},{"id":2,"location":"Sydney"},"location":"Melbourne"}]`);
 
     });
 });

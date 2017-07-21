@@ -5,7 +5,7 @@ import { ObjectMapper } from '../main/index';
 describe('Testing Map De-serializer', () => {
     it('Test Map Serialization', () => {
 
-        class MapDeserailizer implements Deserializer {
+        class MapDeserializer implements Deserializer {
             deserialize = (value: any): any => {
                 const mapToReturn: Map<String, String> = new Map<String, String>();
                 if (value) {
@@ -22,7 +22,6 @@ describe('Testing Map De-serializer', () => {
             tagLibUri: String = undefined;
             @JsonProperty('taglib-location')
             tagLibLocation: String = undefined;
-
         }
 
         class Servlet {
@@ -30,9 +29,8 @@ describe('Testing Map De-serializer', () => {
             servletName: String = undefined;
             @JsonProperty('servlet-class')
             servletClass: String = undefined;
-            @JsonProperty({ name: 'init-param', type: Map, deserializer: MapDeserailizer })
+            @JsonProperty({ name: 'init-param', type: Map, deserializer: MapDeserializer })
             initParams: Map<String, String> = undefined;
-
         }
 
         class WebApp {
@@ -40,7 +38,7 @@ describe('Testing Map De-serializer', () => {
             servlets: Servlet[] = undefined;
             @JsonProperty({ name: 'taglib', type: TagLib })
             tagLib: TagLib = undefined;
-            @JsonProperty({ name: 'servlet-mapping', type: Map, deserializer: MapDeserailizer })
+            @JsonProperty({ name: 'servlet-mapping', type: Map, deserializer: MapDeserializer })
             servletMappings: Map<String, String> = undefined;
         }
 

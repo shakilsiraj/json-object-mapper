@@ -16,6 +16,7 @@ export const SerializeArrayType = (parentStructure: SerializationStructure, inst
     const arrayInstance: Array<any> = instanceStructure.instance as Array<any>;
     instanceStructure.visited = true;
     arrayInstance.forEach((value: any) => {
+        // tslint:disable-next-line:triple-equals
         if (value != undefined) {
             if (!isSimpleType(typeof value)) {
                 const struct: SerializationStructure = {
@@ -46,11 +47,13 @@ const createArrayOfSerializationStructures = (serializationStructuresObject: Obj
 };
 
 export const serializeObject = (key: string, instanceValuesStack: Array<String>): string => {
+    // tslint:disable-next-line:triple-equals
     const json = (key != undefined ? `"${key}":` : '');
     return `${json}{${instanceValuesStack.join()}}`;
 };
 
 export const serializeArray = (key: string, instanceValuesStack: Array<String>): string => {
+    // tslint:disable-next-line:triple-equals
     const json = (key != undefined ? `"${key}":` : '');
     return `${json}[${instanceValuesStack.join()}]`;
 };
@@ -76,10 +79,13 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
     instanceStructure.visited = true;
     Object.keys(instanceStructure.instance).forEach((key: string) => {
         const keyInstance = instanceStructure.instance[key];
+        // tslint:disable-next-line:triple-equals
         if (keyInstance != undefined) {
             const metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
+            // tslint:disable-next-line:triple-equals
             if (metadata != undefined && AccessType.READ_ONLY === metadata.access) {
                 // SKIP
+                // tslint:disable-next-line:triple-equals
             } else if (metadata != undefined && metadata.serializer != undefined) {
                 const serializer: Serializer = getOrCreateSerializer(metadata.serializer);
                 instanceStructure.values.push(serializeFunctions[Constants.STRING_TYPE](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
@@ -123,6 +129,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
  */
 const SerializeSimpleType = (key: string, instance: any, serializer: Serializer): string => {
     const value: any = serializer.serialize(instance);
+    // tslint:disable-next-line:triple-equals
     if (key != undefined) {
         return `"${key}":${value}`;
     } else {

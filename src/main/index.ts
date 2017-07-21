@@ -43,6 +43,7 @@ export namespace ObjectMapper {
 
         let conversionFunctionStructure: ConversionFunctionStructure = converstionFunctionsArray[0];
 
+        // tslint:disable-next-line:triple-equals
         while (conversionFunctionStructure != undefined) {
             const stackEntries: Array<ConversionFunctionStructure> = conversionFunctions[conversionFunctionStructure.functionName](
                 conversionFunctionStructure.instance, conversionFunctionStructure.instanceKey,
@@ -81,9 +82,10 @@ export namespace ObjectMapper {
             } else {
                 const moreStructures: Array<SerializationStructure> = serializeFunctions[instanceStruct.type](parentStruct, instanceStruct, stack.length - 1);
                 if (moreStructures.length > 0) {
-                    moreStructures.forEach((each: SerializationStructure) => {
-                        stack.push(each);
-                    });
+                    let index = moreStructures.length;
+                    while (--index >= 0) {
+                        stack.push(moreStructures[index]);
+                    }
                 } else {
                     if (stack.length > 1) {
                         mergeObjectOrArrayValuesAndCopyToParents(instanceStruct, parentStruct);

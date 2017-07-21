@@ -1,4 +1,5 @@
 import { JsonProperty } from '../main/DecoratorMetadata';
+import { ObjectMapper } from '../main/index';
 import { Constants, getTypeNameFromInstance } from '../main/ReflectHelper';
 import { SerializationStructure, SerializeArrayType, serializeFunctions, SerializeObjectType, serializers } from '../main/SerializationHelper';
 
@@ -7,23 +8,28 @@ describe('Testing SerializationHelper methods', () => {
     it('Testing SerializeDateType', () => {
         expect(serializeFunctions[Constants.DATE_TYPE]('test', new Date('03/05/2016'), serializers[Constants.DATE_TYPE])).toBe(`"test":${(new Date('03/05/2016')).getTime()}`);
     });
+
     it('Testing SerializeStringType', () => {
         expect(serializeFunctions[Constants.STRING_TYPE]('test', 'testString', serializers[Constants.STRING_TYPE])).toBe(`"test":"testString"`);
     });
+
     it('Testing SerializeStringType with quotes', () => {
         expect(serializeFunctions[Constants.STRING_TYPE]('test', `testString 'with' "quotes"`, serializers[Constants.STRING_TYPE])).toBe(`"test":"testString 'with' \\"quotes\\""`);
     });
+
     it('Testing SerializeBooleanType', () => {
         expect(serializeFunctions[Constants.BOOLEAN_TYPE]('test', true, serializers[Constants.BOOLEAN_TYPE])).toBe(`"test":true`);
     });
+
     it('Testing SerializeNumberType', () => {
         expect(serializeFunctions[Constants.NUMBER_TYPE]('test', 10, serializers[Constants.NUMBER_TYPE])).toBe(`"test":10`);
     });
+
     it('Testing SerializeArrayType', () => {
         const struct: SerializationStructure = {
             id: undefined,
             type: Constants.ARRAY_TYPE,
-            instance: [10, 20, 30],
+            instance: ['67', '33', '23', '45'],
             parentIndex: 0,
             values: new Array<String>(),
             key: 'test',
@@ -31,7 +37,7 @@ describe('Testing SerializationHelper methods', () => {
             visited: false
         };
         const moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.ARRAY_TYPE](struct, struct, 0);
-        expect(struct.values.join()).toBe('10,20,30');
+        expect(struct.values.join()).toBe('"67","33","23","45"');
         expect(moreFunction.length).toBe(0);
     });
 
@@ -60,7 +66,7 @@ describe('Testing SerializationHelper methods', () => {
             id = '1000';
             name = 'Test';
             @JsonProperty({ type: String, name: 'idsArray' })
-            array: string[] = ['10', '20', '30'];
+            array: string[] = ['67', '33', '23', '45'];
         }
         const structTestSerializeObjectTypeClassWithArray: SerializationStructure = {
             id: undefined,
