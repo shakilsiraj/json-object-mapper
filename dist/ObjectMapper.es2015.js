@@ -231,12 +231,6 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function (item) {
         return objectKeys.indexOf(item) < 0;
     }));
-    objectKeys = objectKeys.concat(Object.keys(json).filter(function (item) {
-        if (Reflect.getMetadata("design:type", objectInstance, item) === undefined) {
-            return false;
-        }
-        return objectKeys.indexOf(item) < 0;
-    }));
     objectKeys.forEach(function (key) {
         /**
          * Check if there is any DecoratorMetadata attached to this property, otherwise create a new one.
@@ -377,7 +371,11 @@ var mergeObjectOrArrayValues = function (instanceStructure) {
 var SerializeObjectType = function (parentStructure, instanceStructure, instanceIndex) {
     var furtherSerializationStructures = new Object();
     instanceStructure.visited = true;
-    Object.keys(instanceStructure.instance).forEach(function (key) {
+    var objectKeys = Object.keys(instanceStructure.instance);
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function (item) {
+        return objectKeys.indexOf(item) < 0;
+    }));
+    objectKeys.forEach(function (key) {
         var keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
