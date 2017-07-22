@@ -122,7 +122,15 @@ Originally, I thought of not having to force a dependency on another library.
 But when you look the geneated JS code for a `typescript` decorator, 
 it is always trying to check for the variable `Reflect`. So, until such time when
 `typescript` decorators can be de-coupled from `Reflect` library, I am sticking with it.
-
+You can either download `reflect-metadata` from there or from npmjs.com with the `npm` command:
+```
+npm install reflect-metadata --save
+```
+and make sure to import it in a global place, like app.ts:
+```typescript
+import "reflect-metadata";
+```
+If you are using Angular 2 you should already have this shim installed.
 ## Things to remember
 ### Enum serialization and de-serialization
 You can use `enum` data type by specifying the `type` property of @JsonProperty decorator.
