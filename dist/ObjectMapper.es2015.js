@@ -429,7 +429,7 @@ var DateSerializer = (function () {
 var StringSerializer = (function () {
     function StringSerializer() {
         this.serialize = function (value) {
-            return '"' + value + '"';
+            return JSON.stringify(value);
         };
     }
     StringSerializer = __decorate([
