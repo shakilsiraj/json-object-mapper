@@ -55,6 +55,5 @@
     "typings": "^0.8.1"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.8"
   }
 }
