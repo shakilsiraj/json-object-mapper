@@ -1,4 +1,5 @@
 /// <reference path="../../typings/index.d.ts"/>
+import "reflect-metadata";
 import { JsonProperty } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 describe("Tesing large dataset from https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json", () => {

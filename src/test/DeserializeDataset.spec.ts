@@ -1,4 +1,5 @@
 /// <reference path="../../typings/index.d.ts"/>
+import "reflect-metadata";
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, Deserializer } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 import { Map } from "es6-shim";

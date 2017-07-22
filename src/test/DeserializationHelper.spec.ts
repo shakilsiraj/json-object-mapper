@@ -1,4 +1,5 @@
 /// <reference path="../../typings/index.d.ts"/>
+import "reflect-metadata";
 import { DeserializeSimpleType, DeserializeArrayType, DeserializeDateType, DeserializeComplexType } from "../main/DeserializationHelper";
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
 
