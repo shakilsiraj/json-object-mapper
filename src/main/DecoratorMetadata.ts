@@ -37,7 +37,7 @@ export interface Deserializer{
 /**
  * JsonProperty Decorator function.
  */
-export function JsonProperty(metadata?: JsonPropertyDecoratorMetadata): any {
+export function JsonProperty(metadata?: JsonPropertyDecoratorMetadata | string): any {
     if (typeof metadata === 'string') {
         return getJsonPropertyDecorator({ name: metadata as string, required: false, access: AccessType.BOTH });
     } else {
