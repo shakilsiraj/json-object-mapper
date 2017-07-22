@@ -4,6 +4,8 @@
 
 import { JsonPropertyDecoratorMetadata, JSON_PROPERTY_DECORATOR_NAME } from './DecoratorMetadata';
 
+declare var Reflect: any;
+
 /**
  * Returns the JsonProperty decorator metadata.
  */
