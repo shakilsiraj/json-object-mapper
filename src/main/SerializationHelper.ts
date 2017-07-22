@@ -1,5 +1,5 @@
 import { JsonPropertyDecoratorMetadata, AccessType, Serializer, CacheKey } from "./DecoratorMetadata";
-import { isArrayType, isSimpleType, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants, METADATA_JSON_PROPERTIES_NAME } from "./ReflectHelper";
+import { isArrayType, isSimpleType, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants, METADATA_JSON_PROPERTIES_NAME, METADATA_JSON_IGNORE_NAME } from "./ReflectHelper";
 
 export interface SerializationStructure {
     id: string, /** id of the current structure */
@@ -80,6 +80,9 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
         }
         return objectKeys.indexOf(item) < 0;
     }));
+    objectKeys = objectKeys.filter(function(item: string) {
+        return !Reflect.hasMetadata(METADATA_JSON_IGNORE_NAME, instanceStructure.instance, item);
+    });
     objectKeys.forEach((key: string) => {
         let keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {

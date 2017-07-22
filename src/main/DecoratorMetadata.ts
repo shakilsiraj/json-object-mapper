@@ -1,4 +1,4 @@
-import { getJsonPropertyDecorator, getPropertyDecorator, Constants } from "./ReflectHelper";
+import { getJsonPropertyDecorator, getPropertyDecorator, getJsonIgnoreDecorator, Constants } from "./ReflectHelper";
 
 /**
  * Decorator names
@@ -61,6 +61,12 @@ export function CacheKey(key: string): Function {
     }
 }
 
+/**
+ * JsonIgnore Decorator function.
+ */
+export function JsonIgnore(): Function {
+    return getJsonIgnoreDecorator();
+}
 
 /**
  * Json convertion error type.

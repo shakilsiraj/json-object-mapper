@@ -10,6 +10,7 @@ declare var Reflect: any;
  * Reflect Metadata json properties storage name.
  */
 export const METADATA_JSON_PROPERTIES_NAME = "JsonProperties";
+export const METADATA_JSON_IGNORE_NAME = "JsonIgnore";
 
 /**
  * Returns the JsonProperty decorator metadata.
@@ -41,6 +42,15 @@ export function getJsonPropertyDecorator(metadata: any) {
         Reflect.defineMetadata(METADATA_JSON_PROPERTIES_NAME, properties, target);
         getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata)(target, propertyKey);
     };
+}
+
+/**
+ * Returns the JsonIgnoreDecoratorMetadata for the property
+ */
+export function getJsonIgnoreDecorator() {
+    return function(target: any, propertyKey: string) {
+        Reflect.defineMetadata(METADATA_JSON_IGNORE_NAME, true, target, propertyKey);
+    }
 }
 
 export function getPropertyDecorator(metadataKey: string, metadata: any) {
