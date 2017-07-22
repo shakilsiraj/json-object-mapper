@@ -35,11 +35,11 @@ export var getKeyName = (target: any, key: string): string => {
  * Returns the JsonPropertyDecoratorMetadata for the property
  */
 export function getJsonPropertyDecorator(metadata: any) {
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return function(target: any, propertyKey: string) {
         let properties: string[] = Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, target) || [];
         properties.push(propertyKey);
         Reflect.defineMetadata(METADATA_JSON_PROPERTIES_NAME, properties, target);
-        getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata)(target, propertyKey, descriptor);
+        getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata)(target, propertyKey);
     };
 }
 
