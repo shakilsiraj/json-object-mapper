@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts"/>
 import { JsonProperty } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 

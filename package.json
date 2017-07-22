@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.46",
+    "@types/es6-shim": "^0.31.34",
     "es6-shim": "^0.35.3",
     "jasmine": "^2.5.2",
     "jasmine-core": "^2.3.4",
@@ -51,8 +52,7 @@
     "rollup": "^0.38.3",
     "rollup-plugin-typescript": "^0.8.1",
     "tslint": "^3.10.2",
-    "typescript": "^2.0.10",
-    "typings": "^0.8.1"
+    "typescript": "^2.0.10"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.8"
