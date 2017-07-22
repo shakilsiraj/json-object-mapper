@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
 import { getJsonPropertyDecoratorMetadata } from "../main/ReflectHelper";
 
