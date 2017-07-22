@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts"/>
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, Serializer, Deserializer } from "../main/DecoratorMetadata";
 import { getOrCreateDeserializer, deserializers } from "../main/DeserializationHelper";
 import { getOrCreateSerializer, serializers } from "../main/SerializationHelper";
