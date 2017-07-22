@@ -72,7 +72,11 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
     }
 
     let objectKeys: string[] = Object.keys(objectInstance);
-    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function(item) {
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function(item: string) {
+        if(objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
+            // Property does not have setter
+            return false;
+        }
         return objectKeys.indexOf(item) < 0;
     }));
     objectKeys.forEach((key: string) => {

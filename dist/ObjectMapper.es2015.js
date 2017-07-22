@@ -231,6 +231,10 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
     }
     var objectKeys = Object.keys(objectInstance);
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function (item) {
+        if (objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
+            // Property does not have setter
+            return false;
+        }
         return objectKeys.indexOf(item) < 0;
     }));
     objectKeys.forEach(function (key) {
@@ -375,6 +379,10 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
     instanceStructure.visited = true;
     var objectKeys = Object.keys(instanceStructure.instance);
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function (item) {
+        if (instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
+            // Property does not have getter
+            return false;
+        }
         return objectKeys.indexOf(item) < 0;
     }));
     objectKeys.forEach(function (key) {
