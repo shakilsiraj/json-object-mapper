@@ -41,7 +41,7 @@ export function CacheKey(key: string): Function;
 /**
  * Json convertion error type.
  */
-export declare function JsonConverstionError(message, json);
+export declare function JsonConverstionError(message: string, json: any): Error;
 
 export declare namespace ObjectMapper {
 
