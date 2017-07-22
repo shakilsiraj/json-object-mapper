@@ -74,6 +74,10 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
     instanceStructure.visited = true;
     let objectKeys: string[] = Object.keys(instanceStructure.instance);
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function(item) {
+        if(instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
+            // Property does not have getter
+            return false;
+        }
         return objectKeys.indexOf(item) < 0;
     }));
     objectKeys.forEach((key: string) => {
