@@ -40,11 +40,11 @@ Lets have a look at an example:
 
 ```typescript
 class SimpleRoster {
-    private name: String = undefined;
-    private worksOnWeekend: Boolean = undefined;
-    private numberOfHours: Number = undefined;
+    private name: String;
+    private worksOnWeekend: Boolean;
+    private numberOfHours: Number;
     @JsonProperty({type:Date})
-    private systemDate: Date = undefined;
+    private systemDate: Date;
 
     public isAvailableToday(): Boolean {
         if (this.systemDate.getDay() % 6 == 0 && this.worksOnWeekend == false) {
@@ -155,7 +155,7 @@ enum Days{
 
 class Workday{
     @JsonProperty({ type: Days, deserializer: DaysEnumSerializerDeserializer, serializer: DaysEnumSerializerDeserializer})
-    today: Days = undefined;
+    today: Days;
 }        
 
 let json = { "today": 'Tues' };
