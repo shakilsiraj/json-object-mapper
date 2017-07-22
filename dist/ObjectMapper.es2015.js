@@ -231,6 +231,12 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function (item) {
         return objectKeys.indexOf(item) < 0;
     }));
+    objectKeys = objectKeys.concat(Object.keys(json).filter(function (item) {
+        if (Reflect.getMetadata("design:type", objectInstance, item) === undefined) {
+            return false;
+        }
+        return objectKeys.indexOf(item) < 0;
+    }));
     objectKeys.forEach(function (key) {
         /**
          * Check if there is any DecoratorMetadata attached to this property, otherwise create a new one.
