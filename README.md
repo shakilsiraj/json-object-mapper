@@ -40,8 +40,11 @@ Lets have a look at an example:
 
 ```typescript
 class SimpleRoster {
+    @JsonProperty()
     private name: String;
+    @JsonProperty()
     private worksOnWeekend: Boolean;
+    @JsonProperty()
     private numberOfHours: Number;
     @JsonProperty({type:Date})
     private systemDate: Date;
