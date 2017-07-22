@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts"/>
 import { DeserializeSimpleType, DeserializeArrayType, DeserializeDateType, DeserializeComplexType } from "../main/DeserializationHelper";
 import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
 
