@@ -7,17 +7,10 @@ describe("Tesing large dataset from https://raw.githubusercontent.com/openfootba
     });
 });
 
-
-class League{
+class Team{
+    key: String = undefined;
     name: String = undefined;
-    @JsonProperty({type: Round})
-    rounds: Round[] = undefined;
-}
-
-class Round{
-    name: string = undefined;
-    @JsonProperty({type:Match})
-    matches: Match[] = undefined;    
+    code: String = undefined;
 }
 
 class Match{
@@ -28,11 +21,19 @@ class Match{
     @JsonProperty({type:Team})
     team2: Team = undefined;
 }
-class Team{
-    key: String = undefined;
-    name: String = undefined;
-    code: String = undefined;
+
+class Round{
+    name: string = undefined;
+    @JsonProperty({type:Match})
+    matches: Match[] = undefined;    
 }
+
+class League{
+    name: String = undefined;
+    @JsonProperty({type: Round})
+    rounds: Round[] = undefined;
+}
+
 /** Gathered from OpenFootball https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json */
 var json = {
     "name": "English Premier League 2016/17",
