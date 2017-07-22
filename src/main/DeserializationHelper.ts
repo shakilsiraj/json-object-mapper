@@ -71,7 +71,11 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
         objectInstance = instance;
     }
 
-    Object.keys(objectInstance).concat(Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance)).forEach((key: string) => {
+    let objectKeys: string[] = Object.keys(objectInstance);
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function(item) {
+        return objectKeys.indexOf(item) < 0;
+    }));
+    objectKeys.forEach((key: string) => {
         /**
          * Check if there is any DecoratorMetadata attached to this property, otherwise create a new one.
          */
