@@ -30,8 +30,7 @@
     "rollup": "./node_modules/.bin/rollup -c",
     "dist": "npm run build && npm run test && npm run rollup",
     "test": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
-    "test-karma": "node_modules/.bin/karma start ./karma.conf.js",
-    "post-install": ""
+    "test-karma": "node_modules/.bin/karma start ./karma.conf.js"
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.46",
