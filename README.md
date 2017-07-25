@@ -89,6 +89,8 @@ class SimpleClass {
     firstName: string = "John";
     middleName: string = "P";
     lastName: string = "Doe";
+    @JsonIgnore()
+    password: string = "mypwd";
     @JsonProperty({ type: String, name: "AKA" })
     knownAs: String[] = ["John", "Doe", "JohnDoe", "JohnPDoe"]
 };
@@ -100,6 +102,7 @@ expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe"
 ```
 
 From the example above, the `knownAs` property is serialized as `AKA` as defined in the `@JsonProperty` 
+decorator. The `password` property does not serialized as defined in the `@JsonIgnore` 
 decorator.
 
 The library uses non-recursive iterations to process data. That means you can 
