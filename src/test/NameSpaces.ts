@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { JsonProperty} from "../main/DecoratorMetadata";
 export namespace a{
 

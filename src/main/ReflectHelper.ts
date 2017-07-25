@@ -2,8 +2,9 @@
  * Helper functions for JS reflections.
  */
 
-import 'reflect-metadata';
 import { JsonPropertyDecoratorMetadata, JSON_PROPERTY_DECORATOR_NAME } from './DecoratorMetadata';
+
+declare var Reflect: any;
 
 /**
  * Reflect Metadata json properties storage name.
