@@ -343,6 +343,20 @@ describe('Testing deserialize array function', () => {
         expect(friends[18].gender).toBe("male");
     });
     
+    it("Testing array serialization 3", () => {
+
+        class Event {
+            id: number = undefined;
+            location: string = undefined;
+        }
+
+        let json = [];
+
+        let eventsArray: Event[] = ObjectMapper.deserializeArray(Event, json);
+        expect(Array.isArray(eventsArray)).toBe(true);
+        expect(eventsArray.length == 0);
+    });
+
 });
 
 
