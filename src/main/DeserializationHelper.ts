@@ -33,12 +33,12 @@ export var DeserializeDateType = (instance: Object, instanceKey: string, type: a
  * Deserializes a JS array type from json.
  */
 export var DeserializeArrayType = (instance: Object, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
-    let jsonObject = jsonKey != undefined ? json[jsonKey] : json;
+    let jsonObject = (jsonKey != undefined) ? (json[jsonKey] || []) : json;
     let jsonArraySize = jsonObject.length;
     let conversionFunctionsList = new Array<ConversionFunctionStructure>();
+    let arrayInstance = [];
+    instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
-        let arrayInstance = [];
-        instance[instanceKey] = arrayInstance;
         for (var i = 0; i < jsonArraySize; i++) {
             let typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {

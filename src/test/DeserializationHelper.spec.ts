@@ -113,6 +113,38 @@ describe("Testing Conversion functions", () => {
         expect(testInstance.field.length).toBe(3);
     });
 
+    it("Test DeserializeArrayType - undefined array ", () => {
+        class ComplexType {
+            f: number = Math.random();
+        }
+        class testObject10 {
+            field1: ComplexType[];
+            field2: string[];
+        }
+
+        var json = { 'objects': [] }
+        var testInstance1 = new testObject10();
+        var testInstance2 = new testObject10();
+
+        var moreFunctionsList1 = DeserializeArrayType(testInstance1, "field1", ComplexType, json, "objects");
+        var moreFunctionsList2 = DeserializeArrayType(testInstance1, "field2", String, json, "objects");
+        var moreFunctionsList3 = DeserializeArrayType(testInstance2, "field1", ComplexType, {}, "objects");
+        var moreFunctionsList4 = DeserializeArrayType(testInstance2, "field2", String, {}, "objects");
+
+        expect(moreFunctionsList1.length).toBe(0);
+        expect(moreFunctionsList2.length).toBe(0);
+        expect(moreFunctionsList3.length).toBe(0);
+        expect(moreFunctionsList4.length).toBe(0);
+        expect(Array.isArray(testInstance1.field1)).toBe(true);
+        expect(Array.isArray(testInstance1.field2)).toBe(true);
+        expect(Array.isArray(testInstance2.field1)).toBe(true);
+        expect(Array.isArray(testInstance2.field2)).toBe(true);
+        expect(testInstance1.field1.length).toBe(0);
+        expect(testInstance1.field2.length).toBe(0);
+        expect(testInstance2.field1.length).toBe(0);
+        expect(testInstance2.field2.length).toBe(0);
+    });
+
     it("Test DeserializeComplexType - simple class ", () => {
         class DeserializeComplexTypeSimpleClassTest {
             @JsonProperty()

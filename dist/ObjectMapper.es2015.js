@@ -191,12 +191,12 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
  * Deserializes a JS array type from json.
  */
 var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey) {
-    var jsonObject = jsonKey != undefined ? json[jsonKey] : json;
+    var jsonObject = (jsonKey != undefined) ? (json[jsonKey] || []) : json;
     var jsonArraySize = jsonObject.length;
     var conversionFunctionsList = new Array();
+    var arrayInstance = [];
+    instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
-        var arrayInstance = [];
-        instance[instanceKey] = arrayInstance;
         for (var i = 0; i < jsonArraySize; i++) {
             var typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {
