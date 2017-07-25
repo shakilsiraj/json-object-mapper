@@ -1,5 +1,5 @@
 import { JsonConverstionError, JsonPropertyDecoratorMetadata, AccessType , Deserializer} from "./DecoratorMetadata";
-import { isSimpleType, getTypeName, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType, Constants } from "./ReflectHelper";
+import { isSimpleType, getTypeName, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType, Constants, METADATA_JSON_PROPERTIES_NAME } from "./ReflectHelper";
 
 var SimpleTypeCoverter = (value: any, type: string): any => {
     return type === Constants.DATE_TYPE ? new Date(value) : value;
@@ -71,7 +71,15 @@ export var DeserializeComplexType = (instance: Object, instanceKey: string, type
         objectInstance = instance;
     }
 
-    Object.keys(objectInstance).forEach((key: string) => {
+    let objectKeys: string[] = Object.keys(objectInstance);
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function(item: string) {
+        if(objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
+            // Property does not have setter
+            return false;
+        }
+        return objectKeys.indexOf(item) < 0;
+    }));
+    objectKeys.forEach((key: string) => {
         /**
          * Check if there is any DecoratorMetadata attached to this property, otherwise create a new one.
          */

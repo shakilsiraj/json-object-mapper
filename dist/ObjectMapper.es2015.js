@@ -15,6 +15,10 @@ function __metadata(k, v) {
  * Helper functions for JS reflections.
  */
 /**
+ * Reflect Metadata json properties storage name.
+ */
+var METADATA_JSON_PROPERTIES_NAME = "JsonProperties";
+/**
  * Returns the JsonProperty decorator metadata.
  */
 var getJsonPropertyDecoratorMetadata = function (target, key) {
@@ -37,7 +41,12 @@ var getKeyName = function (target, key) {
  * Returns the JsonPropertyDecoratorMetadata for the property
  */
 function getJsonPropertyDecorator(metadata) {
-    return getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata);
+    return function (target, propertyKey) {
+        var properties = Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, target) || [];
+        properties.push(propertyKey);
+        Reflect.defineMetadata(METADATA_JSON_PROPERTIES_NAME, properties, target);
+        getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata)(target, propertyKey);
+    };
 }
 function getPropertyDecorator(metadataKey, metadata) {
     return Reflect.metadata(metadataKey, metadata);
@@ -220,7 +229,15 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
     else {
         objectInstance = instance;
     }
-    Object.keys(objectInstance).forEach(function (key) {
+    var objectKeys = Object.keys(objectInstance);
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function (item) {
+        if (objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
+            // Property does not have setter
+            return false;
+        }
+        return objectKeys.indexOf(item) < 0;
+    }));
+    objectKeys.forEach(function (key) {
         /**
          * Check if there is any DecoratorMetadata attached to this property, otherwise create a new one.
          */
@@ -360,7 +377,15 @@ var mergeObjectOrArrayValues = function (instanceStructure) {
 var SerializeObjectType = function (parentStructure, instanceStructure, instanceIndex) {
     var furtherSerializationStructures = new Object();
     instanceStructure.visited = true;
-    Object.keys(instanceStructure.instance).forEach(function (key) {
+    var objectKeys = Object.keys(instanceStructure.instance);
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function (item) {
+        if (instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
+            // Property does not have getter
+            return false;
+        }
+        return objectKeys.indexOf(item) < 0;
+    }));
+    objectKeys.forEach(function (key) {
         var keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
