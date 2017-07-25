@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, Serializer, Deserializer } from "../main/DecoratorMetadata";
+import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, JsonIgnore, Serializer, Deserializer } from "../main/DecoratorMetadata";
 import { ObjectMapper } from "../main/index";
 import { a, b } from "./NameSpaces";
 import { getOrCreateDeserializer } from "../main/DeserializationHelper";
@@ -574,4 +574,47 @@ describe("Misc tests", () => {
         expect(instance3).toBe(instance4);
     });
 
+});
+
+describe('Testing JsonIgnore decorator', () => {
+    it("Testing JsonIgnore serialization", () => {
+        class Event {
+            @JsonProperty()
+            id: number;
+            @JsonProperty()
+            location: string;
+            @JsonIgnore()
+            state: string;
+
+            constructor(id: number, location: string, state: string) {
+                this.id = id;
+                this.location = location;
+                this.state = state;
+            }
+        }
+
+        let serializedString: String = ObjectMapper.serialize(new Event(1, "Canberra", "new"));
+        expect(serializedString).toBe('{"id":1,"location":"Canberra"}');
+    });
+
+    it("Testing JsonIgnore deserialization", () => {
+        class Event {
+            @JsonProperty()
+            id: number;
+            @JsonProperty()
+            location: string;
+            @JsonIgnore()
+            state: string = 'old';
+        }
+
+        let json = {
+            'id': '1',
+            'location' : 'Canberra',
+            'state': 'new'
+        };
+
+        let testInstance: Event = ObjectMapper.deserialize(Event, json);
+        expect(testInstance.location).toBe('Canberra');
+        expect(testInstance.state).toBe('old');
+    });
 });
