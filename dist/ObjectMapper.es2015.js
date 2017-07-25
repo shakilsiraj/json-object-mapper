@@ -559,7 +559,7 @@ var ObjectMapper;
         }());
         var parent = new ObjectsArrayParent();
         runDeserialization(conversionFunctions[Constants.ARRAY_TYPE](parent, "instances", type, json, undefined));
-        return parent.instances;
+        return parent.instances || [];
     };
     /**
      * Deserializes a Object type with the passed on JSON data.
