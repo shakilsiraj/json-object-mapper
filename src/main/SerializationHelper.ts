@@ -1,5 +1,5 @@
-import { AccessType, CacheKey, JsonPropertyDecoratorMetadata, Serializer } from './DecoratorMetadata';
-import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getKeyName, getTypeName, getTypeNameFromInstance, isArrayType, isSimpleType } from './ReflectHelper';
+import { JsonPropertyDecoratorMetadata, AccessType, Serializer, CacheKey } from "./DecoratorMetadata";
+import { isArrayType, isSimpleType, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants, METADATA_JSON_PROPERTIES_NAME, METADATA_JSON_IGNORE_NAME } from "./ReflectHelper";
 
 export interface SerializationStructure {
     id: string; /** id of the current structure */
@@ -77,9 +77,19 @@ export const mergeObjectOrArrayValues = (instanceStructure: SerializationStructu
 export const SerializeObjectType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
     const furtherSerializationStructures: Object = new Object();
     instanceStructure.visited = true;
-    Object.keys(instanceStructure.instance).forEach((key: string) => {
-        const keyInstance = instanceStructure.instance[key];
-        // tslint:disable-next-line:triple-equals
+    let objectKeys: string[] = Object.keys(instanceStructure.instance);
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function(item: string) {
+        if(instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
+            // Property does not have getter
+            return false;
+        }
+        return objectKeys.indexOf(item) < 0;
+    }));
+    objectKeys = objectKeys.filter(function(item: string) {
+        return !Reflect.hasMetadata(METADATA_JSON_IGNORE_NAME, instanceStructure.instance, item);
+    });
+    objectKeys.forEach((key: string) => {
+        let keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {
             const metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
             // tslint:disable-next-line:triple-equals

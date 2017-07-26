@@ -16,6 +16,7 @@ function __metadata(k, v) {
  * Reflect Metadata json properties storage name.
  */
 var METADATA_JSON_PROPERTIES_NAME = "JsonProperties";
+var METADATA_JSON_IGNORE_NAME = "JsonIgnore";
 /**
  * Returns the JsonProperty decorator metadata.
  */
@@ -44,6 +45,14 @@ function getJsonPropertyDecorator(metadata) {
         properties.push(propertyKey);
         Reflect.defineMetadata(METADATA_JSON_PROPERTIES_NAME, properties, target);
         getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata)(target, propertyKey);
+    };
+}
+/**
+ * Returns the JsonIgnoreDecoratorMetadata for the property
+ */
+function getJsonIgnoreDecorator() {
+    return function (target, propertyKey) {
+        Reflect.defineMetadata(METADATA_JSON_IGNORE_NAME, true, target, propertyKey);
     };
 }
 function getPropertyDecorator(metadataKey, metadata) {
@@ -151,6 +160,12 @@ function CacheKey(key) {
     };
 }
 /**
+ * JsonIgnore Decorator function.
+ */
+function JsonIgnore() {
+    return getJsonIgnoreDecorator();
+}
+/**
  * Json convertion error type.
  */
 function JsonConverstionError(message, json) {
@@ -235,6 +250,9 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
         }
         return objectKeys.indexOf(item) < 0;
     }));
+    objectKeys = objectKeys.filter(function (item) {
+        return !Reflect.hasMetadata(METADATA_JSON_IGNORE_NAME, objectInstance, item);
+    });
     objectKeys.forEach(function (key) {
         /**
          * Check if there is any DecoratorMetadata attached to this property, otherwise create a new one.
@@ -383,6 +401,9 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
         }
         return objectKeys.indexOf(item) < 0;
     }));
+    objectKeys = objectKeys.filter(function (item) {
+        return !Reflect.hasMetadata(METADATA_JSON_IGNORE_NAME, instanceStructure.instance, item);
+    });
     objectKeys.forEach(function (key) {
         var keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {
@@ -605,4 +626,4 @@ var ObjectMapper;
     };
 })(ObjectMapper || (ObjectMapper = {}));
 
-export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType, CacheKey, DateSerializer };
+export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType, CacheKey, JsonIgnore, DateSerializer };

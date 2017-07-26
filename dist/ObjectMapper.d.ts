@@ -39,6 +39,11 @@ export declare function JsonProperty(metadata?: JsonPropertyDecoratorMetadata): 
 export function CacheKey(key: string): Function;
 
 /**
+ * JsonIgnore Decorator function.
+ */
+export declare function JsonIgnore(): any;
+
+/**
  * Json convertion error type.
  */
 export declare function JsonConverstionError(message: string, json: any): Error;
