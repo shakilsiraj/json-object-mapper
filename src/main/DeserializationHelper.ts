@@ -36,16 +36,15 @@ export const DeserializeDateType = (instance: Object, instanceKey: string, type:
 /**
  * Deserializes a JS array type from json.
  */
-export const DeserializeArrayType = (instance: Object, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
-    // tslint:disable-next-line:triple-equals
-    const jsonObject = jsonKey != undefined ? json[jsonKey] : json;
-    const jsonArraySize = jsonObject.length;
-    const conversionFunctionsList = new Array<ConversionFunctionStructure>();
+export var DeserializeArrayType = (instance: Object, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
+    let jsonObject = (jsonKey != undefined) ? (json[jsonKey] || []) : json;
+    let jsonArraySize = jsonObject.length;
+    let conversionFunctionsList = new Array<ConversionFunctionStructure>();
+    let arrayInstance = [];
+    instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
-        const arrayInstance = [];
-        instance[instanceKey] = arrayInstance;
-        for (let i = 0; i < jsonArraySize; i++) {
-            const typeName = getTypeNameFromInstance(type);
+        for (var i = 0; i < jsonArraySize; i++) {
+            let typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {
                 const typeInstance = new type();
                 conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
