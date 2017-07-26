@@ -1,47 +1,52 @@
-import "reflect-metadata";
-import { JsonProperty } from "../main/DecoratorMetadata";
-import { SerializeArrayType, SerializeObjectType, serializeFunctions, serializers, SerializationStructure } from "../main/SerializationHelper";
-import { getTypeNameFromInstance, Constants } from "../main/ReflectHelper";
+import { JsonProperty } from '../main/DecoratorMetadata';
+import { ObjectMapper } from '../main/index';
+import { Constants, getTypeNameFromInstance } from '../main/ReflectHelper';
+import { SerializationStructure, SerializeArrayType, serializeFunctions, SerializeObjectType, serializers } from '../main/SerializationHelper';
 
-describe("Testing SerializationHelper methods", () => {
+describe('Testing SerializationHelper methods', () => {
 
-    it("Testing SerializeDateType", () => {
-        expect(serializeFunctions[Constants.DATE_TYPE]("test", new Date("03/05/2016"), serializers[Constants.DATE_TYPE])).toBe('"test":' + (new Date("03/05/2016")).getTime());
+    it('Testing SerializeDateType', () => {
+        expect(serializeFunctions[Constants.DATE_TYPE]('test', new Date('03/05/2016'), serializers[Constants.DATE_TYPE])).toBe(`"test":${(new Date('03/05/2016')).getTime()}`);
     });
-    it("Testing SerializeStringType", () => {
-        expect(serializeFunctions[Constants.STRING_TYPE]("test", "testString", serializers[Constants.STRING_TYPE])).toBe('"test":"testString"');
+
+    it('Testing SerializeStringType', () => {
+        expect(serializeFunctions[Constants.STRING_TYPE]('test', 'testString', serializers[Constants.STRING_TYPE])).toBe(`"test":"testString"`);
     });
-    it("Testing SerializeStringType with quotes", () => {
-        expect(serializeFunctions[Constants.STRING_TYPE]("test", `testString 'with' "quotes"`, serializers[Constants.STRING_TYPE])).toBe('"test":"testString \'with\' \\"quotes\\""');
+
+    it('Testing SerializeStringType with quotes', () => {
+        expect(serializeFunctions[Constants.STRING_TYPE]('test', `testString 'with' "quotes"`, serializers[Constants.STRING_TYPE])).toBe(`"test":"testString 'with' \\"quotes\\""`);
     });
-    it("Testing SerializeBooleanType", () => {
-        expect(serializeFunctions[Constants.BOOLEAN_TYPE]("test", true, serializers[Constants.BOOLEAN_TYPE])).toBe('"test":true');
+
+    it('Testing SerializeBooleanType', () => {
+        expect(serializeFunctions[Constants.BOOLEAN_TYPE]('test', true, serializers[Constants.BOOLEAN_TYPE])).toBe(`"test":true`);
     });
-    it("Testing SerializeNumberType", () => {
-        expect(serializeFunctions[Constants.NUMBER_TYPE]("test", 10, serializers[Constants.NUMBER_TYPE])).toBe('"test":10');
+
+    it('Testing SerializeNumberType', () => {
+        expect(serializeFunctions[Constants.NUMBER_TYPE]('test', 10, serializers[Constants.NUMBER_TYPE])).toBe(`"test":10`);
     });
-    it("Testing SerializeArrayType", () => {
-        let struct: SerializationStructure = {
+
+    it('Testing SerializeArrayType', () => {
+        const struct: SerializationStructure = {
             id: undefined,
             type: Constants.ARRAY_TYPE,
-            instance: [10, 20, 30],
+            instance: ['67', '33', '23', '45'],
             parentIndex: 0,
             values: new Array<String>(),
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false
-        }
-        let moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.ARRAY_TYPE](struct, struct, 0);
-        expect(struct.values.join()).toBe('10,20,30');
+        };
+        const moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.ARRAY_TYPE](struct, struct, 0);
+        expect(struct.values.join()).toBe('"67","33","23","45"');
         expect(moreFunction.length).toBe(0);
     });
 
-    it("Testing SerializeObjectType - simple class", () => {
+    it('Testing SerializeObjectType - simple class', () => {
         class TestSerializeObjectTypeSimpleClass {
-            id: string = "1000";
-            name: string = "Test";
+            id = '1000';
+            name = 'Test';
         }
-        let structSerializeObjectType: SerializationStructure = {
+        const structSerializeObjectType: SerializationStructure = {
             id: undefined,
             type: Constants.OBJECT_TYPE,
             instance: new TestSerializeObjectTypeSimpleClass(),
@@ -49,21 +54,21 @@ describe("Testing SerializationHelper methods", () => {
             values: new Array<String>(),
             key: 'test',
             // dependsOn: new Array<String>()
-            visited : false
-        }
-        let moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structSerializeObjectType, structSerializeObjectType, 0);
+            visited: false
+        };
+        const moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structSerializeObjectType, structSerializeObjectType, 0);
         expect(structSerializeObjectType.values.join()).toBe('"id":"1000","name":"Test"');
         expect(moreFunction.length).toBe(0);
     });
 
-    it("Testing SerializeObjectType - class with simple array", () => {
+    it('Testing SerializeObjectType - class with simple array', () => {
         class TestSerializeObjectTypeClassWithArray {
-            id: string = "1000";
-            name: string = "Test";
-            @JsonProperty({ type: String, name: "idsArray" })
-            array: string[] = ["10", "20", "30"];
+            id = '1000';
+            name = 'Test';
+            @JsonProperty({ type: String, name: 'idsArray' })
+            array: string[] = ['67', '33', '23', '45'];
         }
-        let structTestSerializeObjectTypeClassWithArray: SerializationStructure = {
+        const structTestSerializeObjectTypeClassWithArray: SerializationStructure = {
             id: undefined,
             type: Constants.OBJECT_TYPE,
             instance: new TestSerializeObjectTypeClassWithArray(),
@@ -71,25 +76,25 @@ describe("Testing SerializationHelper methods", () => {
             values: new Array<String>(),
             key: 'test',
             // dependsOn: new Array<String>()
-            visited : false
-        }
+            visited: false
+        };
 
-        let moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structTestSerializeObjectTypeClassWithArray, structTestSerializeObjectTypeClassWithArray, 0);
+        const moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structTestSerializeObjectTypeClassWithArray, structTestSerializeObjectTypeClassWithArray, 0);
         expect(moreFunction.length).toBe(1);
-        expect(moreFunction[0].key).toBe("idsArray");
+        expect(moreFunction[0].key).toBe('idsArray');
         // expect(moreFunction[0].id).toBe(structTestSerializeObjectTypeClassWithArray.dependsOn[0]);
         expect(structTestSerializeObjectTypeClassWithArray.values.join()).toBe('"id":"1000","name":"Test"');
     });
 
-    it("Testing SerializeObjectType - class with another class", () => {
+    it('Testing SerializeObjectType - class with another class', () => {
         class TestSerializeObjectTypeClassWithAnotherClass {
-            id: string = "1000";
-            name: string = "Test";
-            @JsonProperty({ type: simpleClass })
-            simpleClass: simpleClass = new simpleClass();
+            id = '1000';
+            name = 'Test';
+            @JsonProperty({ type: SimpleClass })
+            simpleClass: SimpleClass = new SimpleClass();
         }
 
-        let structTestSerializeObjectTypeClassWithAnotherClass: SerializationStructure = {
+        const structTestSerializeObjectTypeClassWithAnotherClass: SerializationStructure = {
             id: undefined,
             type: Constants.OBJECT_TYPE,
             instance: new TestSerializeObjectTypeClassWithAnotherClass(),
@@ -98,28 +103,28 @@ describe("Testing SerializationHelper methods", () => {
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false
-        }
+        };
 
-        let testInstance: TestSerializeObjectTypeClassWithAnotherClass = new TestSerializeObjectTypeClassWithAnotherClass();
+        const testInstance: TestSerializeObjectTypeClassWithAnotherClass = new TestSerializeObjectTypeClassWithAnotherClass();
 
-        let moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structTestSerializeObjectTypeClassWithAnotherClass, structTestSerializeObjectTypeClassWithAnotherClass, 0);
+        const moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structTestSerializeObjectTypeClassWithAnotherClass, structTestSerializeObjectTypeClassWithAnotherClass, 0);
         expect(moreFunction.length).toBe(1);
-        expect(getTypeNameFromInstance(moreFunction[0].instance.constructor)).toBe("simpleClass");
+        expect(getTypeNameFromInstance(moreFunction[0].instance.constructor)).toBe('SimpleClass');
         // expect(moreFunction[0].id).toBe(structTestSerializeObjectTypeClassWithAnotherClass.dependsOn[0]);
-        expect(structTestSerializeObjectTypeClassWithAnotherClass.values.join()).toBe('"id":"1000","name":"Test"');
+        expect(structTestSerializeObjectTypeClassWithAnotherClass.values.join()).toBe(`"id":"1000","name":"Test"`);
     });
 
-    it("Testing SerializeObjectType - class with an array of classes", () => {
+    it('Testing SerializeObjectType - class with an array of classes', () => {
         class TestSerializeObjectTypeClassWithAnArrayOfClasses {
-            id: string = "1000";
-            name: string = "Test";
-            @JsonProperty({ type: simpleClass })
-            array: simpleClass[] = [new simpleClass(), new simpleClass(), new simpleClass()];
+            id = '1000';
+            name = 'Test';
+            @JsonProperty({ type: SimpleClass })
+            array: SimpleClass[] = [new SimpleClass(), new SimpleClass(), new SimpleClass()];
         }
 
-        let instanceTestSerializeObjectTypeClassWithAnArrayOfClasses = new TestSerializeObjectTypeClassWithAnArrayOfClasses();
+        const instanceTestSerializeObjectTypeClassWithAnArrayOfClasses = new TestSerializeObjectTypeClassWithAnArrayOfClasses();
 
-        let structTestSerializeObjectTypeClassWithAnArrayOfClasses: SerializationStructure = {
+        const structTestSerializeObjectTypeClassWithAnArrayOfClasses: SerializationStructure = {
             id: undefined,
             type: Constants.OBJECT_TYPE,
             instance: instanceTestSerializeObjectTypeClassWithAnArrayOfClasses,
@@ -128,16 +133,16 @@ describe("Testing SerializationHelper methods", () => {
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false
-        }
+        };
 
-        let moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structTestSerializeObjectTypeClassWithAnArrayOfClasses, structTestSerializeObjectTypeClassWithAnArrayOfClasses, 0);
+        const moreFunction: Array<SerializationStructure> = serializeFunctions[Constants.OBJECT_TYPE](structTestSerializeObjectTypeClassWithAnArrayOfClasses, structTestSerializeObjectTypeClassWithAnArrayOfClasses, 0);
         expect(moreFunction.length).toBe(1);
-        expect(moreFunction[0].type).toBe("Array");
+        expect(moreFunction[0].type).toBe('Array');
         // expect(moreFunction[0].id).toBe(structTestSerializeObjectTypeClassWithAnArrayOfClasses.dependsOn[0]);
         expect(moreFunction[0].instance).toBe(instanceTestSerializeObjectTypeClassWithAnArrayOfClasses.array);
     });
 });
 
-class simpleClass {
+class SimpleClass {
     id: number = Math.random();
 }

@@ -1,38 +1,37 @@
-import "reflect-metadata";
-import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType } from "../main/DecoratorMetadata";
-import { getJsonPropertyDecoratorMetadata } from "../main/ReflectHelper";
+import { AccessType, JsonProperty, JsonPropertyDecoratorMetadata } from '../main/DecoratorMetadata';
+import { getJsonPropertyDecoratorMetadata } from '../main/ReflectHelper';
 
-describe("Testing JsonProperty decorator", () => {
-    it("Test without any paramter", () => {
-        class testObject1 {
+describe('Testing JsonProperty decorator', () => {
+    it('Test without any paramter', () => {
+        class TestObject1 {
             @JsonProperty()
             field: string;
         }
 
-        var instance = new testObject1();
-        let jsonPropertyDecoratorMetadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instance, "field");
-        expect(jsonPropertyDecoratorMetadata == undefined).toBe(true);
+        const instance = new TestObject1();
+        const jsonPropertyDecoratorMetadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instance, 'field');
+        expect(jsonPropertyDecoratorMetadata === undefined).toBe(true);
     });
-    it("Test with name", () => {
-        class testObject2 {
-            @JsonProperty("Test")
+    it('Test with name', () => {
+        class TestObject2 {
+            @JsonProperty('Test')
             field: String = undefined;
         }
 
-        var instance = new testObject2();
-        let jsonPropertyDecoratorMetadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instance, "field");
-        expect(jsonPropertyDecoratorMetadata.name).toBe("Test");
+        const instance = new TestObject2();
+        const jsonPropertyDecoratorMetadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instance, 'field');
+        expect(jsonPropertyDecoratorMetadata.name).toBe('Test');
     });
 
-    it("Test with parameters", () => {
-        class testObject3 {
+    it('Test with parameters', () => {
+        class TestObject3 {
             @JsonProperty({ required: true, access: AccessType.READ_ONLY })
             field: String = undefined;
         }
 
-        var instance = new testObject3();
-        let jsonPropertyDecoratorMetadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instance, "field");
-        expect(jsonPropertyDecoratorMetadata.name == undefined).toBe(true);
+        const instance = new TestObject3();
+        const jsonPropertyDecoratorMetadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instance, 'field');
+        expect(jsonPropertyDecoratorMetadata.name === undefined).toBe(true);
         expect(jsonPropertyDecoratorMetadata.required).toBe(true);
         expect(jsonPropertyDecoratorMetadata.access).toBe(AccessType.READ_ONLY);
     });

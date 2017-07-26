@@ -1,0 +1,40 @@
+dist: trusty
+sudo: required
+language: node_js
+notifications:
+  email:
+    on_failure: always
+    on_success: never
+  slack:
+    secure: OS2t2tnwZWittCK1C5XpQv41k5zVljZPAmG8DEY1D37RemkyKcNxaXeZwa1/y7qsJZCnPZE4wGbjSE3O3RTbtHbTfb7fBfy3NO/OWjOxszFayS21780U7BSnO9W76FpRyOXZyslsN16gd3Re5FRPvYEJ8w8JvuxhecVpZ6bUUhs+t7i31iQQIpbkat6SN3MmIO+Sb69osP/N4J+dRE40Kiowyp+6pNTlww0cy/uz87R1hnOyy5Izymp2IVAoiR+nAFx6c0Z5l9nYBh5tACQ+2HH+JRuGXndvJatHQeBKw2Ewxxl+NfpG6IGv+Wd5PDnnlotP4ZHUYicx03XjGDuZWiwK01nIn11HhC7UA1ptVvlENXDXWY2EiiXVJgOtNxP+PH5BRivjUEgTBzqS9HQ5fB9HWVQeI4yTN92eN8w/dywek05PYBk04HjjnIYusvnJjzisNjeWQlD8tiQs1oMhsHJO9km1a9TW4/xaD9HDPof2UNaZDEhkXIxRNPtOKQnFajTqA4MWHIr9q8qruXAeRvhcx8gPk06JxatlN/wbQN0EictnZNQbhvCRs9j33Vk7PKNVquths61YYx2nFMKBGT3iHn4HP7Z5iHmfpkYdYdw9SROsLbxR0uxzk8hwQ/cFwEWc6cky25gZu5u8bJu3iIZo+nzcWvjkTsBVcIawlyk=
+node_js:
+- "7"
+branches:
+  only:
+  - master
+  - dev
+before_script:
+- npm prune
+- yarn run post-install
+- yarn run lint
+script:
+- yarn run test
+- yarn run dist
+env:
+  global:
+  - ENCRYPTION_LABEL: d9215e5535f8
+  - COMMIT_AUTHOR_EMAIL: travis@hcuge.ch
+before_deploy:
+  - cd dist
+deploy:
+  provider: npm
+  email: gmer@hcuge.ch
+  skip_cleanup: true
+  api_key:
+    secure: qW5srlnj3UiSkQGwUv07NfyQ18Ry9emfqUXKroDuRr7q5Ip5GJ3DUGoJYJLRehHjT98YSHwUBhW9VvEgI4SopX8SMr4mPyRqU/uUL8IAcJH3kgzsBD2laDf/MPraGHOD3vg4ILZDjMWZaRmfAp2Wr2316OWiTEYGRyK7SmYH5FjLiV6NT1Iif11kRCfZKTb7HXzkldJ8kQ2zocLmihURGobRo7E4eMeYlqA+KNQkzMxcYf1SaJW8uYbWlhDY3DhyBTtMZUUV9qcH4nJ0lVGqlVpaR/+FM53pDRNlViqFZJTpvfYD8kArBjz4XF3memzd5OoG3S5+ZtjYJcUDcRPHJHqugGYFilMSdfzgol28HQlgDCaTTmA2ISOEYkxMhyqBL6LzzoHKC386eA2UbZFWYbRqx1RadDFJjAerLP4VLrOrDZOIOtrORHuFUXE8qmKW5ECSpb4W3bT3QuUr6qePTZ3jIcq31jfP317sWAjEYMMDZF4EykeaGTv6smaGdXyq5byjnfXCwzQzV8OPOwYNGTMnzWuEEU5hK/URWW1XzShxtSsnvMXP+JP8oYdJl83xSmNQJgs3aradk6LL6uI3VDcz9qnbNBJeW/uUCLBU/xPaEO65WtLeG54QbKA8oxjueRWmIAg/hiYm/N+vQaPV5mqN57D1r80b85HBgybMvfs=
+  on:
+    repo: shakilsiraj/json-object-mapper
+    branch: master
+after_deploy:
+- cd ..
+- bash ./tools/scripts/tag.sh

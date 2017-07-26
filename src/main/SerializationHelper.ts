@@ -1,24 +1,25 @@
-import { JsonPropertyDecoratorMetadata, AccessType, Serializer, CacheKey } from "./DecoratorMetadata";
-import { isArrayType, isSimpleType, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants, METADATA_JSON_PROPERTIES_NAME } from "./ReflectHelper";
+import { AccessType, CacheKey, JsonPropertyDecoratorMetadata, Serializer } from './DecoratorMetadata';
+import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getKeyName, getTypeName, getTypeNameFromInstance, isArrayType, isSimpleType } from './ReflectHelper';
 
 export interface SerializationStructure {
-    id: string, /** id of the current structure */
-    type: string, /** 'object' or 'array */
-    instance: any, /** Object instance to serialize */
-    values: Array<String>, /** Array of current current instance's key value pairs */
-    parentIndex: number, /** Parent's index position in the stack */
-    key: string, /** the parent object's key name for this object instance. Options as it is not required for arrays */
-    visited: boolean /** Indicates if this node has been visited or not */
+    id: string; /** id of the current structure */
+    type: string; /** 'object' or 'array */
+    instance: any; /** Object instance to serialize */
+    values: Array<String>; /** Array of current current instance's key value pairs */
+    parentIndex: number; /** Parent's index position in the stack */
+    key: string; /** the parent object's key name for this object instance. Options as it is not required for arrays */
+    visited: boolean; /** Indicates if this node has been visited or not */
 }
 
-export var SerializeArrayType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
-    let furtherSerializationStructures: Object = new Object();
-    let arrayInstance: Array<any> = instanceStructure.instance as Array<any>;
+export const SerializeArrayType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
+    const furtherSerializationStructures: Object = new Object();
+    const arrayInstance: Array<any> = instanceStructure.instance as Array<any>;
     instanceStructure.visited = true;
     arrayInstance.forEach((value: any) => {
+        // tslint:disable-next-line:triple-equals
         if (value != undefined) {
             if (!isSimpleType(typeof value)) {
-                let struct: SerializationStructure = {
+                const struct: SerializationStructure = {
                     id: uniqueId(),
                     type: Constants.OBJECT_TYPE,
                     instance: value,
@@ -35,30 +36,34 @@ export var SerializeArrayType = (parentStructure: SerializationStructure, instan
     });
 
     return createArrayOfSerializationStructures(furtherSerializationStructures);
-}
+};
 
-var createArrayOfSerializationStructures = (serializationStructuresObject: Object) => {
-    let serializationStructures: Array<SerializationStructure> = new Array<SerializationStructure>();
+const createArrayOfSerializationStructures = (serializationStructuresObject: Object) => {
+    const serializationStructures: Array<SerializationStructure> = new Array<SerializationStructure>();
     Object.keys(serializationStructuresObject).forEach((key: string) => {
         serializationStructures.push(serializationStructuresObject[key]);
-    })
+    });
     return serializationStructures;
-}
+};
 
-export var serializeObject = (key: string, instanceValuesStack: Array<String>): string => {
-    return (key != undefined ? '"' + key + '":' : '') + '{' + instanceValuesStack.join() + '}';
-}
+export const serializeObject = (key: string, instanceValuesStack: Array<String>): string => {
+    // tslint:disable-next-line:triple-equals
+    const json = (key != undefined ? `"${key}":` : '');
+    return `${json}{${instanceValuesStack.join()}}`;
+};
 
-export var serializeArray = (key: string, instanceValuesStack: Array<String>): string => {
-    return (key != undefined ? '"' + key + '":' : '') + '[' + instanceValuesStack.join() + ']';
-}
+export const serializeArray = (key: string, instanceValuesStack: Array<String>): string => {
+    // tslint:disable-next-line:triple-equals
+    const json = (key != undefined ? `"${key}":` : '');
+    return `${json}[${instanceValuesStack.join()}]`;
+};
 
-export var mergeObjectOrArrayValuesAndCopyToParents = (instanceStructure: SerializationStructure, parentStructure: SerializationStructure): void => {
+export const mergeObjectOrArrayValuesAndCopyToParents = (instanceStructure: SerializationStructure, parentStructure: SerializationStructure): void => {
     mergeObjectOrArrayValues(instanceStructure);
     parentStructure.values.push(instanceStructure.values.pop());
-}
+};
 
-export var mergeObjectOrArrayValues = (instanceStructure: SerializationStructure): void => {
+export const mergeObjectOrArrayValues = (instanceStructure: SerializationStructure): void => {
     let mergedValue: string;
     if (instanceStructure.type === Constants.OBJECT_TYPE) {
         mergedValue = serializeObject(instanceStructure.key, instanceStructure.values);
@@ -67,31 +72,26 @@ export var mergeObjectOrArrayValues = (instanceStructure: SerializationStructure
     }
     instanceStructure.values = [];
     instanceStructure.values.push(mergedValue);
-}
+};
 
-export var SerializeObjectType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
-    let furtherSerializationStructures: Object = new Object();
+export const SerializeObjectType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
+    const furtherSerializationStructures: Object = new Object();
     instanceStructure.visited = true;
-    let objectKeys: string[] = Object.keys(instanceStructure.instance);
-    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function(item: string) {
-        if(instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
-            // Property does not have getter
-            return false;
-        }
-        return objectKeys.indexOf(item) < 0;
-    }));
-    objectKeys.forEach((key: string) => {
-        let keyInstance = instanceStructure.instance[key];
+    Object.keys(instanceStructure.instance).forEach((key: string) => {
+        const keyInstance = instanceStructure.instance[key];
+        // tslint:disable-next-line:triple-equals
         if (keyInstance != undefined) {
-            let metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
-            if (metadata != undefined && AccessType.READ_ONLY == metadata.access) {
-                //SKIP
+            const metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
+            // tslint:disable-next-line:triple-equals
+            if (metadata != undefined && AccessType.READ_ONLY === metadata.access) {
+                // SKIP
+                // tslint:disable-next-line:triple-equals
             } else if (metadata != undefined && metadata.serializer != undefined) {
-                let serializer: Serializer = getOrCreateSerializer(metadata.serializer);
+                const serializer: Serializer = getOrCreateSerializer(metadata.serializer);
                 instanceStructure.values.push(serializeFunctions[Constants.STRING_TYPE](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
             } else {
                 if (keyInstance instanceof Array) {
-                    let struct: SerializationStructure = {
+                    const struct: SerializationStructure = {
                         id: uniqueId(),
                         type: Constants.ARRAY_TYPE,
                         instance: keyInstance,
@@ -102,7 +102,7 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
                     };
                     furtherSerializationStructures[struct.id] = struct;
                 } else if (!isSimpleType(typeof keyInstance)) {
-                    let struct: SerializationStructure = {
+                    const struct: SerializationStructure = {
                         id: uniqueId(),
                         type: Constants.OBJECT_TYPE,
                         instance: keyInstance,
@@ -113,50 +113,52 @@ export var SerializeObjectType = (parentStructure: SerializationStructure, insta
                     };
                     furtherSerializationStructures[struct.id] = struct;
                 } else {
-                    let serializer: Serializer = serializers[typeof keyInstance];
+                    const serializer: Serializer = serializers[typeof keyInstance];
                     instanceStructure.values.push(serializeFunctions[typeof keyInstance](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
                 }
             }
 
         }
-
-
     });
 
     return createArrayOfSerializationStructures(furtherSerializationStructures);
-}
+};
 
 /**
  * Serialize any type with key value pairs
  */
-var SerializeSimpleType = (key: string, instance: any, serializer: Serializer): string => {
-    let value: any = serializer.serialize(instance);
+const SerializeSimpleType = (key: string, instance: any, serializer: Serializer): string => {
+    const value: any = serializer.serialize(instance);
+    // tslint:disable-next-line:triple-equals
     if (key != undefined) {
-        return '"' + key + '":' + value;
+        return `"${key}":${value}`;
     } else {
         return value;
     }
-}
+};
 
-@CacheKey("DateSerializer")
+@CacheKey('DateSerializer')
 export class DateSerializer implements Serializer {
     serialize = (value: Date): number => {
         return value.getTime();
     }
 }
-@CacheKey("StringSerializer")
+
+@CacheKey('StringSerializer')
 class StringSerializer implements Serializer {
     serialize = (value: string): string => {
         return JSON.stringify(value);
     }
 }
-@CacheKey("NumberSerializer")
+
+@CacheKey('NumberSerializer')
 class NumberSerializer implements Serializer {
     serialize = (value: number): number => {
         return value;
     }
 }
-@CacheKey("BooleanSerializer")
+
+@CacheKey('BooleanSerializer')
 class BooleanSerializer implements Serializer {
     serialize = (value: boolean): boolean => {
         return value;
@@ -166,7 +168,7 @@ class BooleanSerializer implements Serializer {
 /**
  * Object to cache serializers
  */
-export var serializers = new Object();
+export const serializers = new Object();
 serializers[Constants.STRING_TYPE] = new StringSerializer();
 serializers[Constants.NUMBER_TYPE] = new NumberSerializer();
 serializers[Constants.DATE_TYPE] = new DateSerializer();
@@ -181,11 +183,11 @@ serializers[Constants.BOOLEAN_TYPE_LOWERCASE] = serializers[Constants.BOOLEAN_TY
  * If not, creates a new one and caches it, returns the
  * cached instance otherwise.
  */
-export var getOrCreateSerializer = (type: any): any => {
+export const getOrCreateSerializer = (type: any): any => {
     return getCachedType(type, serializers);
-}
+};
 
-export var serializeFunctions = [];
+export const serializeFunctions = [];
 serializeFunctions[Constants.STRING_TYPE] = SerializeSimpleType;
 serializeFunctions[Constants.NUMBER_TYPE] = SerializeSimpleType;
 serializeFunctions[Constants.BOOLEAN_TYPE] = SerializeSimpleType;
@@ -199,8 +201,6 @@ serializeFunctions[Constants.DATE_TYPE_LOWERCASE] = SerializeSimpleType;
 serializeFunctions[Constants.ARRAY_TYPE_LOWERCASE] = SerializeArrayType;
 serializeFunctions[Constants.OBJECT_TYPE_LOWERCASE] = SerializeObjectType;
 
-
-var uniqueId = (): string => {
-    return Math.random() + "-" + Date.now();
-}
-
+const uniqueId = (): string => {
+    return `${Math.random()}-${Date.now()}`;
+};

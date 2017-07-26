@@ -175,7 +175,7 @@ expect(serialized).toBe('{"today":"Fri"}');
 This can be achieved by using implementations of `Serializer` and `Deserializer`. For example:
 
 ```typescript
-class MapDeserailizer implements Deserializer {
+class MapDeserializer implements Deserializer {
     deserialize = (value: any): any => {
         let mapToReturn: Map<String, String> = new Map<String, String>();
         if (value) {

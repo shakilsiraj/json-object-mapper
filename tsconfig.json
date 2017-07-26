@@ -6,10 +6,10 @@
         "sourceMap": true,
         "experimentalDecorators":true,
         "emitDecoratorMetadata": true,
-        "target": "ES5"
+        "target": "es5"
     },
 	
 	"exclude": [
-		"node_modules", "bin", "typings"
+		"node_modules", "bin"
 	]
 }
