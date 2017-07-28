@@ -48,14 +48,6 @@ export function getJsonIgnoreDecorator() {
     }
 }
 
-/**
- * Returns the JsonIgnoreDecoratorMetadata for the property
- */
-export function getJsonIgnoreDecorator() {
-    return function(target: any, propertyKey: string) {
-        Reflect.defineMetadata(METADATA_JSON_IGNORE_NAME, true, target, propertyKey);
-    }
-}
 
 export function getPropertyDecorator(metadataKey: string, metadata: any) {
     return Reflect.metadata(metadataKey, metadata);

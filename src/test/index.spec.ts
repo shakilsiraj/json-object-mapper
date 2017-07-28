@@ -619,9 +619,9 @@ describe('Testing JsonIgnore decorator', () => {
     it("Testing JsonIgnore deserialization", () => {
         class Event {
             @JsonProperty()
-            id: number;
+            id: number = undefined;
             @JsonProperty()
-            location: string;
+            location: string = undefined;
             @JsonIgnore()
             state: string = 'old';
         }
