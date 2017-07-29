@@ -10,9 +10,6 @@ function __metadata(k, v) {
 }
 
 /**
- * Helper functions for JS reflections.
- */
-/**
  * Reflect Metadata json properties storage name.
  */
 var METADATA_JSON_PROPERTIES_NAME = "JsonProperties";
@@ -29,6 +26,7 @@ var getJsonPropertyDecoratorMetadata = function (target, key) {
  */
 var getKeyName = function (target, key) {
     var metadata = getJsonPropertyDecoratorMetadata(target, key);
+    // tslint:disable-next-line:triple-equals
     if (metadata != undefined && metadata.name != undefined) {
         return metadata.name;
     }
@@ -39,14 +37,9 @@ var getKeyName = function (target, key) {
 /**
  * Returns the JsonPropertyDecoratorMetadata for the property
  */
-function getJsonPropertyDecorator(metadata) {
-    return function (target, propertyKey) {
-        var properties = Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, target) || [];
-        properties.push(propertyKey);
-        Reflect.defineMetadata(METADATA_JSON_PROPERTIES_NAME, properties, target);
-        getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata)(target, propertyKey);
-    };
-}
+var getJsonPropertyDecorator = function (metadata) {
+    return getPropertyDecorator(JSON_PROPERTY_DECORATOR_NAME, metadata);
+};
 /**
  * Returns the JsonIgnoreDecoratorMetadata for the property
  */
@@ -58,10 +51,11 @@ function getJsonIgnoreDecorator() {
 function getPropertyDecorator(metadataKey, metadata) {
     return Reflect.metadata(metadataKey, metadata);
 }
+
 /**
  * Checks to see if the specified type is a standard JS object type.
  */
-function isSimpleType(typeName) {
+var isSimpleType = function (typeName) {
     switch (typeName) {
         case Constants.STRING_TYPE: return true;
         case Constants.NUMBER_TYPE: return true;
@@ -71,52 +65,48 @@ function isSimpleType(typeName) {
         case Constants.NUMBER_TYPE_LOWERCASE: return true;
         case Constants.BOOLEAN_TYPE_LOWERCASE: return true;
         case Constants.DATE_TYPE_LOWERCASE: return true;
-        default: false;
+        default: return false;
     }
-}
+};
 /**
  * Returns the the instance type name by looking at the constructor name.
  * Stupid IE does not have name property! Hence the hack.
  */
-function getTypeNameFromInstance(instance) {
+var getTypeNameFromInstance = function (instance) {
     return instance.toString().trim().split(/[\s\()]/g)[1];
-}
-function getType(instance, key) {
+};
+var getType = function (instance, key) {
     return Reflect.getMetadata('design:type', instance, key);
-}
-function isArrayType(instance, key) {
-    return Array == getType(instance, key);
-}
-function getTypeName(instance, key) {
+};
+var isArrayType = function (instance, key) {
+    return Array === getType(instance, key);
+};
+var getTypeName = function (instance, key) {
     var type = getType(instance, key);
+    // tslint:disable-next-line:triple-equals
     if (type != undefined) {
         return getTypeNameFromInstance(type);
     }
     return type;
-}
+};
 var Constants = {
-    OBJECT_TYPE: "Object",
-    OBJECT_TYPE_LOWERCASE: "object",
-    STRING_TYPE: "String",
-    STRING_TYPE_LOWERCASE: "string",
-    NUMBER_TYPE: "Number",
-    NUMBER_TYPE_LOWERCASE: "number",
-    BOOLEAN_TYPE: "Boolean",
-    BOOLEAN_TYPE_LOWERCASE: "boolean",
-    DATE_TYPE: "Date",
-    DATE_TYPE_LOWERCASE: "date",
-    ARRAY_TYPE: "Array",
-    ARRAY_TYPE_LOWERCASE: "array",
-    FROM_ARRAY: "fromArray"
+    OBJECT_TYPE: 'Object',
+    OBJECT_TYPE_LOWERCASE: 'object',
+    STRING_TYPE: 'String',
+    STRING_TYPE_LOWERCASE: 'string',
+    NUMBER_TYPE: 'Number',
+    NUMBER_TYPE_LOWERCASE: 'number',
+    BOOLEAN_TYPE: 'Boolean',
+    BOOLEAN_TYPE_LOWERCASE: 'boolean',
+    DATE_TYPE: 'Date',
+    DATE_TYPE_LOWERCASE: 'date',
+    ARRAY_TYPE: 'Array',
+    ARRAY_TYPE_LOWERCASE: 'array',
+    FROM_ARRAY: 'fromArray'
 };
 var getCachedType = function (type, cache) {
-    var typeName = undefined;
-    if (type.getJsonObjectMapperCacheKey != undefined) {
-        typeName = type.getJsonObjectMapperCacheKey();
-    }
-    else {
-        typeName = getTypeNameFromInstance(type);
-    }
+    // tslint:disable-next-line:triple-equals
+    var typeName = type.getJsonObjectMapperCacheKey != undefined ? type.getJsonObjectMapperCacheKey() : getTypeNameFromInstance(type);
     if (!cache[typeName]) {
         cache[typeName] = new type();
     }
@@ -126,7 +116,7 @@ var getCachedType = function (type, cache) {
 /**
  * Decorator names
  */
-var JSON_PROPERTY_DECORATOR_NAME = "JsonProperty";
+var JSON_PROPERTY_DECORATOR_NAME = 'JsonProperty';
 var AccessType;
 (function (AccessType) {
     AccessType[AccessType["READ_ONLY"] = 0] = "READ_ONLY";
@@ -136,14 +126,14 @@ var AccessType;
 /**
  * JsonProperty Decorator function.
  */
-function JsonProperty(metadata) {
+var JsonProperty = function (metadata) {
     if (typeof metadata === 'string') {
         return getJsonPropertyDecorator({ name: metadata, required: false, access: AccessType.BOTH });
     }
     else {
         return getJsonPropertyDecorator(metadata);
     }
-}
+};
 /**
  * Decorator for specifying cache key.
  * Used for Serializer/Deserializer caching.
@@ -152,13 +142,13 @@ function JsonProperty(metadata) {
  * @param {string} key
  * @returns
  */
-function CacheKey(key) {
+var CacheKey = function (key) {
     return function (f) {
-        var functionName = "getJsonObjectMapperCacheKey";
+        var functionName = 'getJsonObjectMapperCacheKey';
         var functionImpl = new Function("return '" + key + "';");
         f[functionName] = functionImpl;
     };
-}
+};
 /**
  * JsonIgnore Decorator function.
  */
@@ -168,12 +158,14 @@ function JsonIgnore() {
 /**
  * Json convertion error type.
  */
-function JsonConverstionError(message, json) {
-    this.json = json;
-    this.message = message;
-    this.stack = (new Error()).stack;
-}
-JsonConverstionError.prototype = new Error;
+var JsonConverstionError = (function () {
+    function JsonConverstionError(message, json) {
+        this.json = json;
+        this.message = message;
+        this.stack = (new Error()).stack;
+    }
+    return JsonConverstionError;
+}());
 
 var SimpleTypeCoverter = function (value, type) {
     return type === Constants.DATE_TYPE ? new Date(value) : value;
@@ -187,7 +179,8 @@ var DeserializeSimpleType = function (instance, instanceKey, type, json, jsonKey
         return [];
     }
     catch (e) {
-        throw new JsonConverstionError("Property '" + instanceKey + "' of " + instance.constructor["name"] + " does not match datatype of " + jsonKey, json);
+        // tslint:disable-next-line:no-string-literal
+        throw new JsonConverstionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
     }
 };
 /**
@@ -199,7 +192,8 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
         return [];
     }
     catch (e) {
-        throw new JsonConverstionError("Property '" + instanceKey + "' of " + instance.constructor["name"] + " does not match datatype of " + jsonKey, json);
+        // tslint:disable-next-line:no-string-literal
+        throw new JsonConverstionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
     }
 };
 /**
@@ -235,6 +229,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
     /**
      * If instanceKey is not passed on then it's the first iteration of the functions.
      */
+    // tslint:disable-next-line:triple-equals
     if (instanceKey != undefined) {
         objectInstance = new type();
         instance[instanceKey] = objectInstance;
@@ -261,20 +256,22 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
         if (metadata === undefined) {
             metadata = { name: key, required: false, access: AccessType.BOTH };
         }
+        // tslint:disable-next-line:triple-equals
         if (AccessType.WRITE_ONLY != metadata.access) {
             /**
              * Check requried property
              */
             if (metadata.required && json[metadata.name] === undefined) {
-                throw new JsonConverstionError("JSON structure does have have required property '"
-                    + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance)
-                    + "[" + key + "]", json);
+                throw new JsonConverstionError("JSON structure does have have required property '" + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", json);
             }
+            // tslint:disable-next-line:triple-equals
             var jsonKeyName = metadata.name != undefined ? metadata.name : key;
+            // tslint:disable-next-line:triple-equals
             if (json[jsonKeyName] != undefined) {
                 /**
                  * If metadata has deserializer, use that one instead.
                  */
+                // tslint:disable-next-line:triple-equals
                 if (metadata.deserializer != undefined) {
                     objectInstance[key] = getOrCreateDeserializer(metadata.deserializer).deserialize(json[jsonKeyName]);
                 }
@@ -286,6 +283,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                 }
                 else {
                     if (!isArrayType(objectInstance, key)) {
+                        // tslint:disable-next-line:triple-equals
                         var typeName = metadata.type != undefined ? getTypeNameFromInstance(metadata.type) : getTypeName(objectInstance, key);
                         if (!isSimpleType(typeName)) {
                             objectInstance[key] = new metadata.type();
@@ -342,6 +340,7 @@ var SerializeArrayType = function (parentStructure, instanceStructure, instanceI
     var arrayInstance = instanceStructure.instance;
     instanceStructure.visited = true;
     arrayInstance.forEach(function (value) {
+        // tslint:disable-next-line:triple-equals
         if (value != undefined) {
             if (!isSimpleType(typeof value)) {
                 var struct = {
@@ -370,10 +369,14 @@ var createArrayOfSerializationStructures = function (serializationStructuresObje
     return serializationStructures;
 };
 var serializeObject = function (key, instanceValuesStack) {
-    return (key != undefined ? '"' + key + '":' : '') + '{' + instanceValuesStack.join() + '}';
+    // tslint:disable-next-line:triple-equals
+    var json = (key != undefined ? "\"" + key + "\":" : '');
+    return json + "{" + instanceValuesStack.join() + "}";
 };
 var serializeArray = function (key, instanceValuesStack) {
-    return (key != undefined ? '"' + key + '":' : '') + '[' + instanceValuesStack.join() + ']';
+    // tslint:disable-next-line:triple-equals
+    var json = (key != undefined ? "\"" + key + "\":" : '');
+    return json + "[" + instanceValuesStack.join() + "]";
 };
 var mergeObjectOrArrayValuesAndCopyToParents = function (instanceStructure, parentStructure) {
     mergeObjectOrArrayValues(instanceStructure);
@@ -408,7 +411,8 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
         var keyInstance = instanceStructure.instance[key];
         if (keyInstance != undefined) {
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
-            if (metadata != undefined && AccessType.READ_ONLY == metadata.access) {
+            // tslint:disable-next-line:triple-equals
+            if (metadata != undefined && AccessType.READ_ONLY === metadata.access) {
             }
             else if (metadata != undefined && metadata.serializer != undefined) {
                 var serializer = getOrCreateSerializer(metadata.serializer);
@@ -453,8 +457,9 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
  */
 var SerializeSimpleType = function (key, instance, serializer) {
     var value = serializer.serialize(instance);
+    // tslint:disable-next-line:triple-equals
     if (key != undefined) {
-        return '"' + key + '":' + value;
+        return "\"" + key + "\":" + value;
     }
     else {
         return value;
@@ -467,7 +472,7 @@ var DateSerializer = (function () {
         };
     }
     DateSerializer = __decorate([
-        CacheKey("DateSerializer"), 
+        CacheKey('DateSerializer'), 
         __metadata('design:paramtypes', [])
     ], DateSerializer);
     return DateSerializer;
@@ -479,7 +484,7 @@ var StringSerializer = (function () {
         };
     }
     StringSerializer = __decorate([
-        CacheKey("StringSerializer"), 
+        CacheKey('StringSerializer'), 
         __metadata('design:paramtypes', [])
     ], StringSerializer);
     return StringSerializer;
@@ -491,7 +496,7 @@ var NumberSerializer = (function () {
         };
     }
     NumberSerializer = __decorate([
-        CacheKey("NumberSerializer"), 
+        CacheKey('NumberSerializer'), 
         __metadata('design:paramtypes', [])
     ], NumberSerializer);
     return NumberSerializer;
@@ -503,7 +508,7 @@ var BooleanSerializer = (function () {
         };
     }
     BooleanSerializer = __decorate([
-        CacheKey("BooleanSerializer"), 
+        CacheKey('BooleanSerializer'), 
         __metadata('design:paramtypes', [])
     ], BooleanSerializer);
     return BooleanSerializer;
@@ -558,15 +563,19 @@ var ObjectMapper;
             return ObjectsArrayParent;
         }());
         var parent = new ObjectsArrayParent();
-        runDeserialization(conversionFunctions[Constants.ARRAY_TYPE](parent, "instances", type, json, undefined));
-        return parent.instances || [];
+        runDeserialization(conversionFunctions[Constants.ARRAY_TYPE](parent, 'instances', type, json, undefined));
+        return parent.instances;
     };
     /**
      * Deserializes a Object type with the passed on JSON data.
      */
     ObjectMapper.deserialize = function (type, json) {
         var dtoInstance = new type();
-        var conversionFunctionStructure = { functionName: Constants.OBJECT_TYPE, instance: dtoInstance, json: json };
+        var conversionFunctionStructure = {
+            functionName: Constants.OBJECT_TYPE,
+            instance: dtoInstance,
+            json: json,
+        };
         runDeserialization([conversionFunctionStructure]);
         return dtoInstance;
     };
@@ -576,6 +585,7 @@ var ObjectMapper;
             converstionFunctionsArray.push(struct);
         });
         var conversionFunctionStructure = converstionFunctionsArray[0];
+        // tslint:disable-next-line:triple-equals
         while (conversionFunctionStructure != undefined) {
             var stackEntries = conversionFunctions[conversionFunctionStructure.functionName](conversionFunctionStructure.instance, conversionFunctionStructure.instanceKey, conversionFunctionStructure.type, conversionFunctionStructure.json, conversionFunctionStructure.jsonKey);
             stackEntries.forEach(function (structure) {
@@ -591,7 +601,7 @@ var ObjectMapper;
         var stack = new Array();
         var struct = {
             id: undefined,
-            type: Array.isArray(obj) == true ? Constants.ARRAY_TYPE : Constants.OBJECT_TYPE,
+            type: Array.isArray(obj) === true ? Constants.ARRAY_TYPE : Constants.OBJECT_TYPE,
             instance: obj,
             parentIndex: undefined,
             values: new Array(),
@@ -609,9 +619,10 @@ var ObjectMapper;
             else {
                 var moreStructures = serializeFunctions[instanceStruct.type](parentStruct, instanceStruct, stack.length - 1);
                 if (moreStructures.length > 0) {
-                    moreStructures.forEach(function (each) {
-                        stack.push(each);
-                    });
+                    var index = moreStructures.length;
+                    while (--index >= 0) {
+                        stack.push(moreStructures[index]);
+                    }
                 }
                 else {
                     if (stack.length > 1) {
