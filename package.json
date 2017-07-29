@@ -1,6 +1,6 @@
 {
   "name": "json-object-mapper",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A TypeScript library to serialize and deserialize JSON objects in a fast and non-recursive way",
   "repository": {
     "type": "git",
@@ -31,7 +31,6 @@
     "dist": "npm run build && npm run test && npm run rollup",
     "test": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
     "test-karma": "node_modules/.bin/karma start ./karma.conf.js",
-    "post-install": "node_modules/.bin/typings install",
     "tslint": "tslint --project ./tsconfig.json --type-check",
     "lint": "npm run tslint"
   },
