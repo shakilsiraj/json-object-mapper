@@ -31,7 +31,6 @@
     "dist": "npm run build && npm run test && npm run rollup",
     "test": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
     "test-karma": "node_modules/.bin/karma start ./karma.conf.js",
-    "post-install": "",
     "tslint": "tslint --project ./tsconfig.json --type-check",
     "lint": "npm run tslint"
   },
