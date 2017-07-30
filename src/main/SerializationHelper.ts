@@ -1,6 +1,8 @@
 import { AccessType, CacheKey, JsonPropertyDecoratorMetadata, Serializer } from './DecoratorMetadata';
 import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getKeyName, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 
+declare var Reflect: any;
+
 export interface SerializationStructure {
     id: string; /** id of the current structure */
     type: string; /** 'object' or 'array */
