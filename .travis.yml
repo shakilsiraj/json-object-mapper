@@ -15,9 +15,7 @@ branches:
   - dev
 before_script:
 - npm prune
-- yarn run lint
 script:
-- yarn run test
 - yarn run dist
 env:
   global:
@@ -34,6 +32,3 @@ deploy:
   on:
     repo: shakilsiraj/json-object-mapper
     branch: master
-after_deploy:
-- cd ..
-- bash ./tools/scripts/tag.sh
