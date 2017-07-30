@@ -16,7 +16,7 @@ describe('Testing serialization of large datasets', () => {
         uuid: String = createUUID();
         random: Number = Math.random();
         @JsonProperty({ type: NodeWith2Children })
-        childNodes: Array<NodeWith2Children> = new Array<NodeWith2Children>();
+        childNodes: Array<NodeWith2Children> = [];
         constructor() {
             for (let i = 0; i < 300; i++) {
                 this.childNodes.push(new NodeWith2Children());

@@ -1,7 +1,7 @@
+import 'reflect-metadata';
 import { AccessType, JsonProperty, JsonPropertyDecoratorMetadata } from '../main/DecoratorMetadata';
 import { ObjectMapper } from '../main/index';
 import { isArrayType } from '../main/ReflectHelper';
-import "reflect-metadata";
 
 describe('Testing deserialize function with large datasets - http://jsonstudio.com/resources/', () => {
     class City {

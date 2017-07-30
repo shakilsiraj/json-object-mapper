@@ -1,5 +1,5 @@
-import { JsonPropertyDecoratorMetadata, AccessType, Serializer, CacheKey } from "./DecoratorMetadata";
-import { isArrayType, isSimpleType, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, getTypeName, getKeyName, Constants, METADATA_JSON_PROPERTIES_NAME, METADATA_JSON_IGNORE_NAME } from "./ReflectHelper";
+import { AccessType, CacheKey, JsonPropertyDecoratorMetadata, Serializer } from './DecoratorMetadata';
+import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getKeyName, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 
 export interface SerializationStructure {
     id: string; /** id of the current structure */
@@ -12,7 +12,7 @@ export interface SerializationStructure {
 }
 
 export const SerializeArrayType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
-    const furtherSerializationStructures: Object = new Object();
+    const furtherSerializationStructures: Object = {};
     const arrayInstance: Array<any> = instanceStructure.instance as Array<any>;
     instanceStructure.visited = true;
     arrayInstance.forEach((value: any) => {
@@ -24,7 +24,7 @@ export const SerializeArrayType = (parentStructure: SerializationStructure, inst
                     type: Constants.OBJECT_TYPE,
                     instance: value,
                     parentIndex: instanceIndex,
-                    values: new Array<String>(),
+                    values: [],
                     key: undefined,
                     visited: false
                 };
@@ -39,7 +39,7 @@ export const SerializeArrayType = (parentStructure: SerializationStructure, inst
 };
 
 const createArrayOfSerializationStructures = (serializationStructuresObject: Object) => {
-    const serializationStructures: Array<SerializationStructure> = new Array<SerializationStructure>();
+    const serializationStructures: Array<SerializationStructure> = [];
     Object.keys(serializationStructuresObject).forEach((key: string) => {
         serializationStructures.push(serializationStructuresObject[key]);
     });
@@ -75,22 +75,22 @@ export const mergeObjectOrArrayValues = (instanceStructure: SerializationStructu
 };
 
 export const SerializeObjectType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
-    const furtherSerializationStructures: Object = new Object();
+    const furtherSerializationStructures: Object = {};
     instanceStructure.visited = true;
     let objectKeys: string[] = Object.keys(instanceStructure.instance);
-    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function(item: string) {
-        if(instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter((item: string) => {
+        if (instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
             // Property does not have getter
             return false;
         }
         return objectKeys.indexOf(item) < 0;
     }));
-    objectKeys = objectKeys.filter(function(item: string) {
+    objectKeys = objectKeys.filter((item: string) => {
         return !Reflect.hasMetadata(METADATA_JSON_IGNORE_NAME, instanceStructure.instance, item);
     });
     objectKeys.forEach((key: string) => {
-        let keyInstance = instanceStructure.instance[key];
-        if (keyInstance != undefined) {
+        const keyInstance = instanceStructure.instance[key];
+        if (keyInstance !== undefined) {
             const metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
             // tslint:disable-next-line:triple-equals
             if (metadata != undefined && AccessType.READ_ONLY === metadata.access) {
@@ -106,7 +106,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
                         type: Constants.ARRAY_TYPE,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
-                        values: new Array<String>(),
+                        values: [],
                         key: getKeyName(instanceStructure.instance, key),
                         visited: false
                     };
@@ -117,7 +117,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
                         type: Constants.OBJECT_TYPE,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
-                        values: new Array<String>(),
+                        values: [],
                         key: getKeyName(instanceStructure.instance, key),
                         visited: false
                     };
@@ -178,7 +178,7 @@ class BooleanSerializer implements Serializer {
 /**
  * Object to cache serializers
  */
-export const serializers = new Object();
+export const serializers = {};
 serializers[Constants.STRING_TYPE] = new StringSerializer();
 serializers[Constants.NUMBER_TYPE] = new NumberSerializer();
 serializers[Constants.DATE_TYPE] = new DateSerializer();

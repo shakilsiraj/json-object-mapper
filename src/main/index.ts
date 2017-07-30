@@ -36,7 +36,7 @@ export namespace ObjectMapper {
 
     const runDeserialization = (conversionFunctionStructures: ConversionFunctionStructure[]): void => {
 
-        const converstionFunctionsArray: Array<ConversionFunctionStructure> = new Array<ConversionFunctionStructure>();
+        const converstionFunctionsArray: Array<ConversionFunctionStructure> = [];
         conversionFunctionStructures.forEach((struct: ConversionFunctionStructure) => {
             converstionFunctionsArray.push(struct);
         });
@@ -60,13 +60,13 @@ export namespace ObjectMapper {
      * Serializes an object instance to JSON string.
      */
     export const serialize = (obj: any): String => {
-        const stack: Array<SerializationStructure> = new Array<SerializationStructure>();
+        const stack: Array<SerializationStructure> = [];
         const struct: SerializationStructure = {
             id: undefined,
             type: Array.isArray(obj) === true ? Constants.ARRAY_TYPE : Constants.OBJECT_TYPE,
             instance: obj,
             parentIndex: undefined,
-            values: new Array<String>(),
+            values: [],
             key: undefined,
             visited: false
         };
@@ -100,5 +100,5 @@ export namespace ObjectMapper {
         return struct.values[0];
     };
 }
-export { JsonProperty, JsonConverstionError, AccessType, CacheKey, JsonIgnore } from "./DecoratorMetadata";
-export { DateSerializer } from "./SerializationHelper";
+export { JsonProperty, JsonConverstionError, AccessType, CacheKey, JsonIgnore } from './DecoratorMetadata';
+export { DateSerializer } from './SerializationHelper';

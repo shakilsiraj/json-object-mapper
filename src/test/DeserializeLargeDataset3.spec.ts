@@ -1,6 +1,6 @@
+import 'reflect-metadata';
 import { JsonProperty } from '../main/DecoratorMetadata';
 import { ObjectMapper } from '../main/index';
-import "reflect-metadata";
 
 describe('Tesing large dataset from https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json', () => {
     it('Test loading 64.72 KB ignoring spaces', () => {

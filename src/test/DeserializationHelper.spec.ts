@@ -9,7 +9,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject5();
 
-        const jsonTest = new Object();
+        const jsonTest = {};
         jsonTest['name'] = 'Shakil';
 
         const moreFunctionsList = DeserializeSimpleType(instance, 'field', 'String', jsonTest, 'name');
@@ -24,7 +24,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject6();
 
-        const jsonTest = new Object();
+        const jsonTest = {};
         jsonTest['booleanType'] = true;
 
         const moreFunctionsList = DeserializeSimpleType(instance, 'field', 'Boolean', jsonTest, 'booleanType');
@@ -39,7 +39,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject7();
 
-        const jsonTest = new Object();
+        const jsonTest = {};
         jsonTest['numberType'] = 12345;
 
         const moreFunctionsList = DeserializeSimpleType(instance, 'field', 'Number', jsonTest, 'numberType');
@@ -54,7 +54,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject8();
 
-        const jsonTest = new Object();
+        const jsonTest = {};
         jsonTest['dateType'] = '05/08/2013';
 
         const moreFunctionsList = DeserializeDateType(instance, 'field', 'Date', jsonTest, 'dateType');
@@ -69,7 +69,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject81();
 
-        const jsonTest = new Object();
+        const jsonTest = {};
         jsonTest['dateType'] = 1333065600000;
 
         const moreFunctionsList = DeserializeDateType(instance, 'field', 'Date', jsonTest, 'dateType');
@@ -111,23 +111,23 @@ describe('Testing Conversion functions', () => {
         expect(testInstance.field.length).toBe(3);
     });
 
-    it("Test DeserializeArrayType - undefined array ", () => {
+    it('Test DeserializeArrayType - undefined array ', () => {
         class ComplexType {
             f: number = Math.random();
         }
-        class testObject10 {
+        class TestObject10 {
             field1: ComplexType[];
             field2: string[];
         }
 
-        var json = { 'objects': [] }
-        var testInstance1 = new testObject10();
-        var testInstance2 = new testObject10();
+        const json = { 'objects': [] };
+        const testInstance1 = new TestObject10();
+        const testInstance2 = new TestObject10();
 
-        var moreFunctionsList1 = DeserializeArrayType(testInstance1, "field1", ComplexType, json, "objects");
-        var moreFunctionsList2 = DeserializeArrayType(testInstance1, "field2", String, json, "objects");
-        var moreFunctionsList3 = DeserializeArrayType(testInstance2, "field1", ComplexType, {}, "objects");
-        var moreFunctionsList4 = DeserializeArrayType(testInstance2, "field2", String, {}, "objects");
+        const moreFunctionsList1 = DeserializeArrayType(testInstance1, 'field1', ComplexType, json, 'objects');
+        const moreFunctionsList2 = DeserializeArrayType(testInstance1, 'field2', String, json, 'objects');
+        const moreFunctionsList3 = DeserializeArrayType(testInstance2, 'field1', ComplexType, {}, 'objects');
+        const moreFunctionsList4 = DeserializeArrayType(testInstance2, 'field2', String, {}, 'objects');
 
         expect(moreFunctionsList1.length).toBe(0);
         expect(moreFunctionsList2.length).toBe(0);
@@ -143,7 +143,7 @@ describe('Testing Conversion functions', () => {
         expect(testInstance2.field2.length).toBe(0);
     });
 
-    it("Test DeserializeComplexType - simple class ", () => {
+    it('Test DeserializeComplexType - simple class ', () => {
         class DeserializeComplexTypeSimpleClassTest {
             @JsonProperty()
             firstname: string = undefined;

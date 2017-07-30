@@ -1,9 +1,9 @@
-import "reflect-metadata";
-import { JsonProperty, JsonPropertyDecoratorMetadata, AccessType, JsonIgnore, Serializer, Deserializer } from "../main/DecoratorMetadata";
-import { ObjectMapper } from "../main/index";
-import { a, b } from "./NameSpaces";
-import { getOrCreateDeserializer } from "../main/DeserializationHelper";
-import { getOrCreateSerializer, DateSerializer } from "../main/SerializationHelper";
+import 'reflect-metadata';
+import { AccessType, Deserializer, JsonIgnore, JsonProperty, JsonPropertyDecoratorMetadata, Serializer } from '../main/DecoratorMetadata';
+import { getOrCreateDeserializer } from '../main/DeserializationHelper';
+import { ObjectMapper } from '../main/index';
+import { DateSerializer, getOrCreateSerializer } from '../main/SerializationHelper';
+import { a, b } from './NameSpaces';
 
 describe('Testing deserialize functions', () => {
 
@@ -553,7 +553,7 @@ describe('Misc tests', () => {
 });
 
 describe('Testing JsonIgnore decorator', () => {
-    it("Testing JsonIgnore serialization", () => {
+    it('Testing JsonIgnore serialization', () => {
         class Event {
             @JsonProperty()
             id: number;
@@ -569,34 +569,34 @@ describe('Testing JsonIgnore decorator', () => {
             }
         }
 
-        let serializedString: String = ObjectMapper.serialize(new Event(1, "Canberra", "new"));
+        const serializedString: String = ObjectMapper.serialize(new Event(1, 'Canberra', 'new'));
         expect(serializedString).toBe('{"id":1,"location":"Canberra"}');
     });
 
-    it("Testing JsonIgnore deserialization", () => {
+    it('Testing JsonIgnore deserialization', () => {
         class Event {
             @JsonProperty()
             id: number = undefined;
             @JsonProperty()
             location: string = undefined;
             @JsonIgnore()
-            state: string = 'old';
+            state = 'old';
         }
 
-        let json = {
+        const json = {
             'id': '1',
             'location' : 'Canberra',
             'state': 'new'
         };
 
-        let testInstance: Event = ObjectMapper.deserialize(Event, json);
+        const testInstance: Event = ObjectMapper.deserialize(Event, json);
         expect(testInstance.location).toBe('Canberra');
         expect(testInstance.state).toBe('old');
     });
 });
 
 describe('Testing JsonIgnore decorator', () => {
-    it("Testing JsonIgnore serialization", () => {
+    it('Testing JsonIgnore serialization', () => {
         class Event {
             @JsonProperty()
             id: number;
@@ -612,27 +612,27 @@ describe('Testing JsonIgnore decorator', () => {
             }
         }
 
-        let serializedString: String = ObjectMapper.serialize(new Event(1, "Canberra", "new"));
+        const serializedString: String = ObjectMapper.serialize(new Event(1, 'Canberra', 'new'));
         expect(serializedString).toBe('{"id":1,"location":"Canberra"}');
     });
 
-    it("Testing JsonIgnore deserialization", () => {
+    it('Testing JsonIgnore deserialization', () => {
         class Event {
             @JsonProperty()
             id: number = undefined;
             @JsonProperty()
             location: string = undefined;
             @JsonIgnore()
-            state: string = 'old';
+            state = 'old';
         }
 
-        let json = {
+        const json = {
             'id': '1',
             'location' : 'Canberra',
             'state': 'new'
         };
 
-        let testInstance: Event = ObjectMapper.deserialize(Event, json);
+        const testInstance: Event = ObjectMapper.deserialize(Event, json);
         expect(testInstance.location).toBe('Canberra');
         expect(testInstance.state).toBe('old');
     });

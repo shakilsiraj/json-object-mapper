@@ -12,8 +12,8 @@ function __metadata(k, v) {
 /**
  * Reflect Metadata json properties storage name.
  */
-var METADATA_JSON_PROPERTIES_NAME = "JsonProperties";
-var METADATA_JSON_IGNORE_NAME = "JsonIgnore";
+var METADATA_JSON_PROPERTIES_NAME = 'JsonProperties';
+var METADATA_JSON_IGNORE_NAME = 'JsonIgnore';
 /**
  * Returns the JsonProperty decorator metadata.
  */
@@ -43,15 +43,14 @@ var getJsonPropertyDecorator = function (metadata) {
 /**
  * Returns the JsonIgnoreDecoratorMetadata for the property
  */
-function getJsonIgnoreDecorator() {
+var getJsonIgnoreDecorator = function () {
     return function (target, propertyKey) {
         Reflect.defineMetadata(METADATA_JSON_IGNORE_NAME, true, target, propertyKey);
     };
-}
-function getPropertyDecorator(metadataKey, metadata) {
+};
+var getPropertyDecorator = function (metadataKey, metadata) {
     return Reflect.metadata(metadataKey, metadata);
-}
-
+};
 /**
  * Checks to see if the specified type is a standard JS object type.
  */
@@ -152,9 +151,9 @@ var CacheKey = function (key) {
 /**
  * JsonIgnore Decorator function.
  */
-function JsonIgnore() {
+var JsonIgnore = function () {
     return getJsonIgnoreDecorator();
-}
+};
 /**
  * Json convertion error type.
  */
@@ -200,9 +199,9 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
  * Deserializes a JS array type from json.
  */
 var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey) {
-    var jsonObject = (jsonKey != undefined) ? (json[jsonKey] || []) : json;
+    var jsonObject = (jsonKey !== undefined) ? (json[jsonKey] || []) : json;
     var jsonArraySize = jsonObject.length;
-    var conversionFunctionsList = new Array();
+    var conversionFunctionsList = [];
     var arrayInstance = [];
     instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
@@ -224,7 +223,7 @@ var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey)
  * Deserializes a js object type from json.
  */
 var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKey) {
-    var conversionFunctionsList = new Array();
+    var conversionFunctionsList = [];
     var objectInstance;
     /**
      * If instanceKey is not passed on then it's the first iteration of the functions.
@@ -308,7 +307,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
 /**
  * Object to cache deserializers
  */
-var deserializers = new Object();
+var deserializers = {};
 /**
  * Checks to see if the deserializer already exists or not.
  * If not, creates a new one and caches it, returns the
@@ -320,7 +319,7 @@ var getOrCreateDeserializer = function (type) {
 /**
  * List of JSON object conversion functions.
  */
-var conversionFunctions = new Object();
+var conversionFunctions = {};
 conversionFunctions[Constants.OBJECT_TYPE] = DeserializeComplexType;
 conversionFunctions[Constants.ARRAY_TYPE] = DeserializeArrayType;
 conversionFunctions[Constants.DATE_TYPE] = DeserializeDateType;
@@ -336,7 +335,7 @@ conversionFunctions[Constants.NUMBER_TYPE_LOWERCASE] = DeserializeSimpleType;
 conversionFunctions[Constants.BOOLEAN_TYPE_LOWERCASE] = DeserializeSimpleType;
 
 var SerializeArrayType = function (parentStructure, instanceStructure, instanceIndex) {
-    var furtherSerializationStructures = new Object();
+    var furtherSerializationStructures = {};
     var arrayInstance = instanceStructure.instance;
     instanceStructure.visited = true;
     arrayInstance.forEach(function (value) {
@@ -348,7 +347,7 @@ var SerializeArrayType = function (parentStructure, instanceStructure, instanceI
                     type: Constants.OBJECT_TYPE,
                     instance: value,
                     parentIndex: instanceIndex,
-                    values: new Array(),
+                    values: [],
                     key: undefined,
                     visited: false
                 };
@@ -362,7 +361,7 @@ var SerializeArrayType = function (parentStructure, instanceStructure, instanceI
     return createArrayOfSerializationStructures(furtherSerializationStructures);
 };
 var createArrayOfSerializationStructures = function (serializationStructuresObject) {
-    var serializationStructures = new Array();
+    var serializationStructures = [];
     Object.keys(serializationStructuresObject).forEach(function (key) {
         serializationStructures.push(serializationStructuresObject[key]);
     });
@@ -394,7 +393,7 @@ var mergeObjectOrArrayValues = function (instanceStructure) {
     instanceStructure.values.push(mergedValue);
 };
 var SerializeObjectType = function (parentStructure, instanceStructure, instanceIndex) {
-    var furtherSerializationStructures = new Object();
+    var furtherSerializationStructures = {};
     instanceStructure.visited = true;
     var objectKeys = Object.keys(instanceStructure.instance);
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function (item) {
@@ -409,7 +408,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
     });
     objectKeys.forEach(function (key) {
         var keyInstance = instanceStructure.instance[key];
-        if (keyInstance != undefined) {
+        if (keyInstance !== undefined) {
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
             // tslint:disable-next-line:triple-equals
             if (metadata != undefined && AccessType.READ_ONLY === metadata.access) {
@@ -425,7 +424,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
                         type: Constants.ARRAY_TYPE,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
-                        values: new Array(),
+                        values: [],
                         key: getKeyName(instanceStructure.instance, key),
                         visited: false
                     };
@@ -437,7 +436,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
                         type: Constants.OBJECT_TYPE,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
-                        values: new Array(),
+                        values: [],
                         key: getKeyName(instanceStructure.instance, key),
                         visited: false
                     };
@@ -516,7 +515,7 @@ var BooleanSerializer = (function () {
 /**
  * Object to cache serializers
  */
-var serializers = new Object();
+var serializers = {};
 serializers[Constants.STRING_TYPE] = new StringSerializer();
 serializers[Constants.NUMBER_TYPE] = new NumberSerializer();
 serializers[Constants.DATE_TYPE] = new DateSerializer();
@@ -580,7 +579,7 @@ var ObjectMapper;
         return dtoInstance;
     };
     var runDeserialization = function (conversionFunctionStructures) {
-        var converstionFunctionsArray = new Array();
+        var converstionFunctionsArray = [];
         conversionFunctionStructures.forEach(function (struct) {
             converstionFunctionsArray.push(struct);
         });
@@ -598,13 +597,13 @@ var ObjectMapper;
      * Serializes an object instance to JSON string.
      */
     ObjectMapper.serialize = function (obj) {
-        var stack = new Array();
+        var stack = [];
         var struct = {
             id: undefined,
             type: Array.isArray(obj) === true ? Constants.ARRAY_TYPE : Constants.OBJECT_TYPE,
             instance: obj,
             parentIndex: undefined,
-            values: new Array(),
+            values: [],
             key: undefined,
             visited: false
         };

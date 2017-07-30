@@ -31,7 +31,7 @@
     "dist": "npm run build && npm run test && npm run rollup",
     "test": "node_modules/.bin/jasmine-node bin --verbose --junitreport --noColor",
     "test-karma": "node_modules/.bin/karma start ./karma.conf.js",
-    "tslint": "tslint --project ./tsconfig.json --type-check",
+    "tslint": "tslint --project ./tsconfig.json --type-check --fix",
     "lint": "npm run tslint"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "es6-shim": "~0.35.3",
     "jasmine": "~2.5.2",
     "jasmine-core": "~2.3.4",
-    "jasmine-node": "~1.14.5",
+    "jasmine-node`": "~1.14.5",
     "jasmine-ts": "^0.2.0",
     "karma": "~1.3.0",
     "karma-chrome-launcher": "~2.0.0",

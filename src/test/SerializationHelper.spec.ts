@@ -31,7 +31,7 @@ describe('Testing SerializationHelper methods', () => {
             type: Constants.ARRAY_TYPE,
             instance: ['67', '33', '23', '45'],
             parentIndex: 0,
-            values: new Array<String>(),
+            values: [],
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false
@@ -51,7 +51,7 @@ describe('Testing SerializationHelper methods', () => {
             type: Constants.OBJECT_TYPE,
             instance: new TestSerializeObjectTypeSimpleClass(),
             parentIndex: 0,
-            values: new Array<String>(),
+            values: [],
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false
@@ -73,7 +73,7 @@ describe('Testing SerializationHelper methods', () => {
             type: Constants.OBJECT_TYPE,
             instance: new TestSerializeObjectTypeClassWithArray(),
             parentIndex: 0,
-            values: new Array<String>(),
+            values: [],
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false
@@ -99,7 +99,7 @@ describe('Testing SerializationHelper methods', () => {
             type: Constants.OBJECT_TYPE,
             instance: new TestSerializeObjectTypeClassWithAnotherClass(),
             parentIndex: 0,
-            values: new Array<String>(),
+            values: [],
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false
@@ -129,7 +129,7 @@ describe('Testing SerializationHelper methods', () => {
             type: Constants.OBJECT_TYPE,
             instance: instanceTestSerializeObjectTypeClassWithAnArrayOfClasses,
             parentIndex: 0,
-            values: new Array<String>(),
+            values: [],
             key: 'test',
             // dependsOn: new Array<String>()
             visited: false

@@ -95,6 +95,7 @@ class SimpleClass {
     knownAs: String[] = ["John", "Doe", "JohnDoe", "JohnPDoe"]
 };
 
+
 let instance: SimpleClass = new SimpleClass();
 
 let stringrified: String = ObjectMapper.serialize(instance);

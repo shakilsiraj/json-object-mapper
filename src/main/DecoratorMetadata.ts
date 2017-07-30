@@ -1,12 +1,10 @@
-import { getJsonPropertyDecorator, getPropertyDecorator, getJsonIgnoreDecorator, Constants } from "./ReflectHelper";
+import { Constants, getJsonIgnoreDecorator, getJsonPropertyDecorator, getPropertyDecorator } from './ReflectHelper';
 
 /**
  * Decorator names
  */
 export const JSON_PROPERTY_DECORATOR_NAME = 'JsonProperty';
 // const JSON_IGNORE_DECORATOR_NAME = 'JsonIgnore';
-// const JSON_SERAIALIZE_DECORATOR_NAME = 'JsonSerialize';
-// const JSON_DESERAIALIZE_DECORATOR_NAME = 'JsonDeserialize';
 
 /**
  * Decorator metadata definition for JsonProperty
@@ -56,15 +54,15 @@ export const CacheKey = (key: string): Function => {
         const functionName = 'getJsonObjectMapperCacheKey';
         const functionImpl = new Function(`return '${key}';`);
         f[functionName] = functionImpl;
-    }
-}
+    };
+};
 
 /**
  * JsonIgnore Decorator function.
  */
-export function JsonIgnore(): Function {
+export const JsonIgnore = (): Function => {
     return getJsonIgnoreDecorator();
-}
+};
 
 /**
  * Json convertion error type.

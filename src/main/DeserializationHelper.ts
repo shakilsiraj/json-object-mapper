@@ -1,5 +1,5 @@
-import { JsonConverstionError, JsonPropertyDecoratorMetadata, AccessType , Deserializer} from "./DecoratorMetadata";
-import { isSimpleType, getTypeName, getCachedType, getTypeNameFromInstance, getJsonPropertyDecoratorMetadata, isArrayType, Constants, METADATA_JSON_PROPERTIES_NAME, METADATA_JSON_IGNORE_NAME } from "./ReflectHelper";
+import { AccessType, Deserializer, JsonConverstionError , JsonPropertyDecoratorMetadata} from './DecoratorMetadata';
+import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getTypeName, getTypeNameFromInstance, isArrayType, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 
 declare var Reflect;
 
@@ -36,15 +36,15 @@ export const DeserializeDateType = (instance: Object, instanceKey: string, type:
 /**
  * Deserializes a JS array type from json.
  */
-export var DeserializeArrayType = (instance: Object, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
-    let jsonObject = (jsonKey != undefined) ? (json[jsonKey] || []) : json;
-    let jsonArraySize = jsonObject.length;
-    let conversionFunctionsList = new Array<ConversionFunctionStructure>();
-    let arrayInstance = [];
+export let DeserializeArrayType = (instance: Object, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
+    const jsonObject = (jsonKey !== undefined) ? (json[jsonKey] || []) : json;
+    const jsonArraySize = jsonObject.length;
+    const conversionFunctionsList = [];
+    const arrayInstance = [];
     instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
-        for (var i = 0; i < jsonArraySize; i++) {
-            let typeName = getTypeNameFromInstance(type);
+        for (let i = 0; i < jsonArraySize; i++) {
+            const typeName = getTypeNameFromInstance(type);
             if (!isSimpleType(typeName)) {
                 const typeInstance = new type();
                 conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
@@ -61,7 +61,7 @@ export var DeserializeArrayType = (instance: Object, instanceKey: string, type: 
  * Deserializes a js object type from json.
  */
 export const DeserializeComplexType = (instance: Object, instanceKey: string, type: any, json: any, jsonKey: string): Array<ConversionFunctionStructure> => {
-    const conversionFunctionsList = new Array<ConversionFunctionStructure>();
+    const conversionFunctionsList = [];
 
     let objectInstance;
     /**
@@ -76,14 +76,14 @@ export const DeserializeComplexType = (instance: Object, instanceKey: string, ty
     }
 
     let objectKeys: string[] = Object.keys(objectInstance);
-    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function(item: string) {
-        if(objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
+    objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter((item: string) => {
+        if (objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
             // Property does not have setter
             return false;
         }
         return objectKeys.indexOf(item) < 0;
     }));
-    objectKeys = objectKeys.filter(function(item: string) {
+    objectKeys = objectKeys.filter((item: string) => {
         return !Reflect.hasMetadata(METADATA_JSON_IGNORE_NAME, objectInstance, item);
     });
     objectKeys.forEach((key: string) => {
@@ -157,7 +157,7 @@ export interface ConversionFunctionStructure {
 /**
  * Object to cache deserializers
  */
-export const deserializers = new Object();
+export const deserializers = {};
 
 /**
  * Checks to see if the deserializer already exists or not.
@@ -171,7 +171,7 @@ export const getOrCreateDeserializer = (type: any): any => {
 /**
  * List of JSON object conversion functions.
  */
-export const conversionFunctions = new Object();
+export const conversionFunctions = {};
 conversionFunctions[Constants.OBJECT_TYPE] = DeserializeComplexType;
 conversionFunctions[Constants.ARRAY_TYPE] = DeserializeArrayType;
 conversionFunctions[Constants.DATE_TYPE] = DeserializeDateType;
