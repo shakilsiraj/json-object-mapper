@@ -35,8 +35,8 @@
     "lint": "npm run tslint"
   },
   "devDependencies": {
-    "@types/jasmine": "~2.5.53",
     "@types/es6-shim": "^0.31.34",
+    "@types/jasmine": "~2.5.53",
     "es6-shim": "~0.35.3",
     "jasmine": "~2.5.2",
     "jasmine-core": "~2.3.4",
@@ -49,12 +49,12 @@
     "karma-requirejs": "~1.1.0",
     "karma-safari-launcher": "~1.0.0",
     "karma-spec-reporter": "0.0.26",
-    "karma-typescript": "~2.1.4",
+    "karma-typescript": "^3.0.4",
     "process": "~0.11.9",
+    "reflect-metadata": "^0.1.10",
     "rollup": "~0.38.3",
     "rollup-plugin-typescript": "~0.8.1",
     "tslint": "~5.5.0",
-    "reflect-metadata": "^0.1.10",
     "typescript": "~2.4.2",
     "typings": "^0.8.1"
   }
