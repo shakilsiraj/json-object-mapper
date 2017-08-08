@@ -1,7 +1,4 @@
 node_modules/
 bin/
-typings/
 reports/
 *.log
-.idea/
-*.iml
