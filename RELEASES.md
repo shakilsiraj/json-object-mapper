@@ -1,3 +1,7 @@
+### Release 1.5.1
+Defect fix:
+* null values throwing exception during serialization [issue 22](http://github.com/shakilsiraj/json-object-mapper/issues/22)
+
 ### Release 1.5
 Features added:
 * Ignore serialization and deserialization with @JsonIgnore decorator - thanks [@devpreview](https://github.com/devpreview).

@@ -339,8 +339,7 @@ var SerializeArrayType = function (parentStructure, instanceStructure, instanceI
     var arrayInstance = instanceStructure.instance;
     instanceStructure.visited = true;
     arrayInstance.forEach(function (value) {
-        // tslint:disable-next-line:triple-equals
-        if (value != undefined) {
+        if (value !== undefined) {
             if (!isSimpleType(typeof value)) {
                 var struct = {
                     id: uniqueId(),
@@ -368,13 +367,11 @@ var createArrayOfSerializationStructures = function (serializationStructuresObje
     return serializationStructures;
 };
 var serializeObject = function (key, instanceValuesStack) {
-    // tslint:disable-next-line:triple-equals
-    var json = (key != undefined ? "\"" + key + "\":" : '');
+    var json = (key !== undefined ? "\"" + key + "\":" : '');
     return json + "{" + instanceValuesStack.join() + "}";
 };
 var serializeArray = function (key, instanceValuesStack) {
-    // tslint:disable-next-line:triple-equals
-    var json = (key != undefined ? "\"" + key + "\":" : '');
+    var json = (key !== undefined ? "\"" + key + "\":" : '');
     return json + "[" + instanceValuesStack.join() + "]";
 };
 var mergeObjectOrArrayValuesAndCopyToParents = function (instanceStructure, parentStructure) {
@@ -408,12 +405,14 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
     });
     objectKeys.forEach(function (key) {
         var keyInstance = instanceStructure.instance[key];
-        if (keyInstance !== undefined) {
+        if (keyInstance === null) {
+            instanceStructure.values.push("\"" + key + "\":" + keyInstance);
+        }
+        else if (keyInstance !== undefined) {
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
-            // tslint:disable-next-line:triple-equals
-            if (metadata != undefined && AccessType.READ_ONLY === metadata.access) {
+            if (metadata !== undefined && AccessType.READ_ONLY === metadata.access) {
             }
-            else if (metadata != undefined && metadata.serializer != undefined) {
+            else if (metadata !== undefined && metadata.serializer !== undefined) {
                 var serializer = getOrCreateSerializer(metadata.serializer);
                 instanceStructure.values.push(serializeFunctions[Constants.STRING_TYPE](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
             }
@@ -456,8 +455,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
  */
 var SerializeSimpleType = function (key, instance, serializer) {
     var value = serializer.serialize(instance);
-    // tslint:disable-next-line:triple-equals
-    if (key != undefined) {
+    if (key !== undefined) {
         return "\"" + key + "\":" + value;
     }
     else {
