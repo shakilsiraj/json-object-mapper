@@ -1,3 +1,7 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 function __decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -116,18 +120,18 @@ var getCachedType = function (type, cache) {
  * Decorator names
  */
 var JSON_PROPERTY_DECORATOR_NAME = 'JsonProperty';
-var AccessType;
+
 (function (AccessType) {
     AccessType[AccessType["READ_ONLY"] = 0] = "READ_ONLY";
     AccessType[AccessType["WRITE_ONLY"] = 1] = "WRITE_ONLY";
     AccessType[AccessType["BOTH"] = 2] = "BOTH";
-})(AccessType || (AccessType = {}));
+})(exports.AccessType || (exports.AccessType = {}));
 /**
  * JsonProperty Decorator function.
  */
 var JsonProperty = function (metadata) {
     if (typeof metadata === 'string') {
-        return getJsonPropertyDecorator({ name: metadata, required: false, access: AccessType.BOTH });
+        return getJsonPropertyDecorator({ name: metadata, required: false, access: exports.AccessType.BOTH });
     }
     else {
         return getJsonPropertyDecorator(metadata);
@@ -253,10 +257,10 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
          */
         var metadata = getJsonPropertyDecoratorMetadata(objectInstance, key);
         if (metadata === undefined) {
-            metadata = { name: key, required: false, access: AccessType.BOTH };
+            metadata = { name: key, required: false, access: exports.AccessType.BOTH };
         }
         // tslint:disable-next-line:triple-equals
-        if (AccessType.WRITE_ONLY != metadata.access) {
+        if (exports.AccessType.WRITE_ONLY != metadata.access) {
             /**
              * Check requried property
              */
@@ -410,7 +414,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
         }
         else if (keyInstance !== undefined) {
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
-            if (metadata !== undefined && AccessType.READ_ONLY === metadata.access) {
+            if (metadata !== undefined && exports.AccessType.READ_ONLY === metadata.access) {
             }
             else if (metadata !== undefined && metadata.serializer !== undefined) {
                 var serializer = getOrCreateSerializer(metadata.serializer);
@@ -547,7 +551,6 @@ var uniqueId = function () {
     return Math.random() + "-" + Date.now();
 };
 
-var ObjectMapper;
 (function (ObjectMapper) {
     /**
      * Deserializes an array of object types with the passed on JSON data.
@@ -632,6 +635,11 @@ var ObjectMapper;
         mergeObjectOrArrayValues(struct);
         return struct.values[0];
     };
-})(ObjectMapper || (ObjectMapper = {}));
+})(exports.ObjectMapper || (exports.ObjectMapper = {}));
 
-export { ObjectMapper, JsonProperty, JsonConverstionError, AccessType, CacheKey, JsonIgnore, DateSerializer };
+exports.JsonProperty = JsonProperty;
+exports.JsonConverstionError = JsonConverstionError;
+exports.CacheKey = CacheKey;
+exports.JsonIgnore = JsonIgnore;
+exports.DateSerializer = DateSerializer;
+//# sourceMappingURL=ObjectMapper.js.map

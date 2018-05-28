@@ -1,6 +1,8 @@
 # npmignore
 node_modules
-bin
-reports
-references
-.idea
+bin/
+reports/
+references/
+.idea/
+.vscode/
+src/
