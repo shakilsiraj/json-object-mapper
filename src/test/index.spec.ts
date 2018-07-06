@@ -80,6 +80,23 @@ describe('Testing deserialize array function', () => {
 
     });
 
+    it('Deserialize array with one null value', () => {
+        class Event {
+            id: number = undefined;
+            location: string = undefined;
+        }
+
+        const json = JSON.parse('[{"id":1,"location":"Canberra"},{"id":2,"location":"Sydney"}, {"id":3,"location":"Melbourne"}, null]');
+        const eventsArray: Event[] = ObjectMapper.deserializeArray(Event, json);
+        expect(eventsArray.length > 0);
+        expect(eventsArray[0].id).toBe(1);
+        expect(eventsArray[0].location).toBe('Canberra');
+        expect(eventsArray[1].id).toBe(2);
+        expect(eventsArray[1].location).toBe('Sydney');
+        expect(eventsArray[2].id).toBe(3);
+        expect(eventsArray[2].location).toBe('Melbourne');
+    });
+
     it('Testing array serialization 2', () => {
         class Friend {
             id: number = undefined;
