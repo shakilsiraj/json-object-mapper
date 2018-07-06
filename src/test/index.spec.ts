@@ -453,6 +453,32 @@ describe('Misc tests', () => {
         expect(testInstance.isAvailableToday()).toBe(((new Date()).getDay() % 6 === 0) ? false : true);
     });
 
+    it('Testing enum array serializing', () => {
+        enum Days {
+            Sun, Mon, Tues, Wed, Thurs, Fri, Sat
+        }
+
+        class DaysEnumArraySerializer implements Serializer {
+           
+            serialize = (values: Days[]): any => {
+                let result: string[] = values.map((value: Days) => Days[value]);
+                return JSON.stringify(result);
+            }
+        }
+
+        class Calendar {
+            month: string = undefined;
+            @JsonProperty({type: Days, serializer: DaysEnumArraySerializer})
+            days: Days[] = undefined;
+        }
+
+        let cal: Calendar = new Calendar();
+        cal.month = "June";
+        cal.days = [Days.Mon, Days.Tues];
+        const serialized: String = ObjectMapper.serialize(cal);
+        expect(serialized).toBe(`{"month":"June","days":["Mon","Tues"]}`);
+    });
+
     it('Testing enum ', () => {
 
         class DaysEnumSerializerDeserializer implements Deserializer, Serializer {
