@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { AccessType, JsonProperty, JsonPropertyDecoratorMetadata } from '../main/DecoratorMetadata';
 import { DeserializeArrayType, DeserializeComplexType, DeserializeDateType, DeserializeSimpleType } from '../main/DeserializationHelper';
 

@@ -210,14 +210,16 @@ var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey)
     instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
         for (var i = 0; i < jsonArraySize; i++) {
-            var typeName = getTypeNameFromInstance(type);
-            if (!isSimpleType(typeName)) {
-                var typeInstance = new type();
-                conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
-                arrayInstance.push(typeInstance);
-            }
-            else {
-                arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](jsonObject[i], typeName));
+            if (jsonObject[i]) {
+                var typeName = getTypeNameFromInstance(type);
+                if (!isSimpleType(typeName)) {
+                    var typeInstance = new type();
+                    conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
+                    arrayInstance.push(typeInstance);
+                }
+                else {
+                    arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](jsonObject[i], typeName));
+                }
             }
         }
     }
