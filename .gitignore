@@ -3,3 +3,4 @@ coverage/
 bin/
 reports/
 *.log
+.c9/
