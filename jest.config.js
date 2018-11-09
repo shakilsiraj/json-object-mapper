@@ -1,6 +1,7 @@
 module.exports = {
     "globals": {
         "ts-jest": {
+            "diagnostics": true,
             "tsConfig": "./tsconfig.spec.json"
         },
     },
@@ -17,6 +18,7 @@ module.exports = {
         "node"
     ],
     "collectCoverage": true,
+    "coverageReporters": ["text-summary"],
     "verbose": true,
     "transformIgnorePatterns": [
         "/node_modules/(?!@tsed/testing).+\\.js$"
