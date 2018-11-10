@@ -5,6 +5,9 @@ module.exports = {
             "tsConfig": "./tsconfig.spec.json"
         },
     },
+    "testPathIgnorePatterns": [
+        "<rootDir>/.c9/", "<rootDir>/node_modules/"
+    ],
     "transform": {
         "^.+\\.tsx?$": "ts-jest"
     },

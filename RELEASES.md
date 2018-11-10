@@ -1,3 +1,6 @@
+### Release : NOT CONFIRMED
+Features added: Jest integration
+
 ### Release 1.5.1
 Defect fix:
 * null values throwing exception during serialization [issue 22](http://github.com/shakilsiraj/json-object-mapper/issues/22)
