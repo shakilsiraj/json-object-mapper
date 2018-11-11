@@ -2,7 +2,7 @@ module.exports = {
     "globals": {
         "ts-jest": {
             "diagnostics": true,
-            "tsConfig": "./tsconfig.spec.json"
+            "tsConfig": "<rootDir>/tsconfig.spec.json"
         },
     },
     "testPathIgnorePatterns": [

@@ -2,6 +2,7 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "sourceMap": true,
+        "inlineSourceMap": true,
         "experimentalDecorators":true,
         "emitDecoratorMetadata": true,
         "target": "es5"
