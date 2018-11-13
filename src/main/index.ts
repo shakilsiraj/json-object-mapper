@@ -23,6 +23,7 @@ export namespace ObjectMapper {
      */
     export const deserialize = <T>(type: { new(): T }, json: Object): T => {
         const dtoInstance = new type();
+        Object.keys(json).forEach((key: string) => dtoInstance[key] = undefined);
         const conversionFunctionStructure: ConversionFunctionStructure = {
             functionName: Constants.OBJECT_TYPE,
             instance: dtoInstance,
