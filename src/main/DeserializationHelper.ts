@@ -74,6 +74,7 @@ export const DeserializeComplexType = (instance: Object, instanceKey: string, ty
         objectInstance = new type();
         instance[instanceKey] = objectInstance;
     } else {
+        Object.keys(json).forEach((key: string) => instance[key] = undefined);
         objectInstance = instance;
     }
 
