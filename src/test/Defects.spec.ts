@@ -86,7 +86,7 @@ describe("Defects", () => {
       constructor() {
         this.creationDate = new Date(1541585888587);
         this.endControlDate = new Date(1541585888587);
-        this.servers = new Array<ServerHealthReport>();
+        this.servers = new Array < ServerHealthReport > ();
       }
     }
 
