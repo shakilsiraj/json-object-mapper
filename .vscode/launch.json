@@ -7,21 +7,32 @@ References:{
 
 */
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug Tests",
-            "type": "node",
-            "request": "launch",
-            "program": "${workspaceRoot}/node_modules/jasmine-node/bin/jasmine-node",
-            "stopOnEntry": false,
-            "args": [
-                "bin",
-                "--verbose"
-            ],
-            "cwd": "${workspaceRoot}",
-            "sourceMaps": true,
-            "outDir": "${workspaceRoot}/bin"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/jasmine-node/bin/jasmine-node",
+      "stopOnEntry": false,
+      "args": ["bin", "--verbose"],
+      "cwd": "${workspaceRoot}",
+      "sourceMaps": true,
+      "outDir": "${workspaceRoot}/bin"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Test current spec",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": [
+        "--runInBand",
+        "--colors",
+        "--no-cache",
+        "--coverage=false",
+        "${relativeFile}"
+      ]
+    }
+  ]
 }
