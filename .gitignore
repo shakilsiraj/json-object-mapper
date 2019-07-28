@@ -3,4 +3,5 @@ coverage/
 bin/
 reports/
 *.log
-.c9/
+.c9/*
+!.c9/runners

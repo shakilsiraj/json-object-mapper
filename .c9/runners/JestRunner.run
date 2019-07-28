@@ -1,0 +1,17 @@
+// Create a custom Cloud9 runner - similar to the Sublime build system
+// For more information see http://docs.aws.amazon.com/console/cloud9/create-run-config
+{
+    "cmd": [
+        "npx",
+        "-n=--inspect",
+        "jest",
+        "--rootDir=$project_path",
+        "-i",
+        "--coverage=false",
+        "--runInBand",
+        "$file"
+    ],
+    "info": "Running test $file",
+    "debugger": "v8",
+    "debugport": 9229
+}
