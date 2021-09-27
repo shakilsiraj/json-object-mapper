@@ -17,6 +17,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Install dependencies
         run: npm clean-install
+      - name: Build the project
+        run: npm run dist
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
