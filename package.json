@@ -26,7 +26,6 @@
     "dist": "npm run test && npm run rollup",
     "test": "jest --no-cache --silent",
     "test-jest": "jest --watchAll",
-    "test-karma": "karma start ./karma.conf.js",
     "tslint": "tslint --project ./tsconfig.json --type-check --fix",
     "lint": "npm run tslint"
   },
