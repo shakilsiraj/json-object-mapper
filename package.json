@@ -1,6 +1,6 @@
 {
   "name": "@hug/json-object-mapper",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "A TypeScript library to serialize and deserialize JSON objects in a fast and non-recursive way",
   "repository": {
     "type": "git",
