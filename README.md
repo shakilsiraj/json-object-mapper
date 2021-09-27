@@ -12,8 +12,6 @@
         <img src="https://www.hug.ch/sites/all/themes/interhug/img/logos/logo-hug.svg" alt="hug-logo" height="54px" />
     </a>
     <br><br>
-    <i>ESLint shareable configuration with great defaults</i>
-    <br><br>
 </p>
 
 <p align="center">
