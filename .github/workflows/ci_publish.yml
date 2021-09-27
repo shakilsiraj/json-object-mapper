@@ -1,4 +1,4 @@
-name: Publish library to NPM
+name: Publish library to NPM and Yarn
 
 on:
   release:
@@ -17,9 +17,11 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Install dependencies
         run: npm clean-install
-      - name: Build the project
-        run: npm run dist
-      - name: Publish
+      - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
+      - name: Publish to Yarn
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn publish --access public
