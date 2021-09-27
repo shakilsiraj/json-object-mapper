@@ -1,10 +1,10 @@
 {
-  "name": "json-object-mapper",
-  "version": "1.5.2",
+  "name": "@hug/json-object-mapper",
+  "version": "0.0.1",
   "description": "A TypeScript library to serialize and deserialize JSON objects in a fast and non-recursive way",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shakilsiraj/json-object-mapper.git"
+    "url": "https://github.com/DSI-HUG/json-object-mapper.git"
   },
   "keywords": [
     "JSON",
@@ -15,15 +15,12 @@
     "DTO",
     "Data Transfer Objects"
   ],
-  "author": {
-    "name": "Shakil Siraj",
-    "email": "shakil.siraj@gmail.com"
-  },
+  "author": "HUG - Hôpitaux Universitaires Genève",
   "main": "./dist/ObjectMapper.js",
   "typings": "./dist/ObjectMapper.d.ts",
   "moduleName": "ObjectMapper",
   "license": "MIT",
-  "homepage": "https://github.com/shakilsiraj/json-object-mapper",
+  "homepage": "https://github.com/DSI-HUG/json-object-mapper",
   "scripts": {
     "rollup": "rollup -c",
     "dist": "npm run test && npm run rollup",
