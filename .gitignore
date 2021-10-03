@@ -1,7 +1,26 @@
 node_modules/
 coverage/
 bin/
+dist/
 reports/
 *.log
 .c9/*
 !.c9/runners
+
+# IntelliJ project files 
+*.iml
+*.iws
+*.ipr
+.idea/
+# eclipse project file
+.settings/
+.classpath
+.project
+# vscode project file
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
