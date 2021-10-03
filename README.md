@@ -1,3 +1,42 @@
+<h1 align="center">
+    @hug/json-object-mapper
+</h1>
+<h2 align="center">
+	Fork from 
+	<a href="https://github.com/shakilsiraj/json-object-mapper">json-object-mapper</a>
+</h>
+
+<p align="center">
+    <br>
+    <a href="https://www.hug.ch/">
+        <img src="https://www.hug.ch/sites/all/themes/interhug/img/logos/logo-hug.svg" alt="hug-logo" height="54px" />
+    </a>
+    <br><br>
+</p>
+
+<p align="center">
+    <a href="https://www.npmjs.com/package/@hug/json-object-mapper">
+        <img src="https://img.shields.io/npm/v/@hug/json-object-mapper.svg?color=blue&logo=npm" alt="npm version" />
+    </a>
+    <a href="https://npmcharts.com/compare/@hug/json-object-mapper?minimal=true">
+        <img src="https://img.shields.io/npm/dw/@hug/json-object-mapper.svg?color=blue&logo=npm" alt="npm donwloads" />
+    </a>
+    <a href="https://github.com/DSI-HUG/json-object-mapper/blob/master/LICENSE">
+        <img src="https://img.shields.io/badge/license-GPLv3-ff69b4.svg" alt="license GPLv3" />
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://david-dm.org/DSI-HUG/json-object-mapper">
+        <img src="https://img.shields.io/david/DSI-HUG/json-object-mapper.svg" alt="dependency status" />
+    </a>
+    <a href="https://github.com/DSI-HUG/json-object-mapper/blob/master/CONTRIBUTING.md#-submitting-a-pull-request-pr">
+        <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome" />
+    </a>
+</p>
+
+<hr>
+
 ## Introduction
 `json-object-mapper` is a `typescript` library designed to serialize and 
 de-serialize DTO objects from and to JSON objects. Using the library, you would 
