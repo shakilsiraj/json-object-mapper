@@ -6,5 +6,6 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     }
 }
