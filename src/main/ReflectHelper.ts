@@ -73,8 +73,14 @@ export const isSimpleType = (typeName: string): boolean => {
  * Returns the the instance type name by looking at the constructor name.
  * Stupid IE does not have name property! Hence the hack.
  */
+export const extractClassname = (instance): string => {
+    var instr = instance.toString();
+    var i1 = instr.indexOf('class');
+    var i2 = instr.indexOf('{', i1 + 5);
+    return instr.substring(i1 + 5, i2).trim();
+}
 export const getTypeNameFromInstance = (instance): string => {
-    return instance.toString().trim().split(/[\s\()]/g)[1];
+    return instance.name || extractClassname(instance);
 };
 
 const getType = (instance: any, key: string): any => {
