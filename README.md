@@ -219,3 +219,9 @@ Also, you will need to use the `DateSerializer` or your own implementation for s
 dob: Date = new Date(1483142400000)
 ```
 
+## Contributors
+A special thanks to all who have contributed to this project.
+
+<a href="https://github.com/shakilsiraj/json-object-mapper/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=shakilsiraj/json-object-mapper" />
+</a>
