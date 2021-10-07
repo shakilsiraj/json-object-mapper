@@ -9,7 +9,7 @@ The idea behind this is that you do not need to add serialization and
 de-serialization methods to each of your DTO classes - thus keeping them clean 
 and simple.
 
-[![Build Status](https://travis-ci.org/shakilsiraj/json-object-mapper.svg?branch=master)](https://travis-ci.org/shakilsiraj/json-object-mapper)
+[![Build Status](https://github.com/shakilsiraj/json-object-mapper/actions/workflows/test.yml/badge.svg?branch=release/1.7)
 
 ## Usage
 
