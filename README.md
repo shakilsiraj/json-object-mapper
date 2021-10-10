@@ -9,7 +9,7 @@ The idea behind this is that you do not need to add serialization and
 de-serialization methods to each of your DTO classes - thus keeping them clean 
 and simple.
 
-[![Build Status](https://travis-ci.org/shakilsiraj/json-object-mapper.svg?branch=master)](https://travis-ci.org/shakilsiraj/json-object-mapper)
+![Build Status](https://github.com/shakilsiraj/json-object-mapper/actions/workflows/test.yml/badge.svg?branch=release/1.7)
 
 ## Usage
 
@@ -219,3 +219,9 @@ Also, you will need to use the `DateSerializer` or your own implementation for s
 dob: Date = new Date(1483142400000)
 ```
 
+## Contributors
+A special thanks to all who have contributed to this project.
+
+<a href="https://github.com/shakilsiraj/json-object-mapper/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=shakilsiraj/json-object-mapper" />
+</a>

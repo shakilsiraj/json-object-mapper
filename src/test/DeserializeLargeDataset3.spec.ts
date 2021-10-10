@@ -2,9 +2,23 @@ import 'reflect-metadata';
 import { JsonProperty } from '../main/DecoratorMetadata';
 import { ObjectMapper } from '../main/index';
 
-describe('Tesing large dataset from https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json', () => {
-    it('Test loading 64.72 KB ignoring spaces', () => {
+describe('Testing large dataset from https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json', () => {
+    it('Test loading (64.72 KB - original file) ignoring spaces', () => {
+        const originLength = json.rounds.length;
+        const nbOfClonedObjects = 5000;
+        // Clone objects to extend the list
+        for (let i = 0; i < nbOfClonedObjects; i++) {
+            json.rounds.push(Object.assign({}, json.rounds[0]));
+        }
         const testInstance = ObjectMapper.deserialize(League, json);
+        expect(testInstance.rounds.length).toBe(json.rounds.length);
+        expect(testInstance.rounds.length).toBe(nbOfClonedObjects + originLength);
+
+        expect(testInstance.rounds[testInstance.rounds.length - 1].matches[0].team1.code).toBe('HUL');
+        expect(testInstance.rounds[testInstance.rounds.length - 1].matches[0].score1).toBe(2);
+        
+        expect(testInstance.rounds[testInstance.rounds.length - 1].matches[0].team2.code).toBe('LEI');
+        expect(testInstance.rounds[testInstance.rounds.length - 1].matches[0].score2).toBe(1);
     });
 });
 
@@ -21,6 +35,10 @@ class Match {
     team1: Team = undefined;
     @JsonProperty({ type: Team })
     team2: Team = undefined;
+    @JsonProperty()
+    score1: number = undefined;
+    @JsonProperty()
+    score2: number = undefined;
 }
 
 class Round {
