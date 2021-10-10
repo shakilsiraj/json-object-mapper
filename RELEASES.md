@@ -1,5 +1,22 @@
-### Release : NOT CONFIRMED
-Features added: Jest integration
+### Release : 1.7
+Features added:
+* Updated libraries
+* Merged [pr/64](https://github.com/shakilsiraj/json-object-mapper/pull/64). Thanks [DSI-HUG](https://github.com/DSI-HUG)
+* Merged [pr/64](https://github.com/shakilsiraj/json-object-mapper/pull/65). Thanks [DSI-HUG](https://github.com/DSI-HUG)
+* Integrated Github actions.
+
+Fixes:
+* Fixed issue with jest setup in general.
+
+Others:
+* Updated README.md
+
+### Release : 1.6
+Features added: 
+* Jest integration
+* Upgraded libraries
+* Upgraded typescript version
+
 
 ### Release 1.5.1
 Defect fix:
