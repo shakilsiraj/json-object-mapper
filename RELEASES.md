@@ -1,3 +1,7 @@
+### Release : 1.7.1
+Fixes:
+* Fix issue with npm publish github action 
+
 ### Release : 1.7
 Features added:
 * Updated libraries
