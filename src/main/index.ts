@@ -41,7 +41,7 @@ export namespace ObjectMapper {
             converstionFunctionsArray.push(struct);
         });
 
-        let conversionFunctionStructure: ConversionFunctionStructure = converstionFunctionsArray[0];
+        let conversionFunctionStructure: ConversionFunctionStructure = (converstionFunctionsArray.length > 0)? converstionFunctionsArray.pop() : undefined;
 
         // tslint:disable-next-line:triple-equals
         while (conversionFunctionStructure != undefined) {
