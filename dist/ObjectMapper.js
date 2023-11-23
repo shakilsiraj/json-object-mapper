@@ -75,8 +75,14 @@ var isSimpleType = function (typeName) {
  * Returns the the instance type name by looking at the constructor name.
  * Stupid IE does not have name property! Hence the hack.
  */
+var extractClassname = function (instance) {
+    var instr = instance.toString();
+    var i1 = instr.indexOf('class');
+    var i2 = instr.indexOf('{', i1 + 5);
+    return instr.substring(i1 + 5, i2).trim();
+};
 var getTypeNameFromInstance = function (instance) {
-    return instance.toString().trim().split(/[\s\()]/g)[1];
+    return instance.name || extractClassname(instance);
 };
 var getType = function (instance, key) {
     return Reflect.getMetadata('design:type', instance, key);
@@ -586,7 +592,7 @@ var uniqueId = function () {
         conversionFunctionStructures.forEach(function (struct) {
             converstionFunctionsArray.push(struct);
         });
-        var conversionFunctionStructure = converstionFunctionsArray[0];
+        var conversionFunctionStructure = (converstionFunctionsArray.length > 0) ? converstionFunctionsArray.pop() : undefined;
         // tslint:disable-next-line:triple-equals
         while (conversionFunctionStructure != undefined) {
             var stackEntries = conversionFunctions[conversionFunctionStructure.functionName](conversionFunctionStructure.instance, conversionFunctionStructure.instanceKey, conversionFunctionStructure.type, conversionFunctionStructure.json, conversionFunctionStructure.jsonKey);
