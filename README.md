@@ -43,13 +43,13 @@ Lets have a look at an example:
 ```typescript
 class SimpleRoster {
     @JsonProperty()
-    private name: String;
+    private name: String = undefined;
     @JsonProperty()
-    private worksOnWeekend: Boolean;
+    private worksOnWeekend: Boolean = undefined;
     @JsonProperty()
-    private numberOfHours: Number;
+    private numberOfHours: Number = undefined;
     @JsonProperty({type:Date})
-    private systemDate: Date;
+    private systemDate: Date = undefined;
 
     public isAvailableToday(): Boolean {
         if (this.systemDate.getDay() % 6 == 0 && this.worksOnWeekend == false) {
@@ -82,6 +82,8 @@ meaning that `name` field will be assinged a `String` object with the value 'Joh
 a `Number` object and the `systemDate` field will be assinged a `Date` object with the value
 `Sat Dec 31, 2016`. The method will also make sure that all the nested object graphs has been
 created based on the JSON model.
+
+Note that initializing the properties is important (eg by assigning `undefined` at their declaration or in the constructor). Properties which are not initialized properly are not part of the keys-collection after object creation - therefore deserialization would not work as expected.
 
 The `serialize` method will serialize an object graph into JSON string (similar to what `JSON.stringrify()`
 method would do) while honoring the decorator metadata. Following is an example of serialization:
