@@ -43,11 +43,11 @@ Lets have a look at an example:
 ```typescript
 class SimpleRoster {
     @JsonProperty()
-    private name: String;
+    private name: String = undefined;
     @JsonProperty()
-    private worksOnWeekend: Boolean;
+    private worksOnWeekend: Boolean = undefined;
     @JsonProperty()
-    private numberOfHours: Number;
+    private numberOfHours: Number = undefined;
     @JsonProperty({type:Date})
     private systemDate: Date;
 
@@ -140,7 +140,33 @@ and make sure to import it in a global place, like app.ts:
 import "reflect-metadata";
 ```
 If you are using Angular 2 you should already have this shim installed.
+
 ## Things to remember
+
+### Ignoring `name` metadata during de-serialization
+If you have an use case where you want to not use `name` metadata using de-serialization, the you cna turn if off by setting `ignoreNameMetadata` to true (default is false). Here is an example usage:
+
+```typescript
+class Event {
+    @JsonProperty()
+    id: number = undefined;
+    @JsonProperty({ name: "geo-location" })
+    location = "old";
+}
+
+const json = {
+    id: "1",
+    location: "Canberra",
+};
+
+const testInstance: Event = ObjectMapper.deserialize(Event, json, {ignoreNameMetadata: true});
+expect(testInstance.location).toBe("Canberra");
+
+const serialized = ObjectMapper.serialize(testInstance);
+aexpect(serialized).toBe('{"id":"1","geo-location":"Canberra"}');
+
+```
+
 ### Enum serialization and de-serialization
 You can use `enum` data type by specifying the `type` property of @JsonProperty decorator.
 You will need to use `Serializer` and `Deserializer` to make the enum work correctly.
