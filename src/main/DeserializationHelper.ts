@@ -174,9 +174,6 @@ export const DeserializeComplexType = (
     if (metadata === undefined) {
       metadata = { name: key, required: false, access: AccessType.BOTH };
     }
-    if (config.ignoreNameMetadata === true) {
-      metadata.name = undefined;
-    }
     // tslint:disable-next-line:triple-equals
     if (AccessType.WRITE_ONLY != metadata.access) {
       /**
@@ -193,7 +190,8 @@ export const DeserializeComplexType = (
         );
       }
       // tslint:disable-next-line:triple-equals
-      const jsonKeyName = metadata.name != undefined ? metadata.name : key;
+      const jsonKeyName =
+        config.ignoreNameMetadata === true ? key : metadata.name || key;
       // tslint:disable-next-line:triple-equals
       if (json[jsonKeyName] != undefined) {
         /**

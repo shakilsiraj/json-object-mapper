@@ -722,22 +722,73 @@ describe("Testing JsonIgnore decorator", () => {
     expect(testInstance.state).toBe("old");
   });
 
-  it("Testing DeserializationConfig", () => {
-    class Event {
+  describe("DeserializationConfig", () => {
+    it("{ ignoreNameMetadata: true } should use property name", () => {
+      class Event {
+        @JsonProperty()
+        id: number = undefined;
+        @JsonProperty({ name: "geo-location" })
+        location = "old";
+      }
+
+      const json = {
+        id: "1",
+        location: "Canberra",
+      };
+
+      const testInstance: Event = ObjectMapper.deserialize(Event, json, {
+        ignoreNameMetadata: true,
+      });
+      expect(testInstance.location).toBe("Canberra");
+    });
+
+    it("{ ignoreNameMetadata: true } should use name metadata during serialization", () => {
+      class Event {
+        @JsonProperty()
+        id: number = undefined;
+        @JsonProperty({ name: "geo-location" })
+        location = "old";
+      }
+
+      const json = {
+        id: "1",
+        location: "Canberra",
+      };
+
+      const testInstance: Event = ObjectMapper.deserialize(Event, json, {
+        ignoreNameMetadata: true,
+      });
+
+      const serialized = ObjectMapper.serialize(testInstance);
+      expect(serialized).toBe('{"id":"1","geo-location":"Canberra"}');
+    });
+  });
+
+  it("{ ignoreNameMetadata: true } should work with array serialization", () => {
+    class DeserializeComplexTypeArrayTest {
       @JsonProperty()
-      id: number = undefined;
-      @JsonProperty({ name: "geo-location" })
-      location = "old";
+      storeName: string = undefined;
+
+      @JsonProperty({ name: "AVAILABLE_AT" })
+      availableAt: String[] = undefined;
     }
 
     const json = {
-      id: "1",
-      location: "Canberra",
+      storeName: "PizzaHut",
+      availableAt: ["2000", "3000", "4000", "5000"],
     };
 
-    const testInstance: Event = ObjectMapper.deserialize(Event, json, {
-      ignoreNameMetadata: true,
-    });
-    expect(testInstance.location).toBe("Canberra");
+    const testInstance = ObjectMapper.deserialize(
+      DeserializeComplexTypeArrayTest,
+      json,
+      {
+        ignoreNameMetadata: true,
+      }
+    );
+
+    const serialized = ObjectMapper.serialize(testInstance);
+    expect(serialized).toBe(
+      '{"storeName":"PizzaHut","AVAILABLE_AT":["2000","3000","4000","5000"]}'
+    );
   });
 });
