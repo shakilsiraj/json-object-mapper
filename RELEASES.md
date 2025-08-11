@@ -1,6 +1,14 @@
+### Release : 1.9.0
+Feature added:
+* Feature - ignore deserializer [pr/84](https://github.com/shakilsiraj/json-object-mapper/pull/84)
+
+### Release : 1.8.1
+Feature added:
+* Feature - ignore name metadata [pr/83](https://github.com/shakilsiraj/json-object-mapper/pull/83)
+
 ### Release : 1.7.1
 Fixes:
-* Fix issue with npm publish github action 
+* Fix issue with npm publish github action
 
 ### Release : 1.7
 Features added:
@@ -16,7 +24,7 @@ Others:
 * Updated README.md
 
 ### Release : 1.6
-Features added: 
+Features added:
 * Jest integration
 * Upgraded libraries
 * Upgraded typescript version
@@ -34,6 +42,6 @@ Features added:
 
 Defect fixes:
 * [Enable String Serializer to support strings with special characters](https://github.com/shakilsiraj/json-object-mapper/pull/6). Thanks [@ironchimp](https://github.com/ironchimp)
-* [deserializeArray returns undefined when called on an empty array](https://github.com/shakilsiraj/json-object-mapper/pull/19). Thanks [@devpreview](https://github.com/devpreview) 
-* [nested array is undefined](https://github.com/shakilsiraj/json-object-mapper/pull/21). Thanks [@devpreview](https://github.com/devpreview) 
+* [deserializeArray returns undefined when called on an empty array](https://github.com/shakilsiraj/json-object-mapper/pull/19). Thanks [@devpreview](https://github.com/devpreview)
+* [nested array is undefined](https://github.com/shakilsiraj/json-object-mapper/pull/21). Thanks [@devpreview](https://github.com/devpreview)
 * Finally fixed travis build with linting fix.
