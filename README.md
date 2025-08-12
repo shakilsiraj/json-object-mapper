@@ -1,12 +1,12 @@
 ## Introduction
-`json-object-mapper` is a `typescript` library designed to serialize and 
-de-serialize DTO objects from and to JSON objects. Using the library, you would 
-be able to load the JSON data from `Http`/`File`/`Stream` stright 
-into an object graph of your DTO classes as well as serialize a DTO object graph 
-so that it can be sent to an output stream. 
+`json-object-mapper` is a `typescript` library designed to serialize and
+de-serialize DTO objects from and to JSON objects. Using the library, you would
+be able to load the JSON data from `Http`/`File`/`Stream` stright
+into an object graph of your DTO classes as well as serialize a DTO object graph
+so that it can be sent to an output stream.
 
-The idea behind this is that you do not need to add serialization and 
-de-serialization methods to each of your DTO classes - thus keeping them clean 
+The idea behind this is that you do not need to add serialization and
+de-serialization methods to each of your DTO classes - thus keeping them clean
 and simple.
 
 ![Build Status](https://github.com/shakilsiraj/json-object-mapper/actions/workflows/test.yml/badge.svg?branch=release/1.7)
@@ -70,13 +70,13 @@ let testInstance: SimpleRoster = ObjectMapper.deserialize(SimpleRoster, json);
 expect(testInstance.isAvailableToday()).toBeFalsy();
 ```
 
-First lets talk about the property `systemDate` and the `@JsonProperty` property decorator assinged 
-to it. As the `Date` type is not a primitive data type, you will need to explicitly mention that 
+First lets talk about the property `systemDate` and the `@JsonProperty` property decorator assinged
+to it. As the `Date` type is not a primitive data type, you will need to explicitly mention that
 to the processor that we need to create a new instance of `Date` object with the supplied value and
 assign it to the `systemDate` property.
 
 When the `deserialize` method runs, it will first create a new instance of 'SimpleRoster' class.
-Then it will parse the keys of the instance and assign the correct values to 
+Then it will parse the keys of the instance and assign the correct values to
 each keys. While doing that, it will make sure that the right property types are maintained -
 meaning that `name` field will be assinged a `String` object with the value 'John Doe', `numberOfHours` will be assigned
 a `Number` object and the `systemDate` field will be assinged a `Date` object with the value
@@ -104,15 +104,15 @@ let stringrified: String = ObjectMapper.serialize(instance);
 expect(stringrified).toBe('{"firstName":"John","middleName":"P","lastName":"Doe","AKA":["John","Doe","JohnDoe","JohnPDoe"]}');
 ```
 
-From the example above, the `knownAs` property is serialized as `AKA` as defined in the `@JsonProperty` 
-decorator. The `password` property does not serialized as defined in the `@JsonIgnore` 
+From the example above, the `knownAs` property is serialized as `AKA` as defined in the `@JsonProperty`
+decorator. The `password` property does not serialized as defined in the `@JsonIgnore`
 decorator.
 
-The library uses non-recursive iterations to process data. That means you can 
-serialize and de-serialize large amount of data quickly and efficiently using any 
-modern browser as well as native applications (such as nodejs, electron, 
+The library uses non-recursive iterations to process data. That means you can
+serialize and de-serialize large amount of data quickly and efficiently using any
+modern browser as well as native applications (such as nodejs, electron,
 nativescript, etc.). Please have a look at the `test` folder to see few examples
-of using large dataset as well as how to use the library in general. 
+of using large dataset as well as how to use the library in general.
 
 
 ## Inspiration
@@ -126,9 +126,9 @@ The project is hosted on [github.com](https://github.com/shakilsiraj/json-object
 npm install json-object-mapper --save
 ```
 ## Depedency
-The library depends on [reflect-metadata](https://www.npmjs.com/package/reflect-metadata) library. 
+The library depends on [reflect-metadata](https://www.npmjs.com/package/reflect-metadata) library.
 Originally, I thought of not having to force a dependency on another library.
-But when you look the geneated JS code for a `typescript` decorator, 
+But when you look the geneated JS code for a `typescript` decorator,
 it is always trying to check for the variable `Reflect`. So, until such time when
 `typescript` decorators can be de-coupled from `Reflect` library, I am sticking with it.
 You can either download `reflect-metadata` from there or from npmjs.com with the `npm` command:
@@ -167,6 +167,37 @@ aexpect(serialized).toBe('{"id":"1","geo-location":"Canberra"}');
 
 ```
 
+### Ignoring special deserializers all together
+If you have an use case where you want to not use specified deserializer in the metadata using de-serialization, you can turn if off by setting `ignoreDeserializer` to true (default is false). Here is an example usage:
+
+```typescript
+class StringToNumberDeserializer implements Deserializer {
+  deserialize(value: string) {
+    return Number.parseFloat(value);
+  }
+}
+
+class Event {
+  @JsonProperty()
+  id: number = undefined;
+  @JsonProperty({ deserializer: StringToNumberDeserializer })
+  location = undefined;
+}
+
+const json = {
+  id: "1",
+  location: "125.55"
+};
+
+const testInstance: Event = ObjectMapper.deserialize(Event, json, {
+  ignoreDeserializer: true
+});
+
+const serialized = ObjectMapper.serialize(testInstance);
+expect(serialized).toBe('{"id":"1","location":"125.55"}');
+
+```
+
 ### Enum serialization and de-serialization
 You can use `enum` data type by specifying the `type` property of @JsonProperty decorator.
 You will need to use `Serializer` and `Deserializer` to make the enum work correctly.
@@ -186,12 +217,12 @@ class DaysEnumSerializerDeserializer implements Deserializer, Serializer{
 
 enum Days{
     Sun, Mon, Tues, Wed, Thurs, Fri, Sat
-}  
+}
 
 class Workday{
     @JsonProperty({ type: Days, deserializer: DaysEnumSerializerDeserializer, serializer: DaysEnumSerializerDeserializer})
     today: Days;
-}        
+}
 
 let json = { "today": 'Tues' };
 
@@ -222,11 +253,11 @@ class MapDeserializer implements Deserializer {
 ```
 
 ### A special thing about Date object
-It's very hard to get a `Date` instance right across all browsers - 
+It's very hard to get a `Date` instance right across all browsers -
 have a look at the [stackoverflow discussion](http://stackoverflow.com/questions/2587345/why-does-date-parse-give-incorrect-results).
-The best way to manage this complexitiy I have found so far is to use the 
-`new Date(value)` constructor which takes the number of milliseconds since 
-1st January 1970 UTC. So, to best use this library, make sure that the date is 
+The best way to manage this complexitiy I have found so far is to use the
+`new Date(value)` constructor which takes the number of milliseconds since
+1st January 1970 UTC. So, to best use this library, make sure that the date is
 passed on as the number of milliseconds during deserializition:
 ```json
 jsonTest["dateType"] : 1333065600000;
@@ -239,7 +270,7 @@ For serialization, it will only print out the milliseconds:
 ```json
 {"test":1457096400000}
 ```
-Also, you will need to use the `DateSerializer` or your own implementation for serializing `Date` objects. 
+Also, you will need to use the `DateSerializer` or your own implementation for serializing `Date` objects.
 ```typescript
 @JsonProperty({type: Date, name:'dateOfBirth', serializer: DateSerializer})
 dob: Date = new Date(1483142400000)

@@ -13,7 +13,7 @@ export interface JsonPropertyDecoratorMetadata {
 export enum AccessType {
   READ_ONLY,
   WRITE_ONLY,
-  BOTH,
+  BOTH
 }
 
 export interface Serializer {
@@ -52,7 +52,8 @@ export declare function JsonIgnore(): any;
 export declare function JsonConverstionError(message: string, json: any): Error;
 
 export interface DeserializationConfig {
-  ignoreNameMetadata: boolean;
+  ignoreNameMetadata?: boolean;
+  ignoreDeserializer?: boolean;
 }
 
 export declare namespace ObjectMapper {

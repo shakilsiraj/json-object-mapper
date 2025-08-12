@@ -1,7 +1,7 @@
 import {
   AccessType,
   JsonConverstionError,
-  JsonPropertyDecoratorMetadata,
+  JsonPropertyDecoratorMetadata
 } from "./DecoratorMetadata";
 import {
   Constants,
@@ -12,7 +12,7 @@ import {
   isArrayType,
   isSimpleType,
   METADATA_JSON_IGNORE_NAME,
-  METADATA_JSON_PROPERTIES_NAME,
+  METADATA_JSON_PROPERTIES_NAME
 } from "./ReflectHelper";
 
 declare var Reflect;
@@ -25,7 +25,8 @@ const SimpleTypeCoverter = (value: any, type: string): any => {
  * Configuration to fine tune deserialization
  */
 export interface DeserializationConfig {
-  ignoreNameMetadata: boolean; // ignore name metadata from JsonPropertyDecoratorMetadata
+  ignoreNameMetadata?: boolean; // ignore name metadata from JsonPropertyDecoratorMetadata
+  ignoreDeserializer?: boolean; // ignore name metadata from JsonPropertyDecoratorMetadata
 }
 
 /**
@@ -99,7 +100,7 @@ export let DeserializeArrayType = (
             instance: typeInstance,
             json: jsonObject[i],
             undefined,
-            config,
+            config
           });
           arrayInstance.push(typeInstance);
         } else {
@@ -198,7 +199,10 @@ export const DeserializeComplexType = (
          * If metadata has deserializer, use that one instead.
          */
         // tslint:disable-next-line:triple-equals
-        if (metadata.deserializer != undefined) {
+        if (
+          metadata.deserializer != undefined &&
+          !!!config.ignoreDeserializer
+        ) {
           objectInstance[key] = getOrCreateDeserializer(
             metadata.deserializer
           ).deserialize(json[jsonKeyName]);
@@ -222,7 +226,7 @@ export const DeserializeComplexType = (
                 instance: objectInstance[key],
                 json: json[jsonKeyName],
                 jsonKeyName,
-                config,
+                config
               });
             } else {
               conversionFunctions[typeName](
