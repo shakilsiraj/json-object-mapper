@@ -168,7 +168,7 @@ aexpect(serialized).toBe('{"id":"1","geo-location":"Canberra"}');
 ```
 
 ### Ignoring special deserializers all together
-If you have an use case where you want to not use specified deserializer in the metadata using de-serialization, the you can turn if off by setting `ignoreNameMetadata` to true (default is false). Here is an example usage:
+If you have an use case where you want to not use specified deserializer in the metadata using de-serialization, you can turn if off by setting `ignoreDeserializer` to true (default is false). Here is an example usage:
 
 ```typescript
 class StringToNumberDeserializer implements Deserializer {
